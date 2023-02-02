@@ -1,11 +1,97 @@
+import Combine
 import XCTest
 @testable import api_lol
 
-final class api_lolTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(api_lol().text, "Hello, World!")
+class APIManagerTests: XCTestCase, ObservableObject {
+    
+    var cancellationToken: AnyCancellable?
+    
+    
+    let receivedAccountInfoExpectation: XCTestExpectation = .init(description: "")
+    
+    func testAccountInfo() {
+        let manager = APIManager()
+        manager.set(configuration: .developRegistered)
+        
+        cancellationToken = manager.getAccountInfo()
+            .sink(receiveValue: { result in
+                switch result {
+                case .success:
+                    self.receivedAccountInfoExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("received error \(error)")
+                }
+            })
+        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+    }
+    
+    func testAccountName() {
+        let manager = APIManager()
+        manager.set(configuration: .developRegistered)
+        
+        cancellationToken = manager.getAccountName()
+            .sink(receiveValue: { result in
+                switch result {
+                case .success:
+                    self.receivedAccountInfoExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("received error \(error)")
+                }
+            })
+        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+    }
+    
+    func testSetAccountName() {
+        let manager = APIManager()
+        manager.set(configuration: .developRegistered)
+        
+        cancellationToken = manager.setAccountName("")
+            .sink(receiveValue: { result in
+                switch result {
+                case .success(let owner):
+                    XCTAssertEqual(owner.name, "")
+                    self.receivedAccountInfoExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("received error \(error)")
+                }
+            })
+        wait(for: [receivedAccountInfoExpectation], timeout: 10.0)
+    }
+    
+    func testAccountSettings() {
+        let manager = APIManager()
+        manager.set(configuration: .developRegistered)
+        
+        cancellationToken = manager.getAccountSettings()
+            .sink(receiveValue: { result in
+                switch result {
+                case .success:
+                    self.receivedAccountInfoExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("received error \(error)")
+                }
+            })
+        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+    }
+    
+    func testSetAccountSettings() {
+        let manager = APIManager()
+        manager.set(configuration: .developRegistered)
+        
+        let newSettings: AccountSettings =  .init(
+            communication: .email_ok
+        )
+        
+        cancellationToken = manager.setAccountSettings(newSettings)
+            .sink(receiveValue: { result in
+                switch result {
+                case .success:
+                    self.receivedAccountInfoExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail("received error \(error)")
+                }
+            })
+        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
     }
 }
+
