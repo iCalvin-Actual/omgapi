@@ -5,12 +5,10 @@
 //  Created by Calvin Chestnut on 2/2/23.
 //
 
-import Foundation
+import api_core
 
-struct AccountInfoResponseModel: CommonAPIResponse {
+struct AccountSettingsResponseModel: CommonAPIResponse {
     let message: String?
     
-    let email: String
-    let created: TimeStamp
     let settings: AccountSettings
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIResponse<R: Response>: Decodable {
+public struct APIResponse<R: Response>: Decodable {
     struct Request: Decodable {
         let statusCode: Int
         let success: Bool
@@ -16,15 +16,15 @@ struct APIResponse<R: Response>: Decodable {
     let response: R?
 }
 
-protocol Response: Decodable {
+public protocol Response: Decodable {
 }
 
-protocol CommonAPIResponse: Response {
+public protocol CommonAPIResponse: Response {
     var message: String? { get }
 }
 
-struct BasicResponse: CommonAPIResponse {
-    let message: String?
+public struct BasicResponse: CommonAPIResponse {
+    public let message: String?
 }
 
 extension String: Response { }

@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum DateFormat: String, Codable {
+public enum DateFormat: String, Codable {
     case iso_8601
     case dmy
     case mdy
 }
 
-struct TimeStamp: Codable {
+public struct TimeStamp: Codable {
     let message: String?
     let unixEpochTime: String
     let iso8601Time: String?

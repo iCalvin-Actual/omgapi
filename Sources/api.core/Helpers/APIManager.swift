@@ -8,19 +8,19 @@
 import Combine
 import Foundation
 
-typealias APIResult<T: Response> = Result<T, APIManager.APIError>
-typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
+public typealias APIResult<T: Response> = Result<T, APIManager.APIError>
+public typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
 
-enum APIConfiguration {
+public enum APIConfiguration {
     case anonymous
     case registered(email: String, apiKey: String)
     
     static let developRegistered: APIConfiguration = .registered(email: "accounts@icalvin.dev", apiKey: "09f5b7cc519758e4809851dfc98cecf5")
 }
 
-class APIManager {
+public class APIManager {
     
-    enum APIError: Error {
+    public enum APIError: Error {
         case inconceivable
         
         case unauthenticated
@@ -39,14 +39,18 @@ class APIManager {
         return decoder
     }()
     
-    let requestConstructor = APIRequestConstructor()
+    public let requestConstructor = APIRequestConstructor()
+    
     let urlSession: URLSession = .shared
     
-    func set(configuration: APIConfiguration) {
+    public init() {
+    }
+    
+    public func set(configuration: APIConfiguration) {
         requestConstructor.updateConfiguration(configuration)
     }
     
-    func requestPublisher<T: Response>(_ request: URLRequest) -> APIResultPublisher<T> {
+    public func requestPublisher<T: Response>(_ request: URLRequest) -> APIResultPublisher<T> {
         urlSession.dataTaskPublisher(for: request)
             .map { data, response in
                 print("In 'perform request")

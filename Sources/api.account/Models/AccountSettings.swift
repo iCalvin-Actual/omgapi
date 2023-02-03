@@ -5,7 +5,7 @@
 //  Created by Calvin Chestnut on 2/1/23.
 //
 
-import Foundation
+import api_core
 
 struct AccountSettings {
     let communication: CommunicationPreference?

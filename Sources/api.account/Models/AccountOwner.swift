@@ -5,11 +5,9 @@
 //  Created by Calvin Chestnut on 2/1/23.
 //
 
-import Foundation
+import api_core
 
-struct AccountAddress {
+struct AccountOwner: CommonAPIResponse {
     let message: String?
-    let address: String
-    let registration: TimeStamp
+    let name: String?
 }
-

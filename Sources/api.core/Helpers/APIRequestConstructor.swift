@@ -7,7 +7,7 @@
 
 import Foundation
 
-class APIRequestConstructor {
+public class APIRequestConstructor {
     
     static let encoder: JSONEncoder = {
         var encoder = JSONEncoder()
@@ -15,10 +15,11 @@ class APIRequestConstructor {
         return encoder
     }()
     
-    let urlConstructor = URLConstructor()
+    public let urlConstructor = URLConstructor()
     
     private var config: APIConfiguration?
-    var emailAddress: String? {
+    
+    public var emailAddress: String? {
         if case let .registered(email, _) = config {
             return email
         }
@@ -29,11 +30,11 @@ class APIRequestConstructor {
         updateConfiguration(config)
     }
     
-    func updateConfiguration(_ config: APIConfiguration) {
+    public func updateConfiguration(_ config: APIConfiguration) {
         self.config = config
     }
     
-    func request(method: HTTPMethod = .GET, with url: URL, bodyParameters: Encodable? = nil) -> URLRequest {
+    public func request(method: HTTPMethod = .GET, with url: URL, bodyParameters: Encodable? = nil) -> URLRequest {
         var request = URLRequest(url: url)
 
         request.httpMethod = method.rawValue
@@ -55,7 +56,7 @@ class APIRequestConstructor {
     }
 }
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case GET
     case PUT
     case POST

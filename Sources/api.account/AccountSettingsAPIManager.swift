@@ -5,8 +5,8 @@
 //  Created by Calvin Chestnut on 2/2/23.
 //
 
+import api_core
 import Combine
-import Foundation
 
 extension APIManager {
     

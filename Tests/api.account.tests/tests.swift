@@ -1,13 +1,14 @@
 import Combine
 import XCTest
+@testable import api_core
+@testable import api_account
 @testable import api_lol
 
 class APIManagerTests: XCTestCase, ObservableObject {
     
     var cancellationToken: AnyCancellable?
     
-    
-    let receivedAccountInfoExpectation: XCTestExpectation = .init(description: "")
+    let standardExpectation: XCTestExpectation = .init(description: "")
     
     func testAccountInfo() {
         let manager = APIManager()
@@ -17,12 +18,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
             .sink(receiveValue: { result in
                 switch result {
                 case .success:
-                    self.receivedAccountInfoExpectation.fulfill()
+                    self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")
                 }
             })
-        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+        wait(for: [standardExpectation], timeout: 5.0)
     }
     
     func testAccountName() {
@@ -33,12 +34,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
             .sink(receiveValue: { result in
                 switch result {
                 case .success:
-                    self.receivedAccountInfoExpectation.fulfill()
+                    self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")
                 }
             })
-        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+        wait(for: [standardExpectation], timeout: 5.0)
     }
     
     func testSetAccountName() {
@@ -50,12 +51,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
                 switch result {
                 case .success(let owner):
                     XCTAssertEqual(owner.name, "")
-                    self.receivedAccountInfoExpectation.fulfill()
+                    self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")
                 }
             })
-        wait(for: [receivedAccountInfoExpectation], timeout: 10.0)
+        wait(for: [standardExpectation], timeout: 10.0)
     }
     
     func testAccountSettings() {
@@ -66,12 +67,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
             .sink(receiveValue: { result in
                 switch result {
                 case .success:
-                    self.receivedAccountInfoExpectation.fulfill()
+                    self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")
                 }
             })
-        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+        wait(for: [standardExpectation], timeout: 5.0)
     }
     
     func testSetAccountSettings() {
@@ -86,12 +87,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
             .sink(receiveValue: { result in
                 switch result {
                 case .success:
-                    self.receivedAccountInfoExpectation.fulfill()
+                    self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")
                 }
             })
-        wait(for: [receivedAccountInfoExpectation], timeout: 5.0)
+        wait(for: [standardExpectation], timeout: 5.0)
     }
 }
 
