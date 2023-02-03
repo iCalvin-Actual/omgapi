@@ -53,7 +53,6 @@ public class APIManager {
     public func requestPublisher<T: Response>(_ request: URLRequest) -> APIResultPublisher<T> {
         urlSession.dataTaskPublisher(for: request)
             .map { data, response in
-                print("In 'perform request")
                 do {
                     let result: APIResponse<T> = try APIManager.decoder.decode(APIResponse.self, from: data)
                     

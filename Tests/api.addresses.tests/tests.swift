@@ -9,7 +9,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
     
     let standardExpectation: XCTestExpectation = .init(description: "")
     
-    func testAccounts() {
+    func testAddresses() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
@@ -25,7 +25,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         wait(for: [standardExpectation], timeout: 5.0)
     }
     
-    func testAccountAvailabilityTrue() {
+    func testAddressAvailabilityTrue() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
@@ -42,7 +42,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         wait(for: [standardExpectation], timeout: 5.0)
     }
     
-    func testAccountAvailabilityFalse() {
+    func testAddressAvailabilityFalse() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
@@ -59,7 +59,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         wait(for: [standardExpectation], timeout: 5.0)
     }
     
-    func testAccountExpiration() {
+    func testAddressExpiration() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
@@ -75,7 +75,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         wait(for: [standardExpectation], timeout: 5.0)
     }
     
-    func testAccountInfoAuthenticated() {
+    func testAddressInfoAuthenticated() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
@@ -91,7 +91,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         wait(for: [standardExpectation], timeout: 5.0)
     }
     
-    func testAccountInfoUnauthenticated() {
+    func testAddressInfoUnauthenticated() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         

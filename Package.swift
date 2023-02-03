@@ -28,6 +28,8 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.addresses",
                dependencies: ["api.core"]),
+        .target(name: "api.profile",
+               dependencies: ["api.core"]),
         .target(
             name: "api.lol",
             dependencies: ["api.core"]),
@@ -37,5 +39,8 @@ let package = Package(
         .testTarget(
             name: "api.addresses.tests",
             dependencies: ["api.addresses"]),
+        .testTarget(
+            name: "api.profile.tests",
+            dependencies: ["api.profile"]),
     ]
 )
