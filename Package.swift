@@ -13,7 +13,15 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "api.lol",
-            targets: ["api.lol"]),
+            targets: [
+                "api.core",
+                "api.account",
+                "api.addresses",
+                "api.profile",
+                "api.now",
+                "api.purl"
+            ]
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -32,9 +40,8 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.now",
                dependencies: ["api.core"]),
-        .target(
-            name: "api.lol",
-            dependencies: ["api.core"]),
+        .target(name: "api.purl",
+               dependencies: ["api.core"]),
         .testTarget(
             name: "api.account.tests",
             dependencies: ["api.account"]),
@@ -47,5 +54,8 @@ let package = Package(
         .testTarget(
             name: "api.now.tests",
             dependencies: ["api.now"]),
+        .testTarget(
+            name: "api.purl.tests",
+            dependencies: ["api.purl"]),
     ]
 )

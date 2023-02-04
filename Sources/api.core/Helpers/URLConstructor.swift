@@ -19,4 +19,7 @@ public struct URLConstructor {
     public func replacingAddress(_ address: String, in path: String) -> String {
         path.replacingOccurrences(of: "{address}", with: address)
     }
+    public func replacingPurl(_ purl: String, in path: String) -> String {
+        path.replacingOccurrences(of: "{purl}", with: purl)
+    }
 }

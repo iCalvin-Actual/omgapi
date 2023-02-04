@@ -57,11 +57,17 @@ public class APIManager {
                     let result: APIResponse<T> = try APIManager.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
+                        let status = result.request.statusCode
                         var message: String?
                         if let responseMessage = (result.response as? CommonAPIResponse)?.message {
                             message = responseMessage
                         }
-                        return .failure(.unhandled(result.request.statusCode, message: message))
+                        switch status {
+                        case 401:
+                            return .failure(.unauthenticated)
+                        default:
+                            return .failure(.unhandled(result.request.statusCode, message: message))
+                        }
                     }
                     
                     guard let response = result.response else {

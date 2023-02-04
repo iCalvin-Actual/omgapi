@@ -28,3 +28,5 @@ public struct BasicResponse: CommonAPIResponse {
 }
 
 extension String: Response { }
+
+extension Array where Element == Response { }

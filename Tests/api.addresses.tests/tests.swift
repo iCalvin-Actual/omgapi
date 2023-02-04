@@ -66,7 +66,7 @@ class APIManagerTests: XCTestCase, ObservableObject {
         cancellationToken = manager.getAddressExpiration("calvin")
             .sink(receiveValue: { result in
                 switch result {
-                case .success(let response):
+                case .success:
                     self.standardExpectation.fulfill()
                 case .failure(let error):
                     XCTFail("received error \(error)")

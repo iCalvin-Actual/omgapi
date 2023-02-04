@@ -2,7 +2,6 @@ import Combine
 import XCTest
 @testable import api_core
 @testable import api_account
-@testable import api_lol
 
 class APIManagerTests: XCTestCase, ObservableObject {
     
