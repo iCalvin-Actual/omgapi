@@ -56,7 +56,7 @@ class APIManagerTests: XCTestCase, APITest {
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.deletePaste(title: "Testing", from: "calvin").sink(receiveValue: { result in
-            if let resposne = self.receiveValue(result) {
+            if let _ = self.receiveValue(result) {
                 // Check response
                 self.responseValidation.fulfill()
             }
