@@ -21,7 +21,8 @@ let package = Package(
                 "api.now",
                 "api.purl",
                 "api.pastebin",
-                "api.weblog"
+                "api.weblog",
+                "api.statuslog"
             ]
         ),
     ],
@@ -48,6 +49,8 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.weblog",
                dependencies: ["api.core"]),
+        .target(name: "api.statuslog",
+               dependencies: ["api.core"]),
         .testTarget(
             name: "api.account.tests",
             dependencies: ["api.account"]),
@@ -69,5 +72,8 @@ let package = Package(
         .testTarget(
             name: "api.weblog.tests",
             dependencies: ["api.weblog"]),
+        .testTarget(
+            name: "api.statuslog.tests",
+            dependencies: ["api.statuslog"]),
     ]
 )

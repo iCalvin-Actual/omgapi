@@ -5,25 +5,20 @@
 //  Created by Calvin Chestnut on 2/2/23.
 //
 
+import api_core
 import Foundation
 
-protocol Status {
-    var content: String { get }
-    var emoji: String? { get }
-    var externalUrl: String? { get }
-}
-
-struct AddressStatus: Status {
-    let id: Int
+struct AddressStatus: Response {
+    let id: String
     let address: String
-    let created: Int
+    let created: String
     
     let content: String
     let emoji: String?
     let externalUrl: String?
 }
 
-struct DraftStatus: Status {
+struct DraftStatus: Encodable {
     let content: String
     let emoji: String?
     let externalUrl: String?

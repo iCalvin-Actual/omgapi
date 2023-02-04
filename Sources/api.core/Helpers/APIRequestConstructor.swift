@@ -58,7 +58,7 @@ public class APIRequestConstructor {
 
 public enum HTTPMethod: String {
     case GET
-    case PUT
+    case PATCH
     case POST
     case DELETE
 }

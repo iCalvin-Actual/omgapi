@@ -28,4 +28,7 @@ public struct APIURLConstructor {
     public func replacingEntry(_ entry: String, in path: String) -> String {
         path.replacingOccurrences(of: "{entry}", with: entry)
     }
+    public func replacingStatus(_ status: String, in path: String) -> String {
+        path.replacingOccurrences(of: "{status}", with: status)
+    }
 }
