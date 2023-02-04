@@ -3,32 +3,31 @@ import XCTest
 @testable import api_core
 @testable import api_profile
 
-class APIManagerTests: XCTestCase, ObservableObject {
+class APIManagerTests: XCTestCase, APITest {
     
-    var cancellationToken: AnyCancellable?
+    var requests: [AnyCancellable] = []
     
-    let standardExpectation: XCTestExpectation = .init(description: "")
+    let successfulResponse: XCTestExpectation = .init(description: "")
+    let responseValidation: XCTestExpectation = .init(description: "")
     
     func testProfile() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getProfile("hotdogsladies").sink(receiveValue: { result in
-            switch result {
-            case .success:
-                self.standardExpectation.fulfill()
-            case .failure(let error):
-                XCTFail("Failed \(error)")
+        requests.append(manager.getProfile("hotdogsladies").sink(receiveValue: { result in
+            if let _ = self.receiveValue(result) {
+                // Check response
+                self.responseValidation.fulfill()
             }
-        })
-        wait(for: [standardExpectation], timeout: 5.0)
+        }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testUpdateProfile() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.updateProfile("calvin", newContent: """
+        requests.append(manager.updateProfile("calvin", newContent: """
 {profile-picture}
 
 # Calvin C
@@ -38,14 +37,12 @@ class APIManagerTests: XCTestCase, ObservableObject {
 | Occupation: Engineer
 | Location: Salem, MA
 """, publish: false).sink(receiveValue: { result in
-            switch result {
-            case .success:
-                self.standardExpectation.fulfill()
-            case .failure(let error):
-                XCTFail("Failed \(error)")
+            if let _ = self.receiveValue(result) {
+                // Check response
+                self.responseValidation.fulfill()
             }
-        })
-        wait(for: [standardExpectation], timeout: 5.0)
+        }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
 }
 

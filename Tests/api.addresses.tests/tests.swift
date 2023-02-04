@@ -3,108 +3,95 @@ import XCTest
 @testable import api_core
 @testable import api_addresses
 
-class APIManagerTests: XCTestCase, ObservableObject {
+class APIManagerTests: XCTestCase, APITest {
     
-    var cancellationToken: AnyCancellable?
+    var requests: [AnyCancellable] = []
     
-    let standardExpectation: XCTestExpectation = .init(description: "")
+    let successfulResponse: XCTestExpectation = .init(description: "")
+    let responseValidation: XCTestExpectation = .init(description: "")
     
     func testAddresses() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getAddresses()
+        requests.append(manager.getAddresses()
             .sink(receiveValue: { result in
-                switch result {
-                case .success:
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testAddressAvailabilityTrue() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getAddressAvailability("icalvin")
+        requests.append(manager.getAddressAvailability("icalvin")
             .sink(receiveValue: { result in
-                switch result {
-                case .success(let response):
+                if let response = self.receiveValue(result) {
                     XCTAssertEqual(response.available, true)
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testAddressAvailabilityFalse() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getAddressAvailability("calvin")
+        requests.append(manager.getAddressAvailability("calvin")
             .sink(receiveValue: { result in
-                switch result {
-                case .success(let response):
+                if let response = self.receiveValue(result) {
                     XCTAssertEqual(response.available, false)
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testAddressExpiration() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getAddressExpiration("calvin")
+        requests.append(manager.getAddressExpiration("calvin")
             .sink(receiveValue: { result in
-                switch result {
-                case .success:
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testAddressInfoAuthenticated() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getAddressInfo("calvin")
+        requests.append(manager.getAddressInfo("calvin")
             .sink(receiveValue: { result in
-                switch result {
-                case .success:
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testAddressInfoUnauthenticated() {
         let manager = APIManager()
         manager.set(configuration: .developRegistered)
         
-        cancellationToken = manager.getPublicAddressInfo("hotdogsladies")
+        requests.append(manager.getPublicAddressInfo("hotdogsladies")
             .sink(receiveValue: { result in
-                switch result {
-                case .success:
-                    self.standardExpectation.fulfill()
-                case .failure(let error):
-                    XCTFail("received error \(error)")
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
                 }
-            })
-        wait(for: [standardExpectation], timeout: 5.0)
+            }))
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
 }
 

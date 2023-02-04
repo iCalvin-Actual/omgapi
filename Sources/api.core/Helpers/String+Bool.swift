@@ -9,9 +9,11 @@ import Foundation
 
 public extension Optional<String> {
     var boolValue: Bool {
-        guard let self = self else {
-            return false
-        }
+        self?.boolValue ?? false
+    }
+}
+public extension String {
+    var boolValue: Bool {
         switch self.lowercased() {
         case "true", "t", "yes", "y":
             return true

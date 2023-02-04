@@ -22,4 +22,7 @@ public struct URLConstructor {
     public func replacingPurl(_ purl: String, in path: String) -> String {
         path.replacingOccurrences(of: "{purl}", with: purl)
     }
+    public func replacingPaste(_ paste: String, in path: String) -> String {
+        path.replacingOccurrences(of: "{paste}", with: paste)
+    }
 }

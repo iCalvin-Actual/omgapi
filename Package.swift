@@ -42,6 +42,8 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.purl",
                dependencies: ["api.core"]),
+        .target(name: "api.pastebin",
+               dependencies: ["api.core"]),
         .testTarget(
             name: "api.account.tests",
             dependencies: ["api.account"]),
@@ -57,5 +59,8 @@ let package = Package(
         .testTarget(
             name: "api.purl.tests",
             dependencies: ["api.purl"]),
+        .testTarget(
+            name: "api.pastebin.tests",
+            dependencies: ["api.pastebin"]),
     ]
 )
