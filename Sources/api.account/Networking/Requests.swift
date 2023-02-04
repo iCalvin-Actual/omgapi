@@ -63,6 +63,15 @@ class SETAccountSettingsAPIRequest: APIRequest<SETAccountSettingsAPIRequest.Para
     }
 }
 
+class GETAddressesAPIRequest: APIRequest<EmptyRequeset, AddressCollection> {
+    init(for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AccountPath.addresses(emailAddress)
+        )
+    }
+}
+
 /*
 GET
 Auth: YES
