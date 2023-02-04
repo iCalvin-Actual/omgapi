@@ -5,14 +5,15 @@
 //  Created by Calvin Chestnut on 2/2/23.
 //
 
+import api_core
 import Foundation
 
-struct WeblogEntry {
+public struct WeblogEntry: Response {
     let address: String
     let location: String
     
     let title: String
-    let date: Int
+    let date: String
     let type: String
     let status: String
     let source: String
@@ -20,6 +21,16 @@ struct WeblogEntry {
     let body: String
     let output:String
     
-    let metadata: [String: String]
+    let metadata: String
     let entry: String
+}
+
+public struct DraftBlogEntry: Encodable {
+    let entryName: String
+    let content: String
+    
+    init(entryName: String = UUID().uuidString, content: String) {
+        self.entryName = entryName
+        self.content = content
+    }
 }

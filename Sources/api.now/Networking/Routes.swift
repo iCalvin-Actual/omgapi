@@ -42,7 +42,7 @@ garden: [
 ]
 */
 
-extension URLConstructor {
+extension APIURLConstructor {
     private var addressNow: String  { "address/{address}/now/" }
     private var garden: String      { "now/garden/" }
     

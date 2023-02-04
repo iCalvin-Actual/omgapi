@@ -15,7 +15,7 @@ public class APIRequestConstructor {
         return encoder
     }()
     
-    public let urlConstructor = URLConstructor()
+    public let urlConstructor = APIURLConstructor()
     
     private var config: APIConfiguration?
     

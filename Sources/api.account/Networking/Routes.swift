@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-extension URLConstructor {
+extension APIURLConstructor {
     private var accountInfo: String      { "account/{email}/info/" }
     private var accountName: String      { "account/{email}/name/"}
     private var accountSettings: String  { "account/{email}/settings/" }

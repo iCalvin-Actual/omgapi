@@ -2,7 +2,7 @@
 
 A description of this package.
 
-struct UrlConstructor {
+struct APIURLConstructor {
     private let base = "https://api.omg.lol/"
     private var baseURL: URL? {
         URL(string: base)

@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-extension URLConstructor {
+extension APIURLConstructor {
     private var addressPastes: String   { "address/{address}/pastebin/" }
     private var addressPaste: String    { "address/{address}/pastebin/{paste}" }
     

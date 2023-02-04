@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-extension URLConstructor {
+extension APIURLConstructor {
     private var addressPURLs: String    { "address/{address}/purls" }
     private var createPURL: String      { "address/{address}/purl" }
     private var managePURL: String      { "address/{address}/purl/{purl}" }

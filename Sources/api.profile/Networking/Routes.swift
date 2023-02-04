@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-extension URLConstructor {
+extension APIURLConstructor {
     private var addressProfile: String { "address/{address}/web/" }
     private var addressPhoto: String { "address/{address}/pfp/" }
     

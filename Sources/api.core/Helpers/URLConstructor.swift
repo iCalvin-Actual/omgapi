@@ -8,7 +8,7 @@
 import Foundation
 
 /// Should be extended by the various modules with the URL routes needed
-public struct URLConstructor {
+public struct APIURLConstructor {
     private let baseAPIString: String = "https://api.omg.lol"
     
     public var baseURL: URL { URL(string: baseAPIString)! }
@@ -24,5 +24,8 @@ public struct URLConstructor {
     }
     public func replacingPaste(_ paste: String, in path: String) -> String {
         path.replacingOccurrences(of: "{paste}", with: paste)
+    }
+    public func replacingEntry(_ entry: String, in path: String) -> String {
+        path.replacingOccurrences(of: "{entry}", with: entry)
     }
 }
