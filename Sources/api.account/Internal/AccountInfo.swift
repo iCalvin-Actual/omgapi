@@ -7,10 +7,10 @@
 
 import api_core
 
-struct AccountInfoResponseModel: CommonAPIResponse {
+struct AccountInfo: CommonAPIResponse {
     let message: String?
     
     let email: String
     let created: TimeStamp
-    let settings: AccountSettings
+    let settings: AccountSettings.Settings
 }

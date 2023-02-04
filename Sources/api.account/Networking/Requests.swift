@@ -8,6 +8,61 @@
 import api_core
 import Foundation
 
+class GETAccountInfoAPIRequest: APIRequest<EmptyRequeset, AccountInfo> {
+    init(for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AccountPath.info(emailAddress)
+        )
+    }
+}
+
+class GETAccountNameAPIRequest: APIRequest<EmptyRequeset, AccountOwner> {
+    init(for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AccountPath.name(emailAddress)
+        )
+    }
+}
+
+class SETAccountNameAPIRequest: APIRequest<SETAccountNameAPIRequest.Parameters, AccountOwner> {
+    struct Parameters: RequestBody {
+        let name: String
+    }
+    init(newValue: String, for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: AccountPath.name(emailAddress),
+            body: Parameters(name: newValue)
+        )
+    }
+}
+
+class GETAccountSettingsAPIRequest: APIRequest<EmptyRequeset, AccountSettings> {
+    init(for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AccountPath.settings(emailAddress)
+        )
+    }
+}
+
+class SETAccountSettingsAPIRequest: APIRequest<SETAccountSettingsAPIRequest.Parameters, BasicResponse> {
+    struct Parameters: RequestBody {
+        let communication: CommunicationPreference
+    }
+    init(communicationPreference: CommunicationPreference, for emailAddress: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: AccountPath.settings(emailAddress),
+            body: Parameters(communication: communicationPreference)
+        )
+    }
+}
+
 /*
 GET
 Auth: YES
@@ -94,19 +149,8 @@ extension APIRequestConstructor {
         }
         return request(with: urlConstructor.accountSettings(emailAddress: emailAddress))
     }
-    
-    func updateAccountSettingsRequest(newSettings: AccountSettings) -> URLRequest? {
-        guard let emailAddress = emailAddress else {
-            return nil
-        }
-        
-        return request(
-            method: .POST,
-            with: urlConstructor.accountSettings(emailAddress: emailAddress),
-            bodyParameters: newSettings
-        )
-    }
 }
+
 
 /*
 GET

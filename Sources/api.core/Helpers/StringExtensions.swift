@@ -7,6 +7,15 @@
 
 import Foundation
 
+public extension String {
+    func replacingEmail(_ address: String) -> String {
+        replacingOccurrences(of: "{email}", with: address)
+    }
+    func replacingAddress(_ address: String) -> String {
+        replacingOccurrences(of: "{address}", with: address)
+    }
+}
+
 public extension Optional<String> {
     var boolValue: Bool {
         self?.boolValue ?? false

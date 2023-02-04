@@ -11,6 +11,8 @@ import Foundation
 public typealias APIResult<T: Response> = Result<T, APIManager.APIError>
 public typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
 
+public typealias ResultPublisher<T> = AnyPublisher<Result<T, APIManager.APIError>, Never>
+
 public enum APIConfiguration {
     case anonymous
     case registered(email: String, apiKey: String)
@@ -66,6 +68,33 @@ public class APIManager {
     
     public func set(configuration: APIConfiguration) {
         requestConstructor.updateConfiguration(configuration)
+    }
+    
+    public func publisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
+        urlSession.dataTaskPublisher(for: APIRequestConstructor.urlRequest(from: request))
+            .map { data, response in
+                do {
+                    let result: APIResponse<R> = try APIManager.decoder.decode(APIResponse.self, from: data)
+                    
+                    guard result.request.success else {
+                        return .failure(.create(from: result))
+                    }
+                    
+                    guard let response = result.response else {
+                        return .failure(.badResponseEncoding)
+                    }
+                    
+                    return .success(response)
+                }
+                catch {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? APIManager.decoder.decode(APIResponse.self, from: data) {
+                        return .failure(.create(from: errorMessageResponse))
+                    }
+                    return .failure(.badResponseEncoding)
+                }
+            }
+            .replaceError(with: .failure(.inconceivable))
+            .eraseToAnyPublisher()
     }
     
     public func requestPublisher<T: Response>(_ request: URLRequest) -> APIResultPublisher<T> {

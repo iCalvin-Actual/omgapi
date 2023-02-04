@@ -7,6 +7,34 @@
 
 import Foundation
 
+public protocol APIPath {
+    var string: String  { get }
+    var url: URL        { get }
+}
+
+public extension APIPath {
+    var url: URL { URL(string: string, relativeTo: CommonPath.api.url)! }
+}
+
+public enum CommonPath: APIPath {
+    private static let baseAPIString = "https://api.omg.lol"
+    
+    case api
+    
+    public var string: String {
+        switch self {
+        case .api:
+            return Self.baseAPIString
+        }
+    }
+    
+    public var url: URL {
+        URL(string: string)!
+    }
+}
+
+
+
 /// Should be extended by the various modules with the URL routes needed
 public struct APIURLConstructor {
     private let baseAPIString: String = "https://api.omg.lol"

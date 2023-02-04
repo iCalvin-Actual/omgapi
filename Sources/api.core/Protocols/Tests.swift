@@ -21,3 +21,10 @@ extension APITest {
         }
     }
 }
+
+class APIManagerTest: XCTestCase, APITest {
+    public var requests: [AnyCancellable] = []
+    
+    let successfulResponse: XCTestExpectation = .init(description: "")
+    let responseValidation: XCTestExpectation = .init(description: "")
+}
