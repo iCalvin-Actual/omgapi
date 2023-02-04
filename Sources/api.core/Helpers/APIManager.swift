@@ -25,10 +25,28 @@ public class APIManager {
         
         case unauthenticated
         
+        case notFound
+        
         case badBody
         case badResponseEncoding
         
         case unhandled(_ statusCode: Int, message: String?)
+        
+        static func create<R>(from response: APIResponse<R>) -> APIError {
+            let status = response.request.statusCode
+            var message: String?
+            if let responseMessage = (response.response as? CommonAPIResponse)?.message {
+                message = responseMessage
+            }
+            switch status {
+            case 401:
+                return .unauthenticated
+            case 404:
+                return .notFound
+            default:
+                return .unhandled(status, message: message)
+            }
+        }
     }
     
     static let decoder: JSONDecoder = {
@@ -57,17 +75,7 @@ public class APIManager {
                     let result: APIResponse<T> = try APIManager.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
-                        let status = result.request.statusCode
-                        var message: String?
-                        if let responseMessage = (result.response as? CommonAPIResponse)?.message {
-                            message = responseMessage
-                        }
-                        switch status {
-                        case 401:
-                            return .failure(.unauthenticated)
-                        default:
-                            return .failure(.unhandled(result.request.statusCode, message: message))
-                        }
+                        return .failure(.create(from: result))
                     }
                     
                     guard let response = result.response else {
@@ -78,7 +86,7 @@ public class APIManager {
                 }
                 catch {
                     if let errorMessageResponse: APIResponse<BasicResponse> = try? APIManager.decoder.decode(APIResponse.self, from: data) {
-                        return .failure(.unhandled(errorMessageResponse.request.statusCode, message: errorMessageResponse.response?.message))
+                        return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)
                 }

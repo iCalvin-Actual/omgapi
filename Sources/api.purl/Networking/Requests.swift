@@ -18,19 +18,19 @@ extension APIRequestConstructor {
         request(with: urlConstructor.addressPurls(address))
     }
     
-    func createPurl(name: String, url: String, for account: String) -> URLRequest {
-        request(method: .POST, with: urlConstructor.createPurls(account), bodyParameters: Parameters(name: name, url: url))
+    func createPurl(name: String, url: String, for address: String) -> URLRequest {
+        request(method: .POST, with: urlConstructor.createPurls(address), bodyParameters: Parameters(name: name, url: url))
     }
     
-    func getPurl(purl: String, from account: String) -> URLRequest {
-        request(with: urlConstructor.managePurl(for: account, purl: purl))
+    func getPurl(purl: String, from address: String) -> URLRequest {
+        request(with: urlConstructor.managePurl(for: address, purl: purl))
     }
     
-    func updatePurl(purl: String, name: String, url: String, from account: String) -> URLRequest {
-        request(method: .POST, with: urlConstructor.managePurl(for: account, purl: purl), bodyParameters: Parameters(name: name, url: url))
+    func updatePurl(purl: String, name: String, url: String, from address: String) -> URLRequest {
+        request(method: .POST, with: urlConstructor.managePurl(for: address, purl: purl), bodyParameters: Parameters(name: name, url: url))
     }
     
-    func deletePurl(purl: String, from account: String) -> URLRequest {
-        request(method: .DELETE, with: urlConstructor.managePurl(for: purl, purl: account))
+    func deletePurl(purl: String, from address: String) -> URLRequest {
+        request(method: .DELETE, with: urlConstructor.managePurl(for: address, purl: purl))
     }
 }
