@@ -70,8 +70,18 @@ public class OMGAPI {
         requestConstructor.updateConfiguration(configuration)
     }
     
+    public func publisher<B, R>(forMultiPart apiRequest: APIRequest<B, R>) -> APIResultPublisher<R> {
+        let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.multipartUrlRequest(from: apiRequest))
+        return publisher(for: dataTask)
+    }
+    
     public func publisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
-        urlSession.dataTaskPublisher(for: APIRequestConstructor.urlRequest(from: request))
+        let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.urlRequest(from: request))
+        return publisher(for: dataTask)
+    }
+    
+    public func publisher<R>(for task: URLSession.DataTaskPublisher) -> APIResultPublisher<R> {
+        task
             .map { data, response in
                 do {
                     let result: APIResponse<R> = try OMGAPI.decoder.decode(APIResponse.self, from: data)

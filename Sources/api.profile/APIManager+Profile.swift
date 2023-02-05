@@ -10,18 +10,78 @@ import Combine
 import Foundation
 
 extension OMGAPI {
-    func getProfile(_ address: String) -> APIResultPublisher<AddressProfileResponseModel> {
-        let request = requestConstructor.getAddressProfile(address)
-        return OMGAPI().requestPublisher(request)
+    
+    func getPublicProfile(_ address: AddressName) -> ResultPublisher<PublicProfile> {
+        let request = GETAddressProfile(address)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    let profile = PublicProfile(address: address, content: response.html)
+                    return .success(profile)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func updateProfile(_ address: String, newContent: String, publish: Bool = false) -> APIResultPublisher<BasicResponse> {
-        let request = requestConstructor.udpateAddressProfile(address, newContent: newContent, publish: publish)
-        return requestPublisher(request)
+    func getProfile(_ address: AddressName, with credential: APICredentials) -> ResultPublisher<Profile> {
+        let request = GETAddressProfile(address, with: credential.authKey)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    let profile = Profile(address: address, content: response.content ?? "", theme: response.theme ?? "", head: response.head, css: response.css)
+                    return .success(profile)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func updateProfilePhoto(_ address: String, data: Data) -> APIResultPublisher<BasicResponse> {
-        let request = requestConstructor.updatePhoto(address, data: data)
-        return requestPublisher(request)
+    func updateProfile(_ draft: PublicProfile.Draft, for address: AddressName, with credential: APICredentials) -> ResultPublisher<Profile> {
+        let request = SETAddressProfile(draft, for: address, with: credential.authKey)
+        return publisher(for: request)
+            .flatMap { result in
+                switch result {
+                case .success:
+                    return self.getProfile(address, with: credential)
+                case .failure(let error):
+                    return Just(.failure(error))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func getAddressPhoto(_ address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
+        let request = GETAddressProfile(address, with: credential.authKey)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    return .success(None.instance)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    func updateAddressPhoto(_ photo: ProfilePhoto, for address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
+        let request = SETAddressPhoto(photo, for: address, with: credential.authKey)
+        return publisher(forMultiPart: request)
+            .flatMap { result in
+                switch result {
+                case .success(let response):
+                    return self.getAddressPhoto(address, with: credential)
+                case .failure(let error):
+                    return Just(.failure(error))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }

@@ -3,45 +3,58 @@ import XCTest
 @testable import api_core
 @testable import api_profile
 
-class APIManagerTests: XCTestCase, APITest {
+class APIAccountTests: APIManagerTest {
     
-    var requests: [AnyCancellable] = []
+    let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
-    let successfulResponse: XCTestExpectation = .init(description: "")
-    let responseValidation: XCTestExpectation = .init(description: "")
+    func testPublicProfile() {
+        let manager = OMGAPI()
+        
+        manager.getPublicProfile("hotdogsladies")
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
+    }
     
     func testProfile() {
         let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
         
-        requests.append(manager.getProfile("hotdogsladies").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
+        manager.getProfile("calvin", with: account)
+            .sink(receiveValue: { result in
                 self.responseValidation.fulfill()
-            }
-        }))
+            })
+            .store(in: &requests)
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testUpdateProfile() {
         let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
+        let draft = PublicProfile.Draft(content: "New profile content")
         
-        requests.append(manager.updateProfile("calvin", newContent: """
-{profile-picture}
-
-# Calvin C
-
-| Pronouns: He/They
-| Gender: Non-Binary {venus-mars}
-| Occupation: Engineer
-| Location: Salem, MA
-""", publish: false).sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
+        manager.updateProfile(draft, for: "calvin", with: account)
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
+    }
+    
+    func testProfilePhoto() {
+        let manager = OMGAPI()
+        
+        manager.getAddressPhoto("calvin", with: account)
+            .sink(receiveValue: { result in
                 self.responseValidation.fulfill()
-            }
-        }))
+            })
+            .store(in: &requests)
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
 }
