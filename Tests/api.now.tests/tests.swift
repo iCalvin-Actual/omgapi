@@ -3,52 +3,66 @@ import XCTest
 @testable import api_core
 @testable import api_now
 
-class APIManagerTests: XCTestCase, APITest {
+class APINowTests: APIManagerTest {
     
-    var requests: [AnyCancellable] = []
-    
-    let successfulResponse: XCTestExpectation = .init(description: "")
-    let responseValidation: XCTestExpectation = .init(description: "")
+    let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
     func testFetchNow() {
         let manager = OMGAPI()
-//        manager.set(configuration: .developRegistered)
         
-        requests.append(manager.getNow("calvin")
+        manager.getNow(for: "calvin")
             .sink(receiveValue: { result in
                 if let _ = self.receiveValue(result) {
                     // Check response
                     self.responseValidation.fulfill()
                 }
-            }))
+            })
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testUpdateNow() {
         let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
         
-        requests.append(manager.updateNow(for: "calvin", content: "Now Now, Hope I have a backup!", listed: true)
+        manager.set(configuration: .developRegistered)
+            .flatMap { result in
+                switch result {
+                case .success(let response):
+                    existingNow = response.content
+                    return manager.updateNow(draft, for: "calvin", credentials: self.account)
+                case .failure(let error):
+                    return Just(.failure(error))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .flatMap({ _ in
+                manager.updateNow(.init(content: existingNow ?? "", listed: true), for: "calvin", credentials: self.account)
+                    .eraseToAnyPublisher()
+            })
             .sink(receiveValue: { result in
-                if let _ = self.receiveValue(result) {
-                    // Check response
+                if case .success = result {
                     self.responseValidation.fulfill()
                 }
-            }))
-        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
+            })
+            .store(in: &requests)
+        
+        wait(for: [responseValidation], timeout: 5.0)
     }
     
     func testNowGarden() {
         let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
-        requests.append(manager.getNowGarden()
+        manager.getNowGarden()
             .sink(receiveValue: { result in
                 if let _ = self.receiveValue(result) {
                     // Check response
                     self.responseValidation.fulfill()
                 }
-            }))
+            })
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
 }

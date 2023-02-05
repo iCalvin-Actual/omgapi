@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-struct NowGarden: CommonAPIResponse {
+struct NowGardenResponse: CommonAPIResponse {
     struct Now: Response {
         let address: String
         let url: String
