@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testGetPurls() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.getPURLs(from: "hotdogsladies").sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -25,7 +25,7 @@ class APIManagerTests: XCTestCase, APITest {
     func testCreatePurl() {
         let draft = DraftPURL(name: "testing", url: "https://daringFireball.com")
         
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.createPurl(for: "calvin", draft: draft).sink(receiveValue: { result in
@@ -38,7 +38,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetPurl() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getPurl(purl: "async", for: "calvin").sink(receiveValue: { result in
@@ -51,7 +51,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testDeletePurl() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.deletePurl(purl: "testing", from: "calvin").sink(receiveValue: { result in

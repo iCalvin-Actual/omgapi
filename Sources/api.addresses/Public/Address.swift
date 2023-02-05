@@ -9,8 +9,10 @@ import api_core
 import Foundation
 
 struct Address {
-    let name: String
+    let name: AddressName
     let registered: TimeStamp
     let expired: Bool
     let verified: Bool
 }
+
+typealias AddressName = String

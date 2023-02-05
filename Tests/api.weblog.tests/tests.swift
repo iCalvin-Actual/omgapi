@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testBlogConfiguration() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.blogConfiguration(for: "calvin").sink(receiveValue: { result in
@@ -24,7 +24,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testUpdateBlogConfiguration() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.updateConfiguration(for: "calvin", newValue: "New Config String").sink(receiveValue: { result in
@@ -37,7 +37,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testBlogTemplate() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.blogTemplate(for: "calvin").sink(receiveValue: { result in
@@ -50,7 +50,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testUpdateBlogTemplate() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.updateTemplate(for: "calvin", newValue: "New Blog Template").sink(receiveValue: { result in
@@ -63,7 +63,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testBlogEntries() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getBlogEntries(for: "calvin").sink(receiveValue: { result in
@@ -76,7 +76,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testLatestBlogEntry() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getLatestBlogEntry(for: "calvin").sink(receiveValue: { result in
@@ -89,7 +89,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetEntry() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getBlogEntry("63d958739578c", for: "calvin").sink(receiveValue: { result in
@@ -104,7 +104,7 @@ class APIManagerTests: XCTestCase, APITest {
     func testNewEntry() {
         let draft = DraftBlogEntry(entryName: "testEntry", content: "Blog Content")
         
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.createBlogEntry(draft, for: "calvin").sink(receiveValue: { result in
@@ -119,7 +119,7 @@ class APIManagerTests: XCTestCase, APITest {
     func testUpdateEntry() {
         let draft = DraftBlogEntry(entryName: "AnotherTestEntry", content: "Different Content")
         
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.updateBlogEntry(entry: "testEntry", for: "calvin", newValue: draft).sink(receiveValue: { result in
@@ -132,7 +132,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testDeleteEntry() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.deleteBlogEntry("testentry", for: "calvin").sink(receiveValue: { result in

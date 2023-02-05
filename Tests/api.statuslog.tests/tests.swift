@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testGetStatusLog() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.getCompleteStatusLog().sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -23,7 +23,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetLatestStatusLog() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.getLatestStatusLog().sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -35,7 +35,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetStatuses() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.getStatuses(for: "calvin").sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -47,7 +47,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetStatus() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.getStatus("63dd17bbb25fd", for: "calvin").sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -59,7 +59,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testPostStatus() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         let draft = DraftStatus(content: "Test Status", emoji: "🤔", externalUrl: "https://www.daringfireball.com")
@@ -74,7 +74,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testEditPost() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         let draft = DraftStatus(content: "Not Testing anymore", emoji: "🎉", externalUrl: "https://www.daringfireball.com")
@@ -89,7 +89,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testDeletePost() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.deleteStatus("63de04183522b", for: "calvin").sink(receiveValue: { result in
@@ -102,7 +102,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetBio() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 
         requests.append(manager.statusLogBio(for: "calvin").sink(receiveValue: { result in
             if let _ = self.receiveValue(result) {
@@ -114,7 +114,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testUpdateBio() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.updateStatusLogBio(for: "calvin", newValue: "Some Bio", css: "cssString").sink(receiveValue: { result in

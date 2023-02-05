@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension APIManager {
+extension OMGAPI {
     func getCompleteStatusLog() -> APIResultPublisher<StatusLogResponseModel> {
         let request = requestConstructor.getStatusLog()
         return requestPublisher(request)

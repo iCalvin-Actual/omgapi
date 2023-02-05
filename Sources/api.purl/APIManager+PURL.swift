@@ -46,7 +46,7 @@ import Foundation
      Response: BasicResponse
     */
 
-extension APIManager {
+extension OMGAPI {
     
     func getPURLs(from address: String) -> APIResultPublisher<GetPURLsResponseModel> {
         let request = requestConstructor.getPurls(for: address)

@@ -8,7 +8,7 @@ class APIAccountTests: APIManagerTest {
     let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
     func testAccountInfo() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         manager.getAccount(for: account)
             .sink(receiveValue: { result in
@@ -22,7 +22,7 @@ class APIAccountTests: APIManagerTest {
     }
     
     func testSetName() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         let existingName: String = "Calvin"
         let newName: String = "a stranger"
         
@@ -44,7 +44,7 @@ class APIAccountTests: APIManagerTest {
     }
     
     func testSetPreference() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         manager.setCommunication(.yesPlease, with: account)
             .flatMap({ result in

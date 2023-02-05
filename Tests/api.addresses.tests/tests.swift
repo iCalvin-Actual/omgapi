@@ -8,7 +8,7 @@ class APIAccountTests: APIManagerTest {
     let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
     func testDirectory() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         manager.getAddressDirectory()
             .sink(receiveValue: { result in
@@ -22,7 +22,7 @@ class APIAccountTests: APIManagerTest {
     }
     
     func testAvailability() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         let expectation = XCTestExpectation(description: "Not available")
         let availableExpectation = XCTestExpectation(description: "Not available")
@@ -68,7 +68,7 @@ class APIAccountTests: APIManagerTest {
     }
     
     func testDetails() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         manager.getDetails(for: "calvin")
             .sink(receiveValue: { result in
@@ -82,7 +82,7 @@ class APIAccountTests: APIManagerTest {
     }
     
     func testExpirationDate() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         
         manager.getExpirationDate(for: "calvin", with: account)
             .sink(receiveValue: { result in

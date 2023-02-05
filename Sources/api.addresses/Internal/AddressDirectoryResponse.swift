@@ -11,5 +11,5 @@ import Foundation
 struct AddressDirectoryResponse: CommonAPIResponse {
     let message: String?
     let url: String
-    let directory: [AddressName]
+    let directory: [String]
 }

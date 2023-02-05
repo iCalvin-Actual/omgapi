@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testProfile() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.getProfile("hotdogsladies").sink(receiveValue: { result in
@@ -24,7 +24,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testUpdateProfile() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.updateProfile("calvin", newContent: """

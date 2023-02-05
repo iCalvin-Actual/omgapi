@@ -10,7 +10,7 @@ protocol APITest {
 }
 
 extension APITest {
-    func receiveValue<R>(_ result: Result<R, APIManager.APIError>) -> R? {
+    func receiveValue<R>(_ result: Result<R, OMGAPI.APIError>) -> R? {
         switch result {
         case .success(let response):
             successfulResponse.fulfill()

@@ -44,7 +44,7 @@ Auth: Yes
 Body: None
 Response: BasicResponse
 */
-extension APIManager {
+extension OMGAPI {
     func getPasteBin(for address: String) -> APIResultPublisher<PasteBinResponseModel> {
         let request = requestConstructor.getPastes(from: address)
         return requestPublisher(request)

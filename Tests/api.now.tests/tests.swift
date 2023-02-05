@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testFetchNow() {
-        let manager = APIManager()
+        let manager = OMGAPI()
 //        manager.set(configuration: .developRegistered)
         
         requests.append(manager.getNow("calvin")
@@ -25,7 +25,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testUpdateNow() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.updateNow(for: "calvin", content: "Now Now, Hope I have a backup!", listed: true)
@@ -39,7 +39,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testNowGarden() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
         
         requests.append(manager.getNowGarden()

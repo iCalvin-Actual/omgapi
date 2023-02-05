@@ -14,13 +14,6 @@ open class APIRequest<B: RequestBody, R: Response> {
     var path: APIPath
     var body: B?
     
-    var requestType: B.Type {
-        B.self
-    }
-    var responseType: R.Type {
-        R.self
-    }
-    
     public init(authorization: String? = nil, method: HTTPMethod = .GET, path: APIPath, body: B? = nil) {
         self.authorization = authorization
         self.method = method

@@ -9,7 +9,7 @@ import api_core
 import Combine
 
 
-extension APIManager {
+extension OMGAPI {
     func getAccount(for credentials: APICredentials) -> ResultPublisher<Account> {
         let ownerRequest = GETAccountNameAPIRequest(
             for: credentials.emailAddress,
@@ -33,7 +33,7 @@ extension APIManager {
         let addressesPublisher = publisher(for: addressesRequest)
         
         return Publishers.Zip4(ownerPublisher, infoPublisher, settingsPublisher, addressesPublisher)
-            .map({ ownerResult, infoResult, nameResult, addressesResult -> Result<Account, APIManager.APIError> in
+            .map({ ownerResult, infoResult, nameResult, addressesResult -> Result<Account, OMGAPI.APIError> in
                 switch (ownerResult, infoResult, nameResult, addressesResult) {
                 case (.failure(let error), _, _, _):
                     // owner failure

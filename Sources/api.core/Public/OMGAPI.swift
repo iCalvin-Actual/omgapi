@@ -8,10 +8,10 @@
 import Combine
 import Foundation
 
-public typealias APIResult<T: Response> = Result<T, APIManager.APIError>
+public typealias APIResult<T: Response> = Result<T, OMGAPI.APIError>
 public typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
 
-public typealias ResultPublisher<T> = AnyPublisher<Result<T, APIManager.APIError>, Never>
+public typealias ResultPublisher<T> = AnyPublisher<Result<T, OMGAPI.APIError>, Never>
 
 public enum APIConfiguration {
     case anonymous
@@ -20,7 +20,7 @@ public enum APIConfiguration {
     static let developRegistered: APIConfiguration = .registered(email: "accounts@icalvin.dev", apiKey: "09f5b7cc519758e4809851dfc98cecf5")
 }
 
-public class APIManager {
+public class OMGAPI {
     
     public enum APIError: Error {
         case inconceivable
@@ -74,7 +74,7 @@ public class APIManager {
         urlSession.dataTaskPublisher(for: APIRequestConstructor.urlRequest(from: request))
             .map { data, response in
                 do {
-                    let result: APIResponse<R> = try APIManager.decoder.decode(APIResponse.self, from: data)
+                    let result: APIResponse<R> = try OMGAPI.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
                         return .failure(.create(from: result))
@@ -87,7 +87,7 @@ public class APIManager {
                     return .success(response)
                 }
                 catch {
-                    if let errorMessageResponse: APIResponse<BasicResponse> = try? APIManager.decoder.decode(APIResponse.self, from: data) {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? OMGAPI.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)
@@ -101,7 +101,7 @@ public class APIManager {
         urlSession.dataTaskPublisher(for: request)
             .map { data, response in
                 do {
-                    let result: APIResponse<T> = try APIManager.decoder.decode(APIResponse.self, from: data)
+                    let result: APIResponse<T> = try OMGAPI.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
                         return .failure(.create(from: result))
@@ -114,13 +114,27 @@ public class APIManager {
                     return .success(response)
                 }
                 catch {
-                    if let errorMessageResponse: APIResponse<BasicResponse> = try? APIManager.decoder.decode(APIResponse.self, from: data) {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? OMGAPI.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)
                 }
             }
             .replaceError(with: .failure(.inconceivable))
+            .eraseToAnyPublisher()
+    }
+    
+    public func getServiceInfo() -> ResultPublisher<String> {
+        let request = GETServiceInfoAPIRequest()
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    return .success(response.message ?? "")
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
             .eraseToAnyPublisher()
     }
 }

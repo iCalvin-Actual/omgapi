@@ -10,7 +10,7 @@ import Combine
 import Foundation
 
 
-extension APIManager {
+extension OMGAPI {
     func getNow(_ address: String) -> APIResultPublisher<AddressNowResponseModel> {
         let request = requestConstructor.fetchNow(for: address)
         return requestPublisher(request)

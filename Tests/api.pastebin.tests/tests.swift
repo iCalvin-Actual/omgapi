@@ -11,7 +11,7 @@ class APIManagerTests: XCTestCase, APITest {
     let responseValidation: XCTestExpectation = .init(description: "")
     
     func testGetPastes() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getPasteBin(for: "calvin").sink(receiveValue: { result in
@@ -26,7 +26,7 @@ class APIManagerTests: XCTestCase, APITest {
     func testCreatePaste() {
         let draft = DraftPaste(title: "Testing", content: "Drafted Content")
         
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.postPaste(draft: draft, with: "calvin").sink(receiveValue: { result in
@@ -39,7 +39,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testGetPaste() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.getPaste(title: "async", from: "calvin").sink(receiveValue: { result in
@@ -52,7 +52,7 @@ class APIManagerTests: XCTestCase, APITest {
     }
     
     func testDeletePaste() {
-        let manager = APIManager()
+        let manager = OMGAPI()
         manager.set(configuration: .developRegistered)
 
         requests.append(manager.deletePaste(title: "Testing", from: "calvin").sink(receiveValue: { result in

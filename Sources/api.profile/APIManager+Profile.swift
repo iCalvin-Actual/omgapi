@@ -9,10 +9,10 @@ import api_core
 import Combine
 import Foundation
 
-extension APIManager {
+extension OMGAPI {
     func getProfile(_ address: String) -> APIResultPublisher<AddressProfileResponseModel> {
         let request = requestConstructor.getAddressProfile(address)
-        return APIManager().requestPublisher(request)
+        return OMGAPI().requestPublisher(request)
     }
     
     func updateProfile(_ address: String, newContent: String, publish: Bool = false) -> APIResultPublisher<BasicResponse> {
