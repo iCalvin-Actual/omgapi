@@ -8,22 +8,29 @@
 import api_core
 import Foundation
 
-extension APIRequestConstructor {
-    public func fetchNow(for address: String) -> URLRequest {
-        request(with: urlConstructor.addressNow(address))
-    }
-    
-    public func updateNow(for address: String, content: String, listed: Bool) -> URLRequest {
-        struct Parameters: Encodable {
-            let content: String
-            let listed: Bool
-        }
-        return request(method: .POST, with: urlConstructor.addressNow(address), bodyParameters: Parameters(content: content, listed: listed))
+class GETNowGardenRequest: APIRequest<Empty, NowGardenResponse> {
+    init() {
+        super.init(
+            path: NowPath.garden
+        )
     }
 }
 
-extension APIRequestConstructor {
-    public func getNowGarden() -> URLRequest {
-        request(with: urlConstructor.nowGarden())
+class GETAddressNowRequest: APIRequest<Empty, AddressNowResponseModel> {
+    init(for address: AddressName) {
+        super.init(
+            path: NowPath.now(address: address)
+        )
+    }
+}
+
+class SETAddressNowRequest: APIRequest<Now.Draft, BasicResponse> {
+    init(_ draft: Now.Draft, for address: AddressName, authorization: String){
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: NowPath.now(address: address),
+            body: draft
+        )
     }
 }

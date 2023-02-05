@@ -10,5 +10,5 @@ import Foundation
 public protocol RequestBody: Encodable {
 }
 
-public struct EmptyRequeset: RequestBody {
+public struct Empty: RequestBody {
 }

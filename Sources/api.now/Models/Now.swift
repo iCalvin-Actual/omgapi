@@ -5,15 +5,19 @@
 //  Created by Calvin Chestnut on 2/2/23.
 //
 
+import api_core
 import Foundation
 
-struct Now: Decodable {
-    let content: String
-    let updated: String
-    let listed: String?
-    
-    var isPublic: Bool {
-        listed.boolValue
+struct Now {
+    struct Draft: RequestBody {
+        let content: String
+        let listed: Bool
     }
+    
+    let address: AddressName
+    let content: String
+    let listed: Bool
+    
+    let updated: Date
 }
 
