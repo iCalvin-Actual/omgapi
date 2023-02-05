@@ -3,126 +3,122 @@ import XCTest
 @testable import api_core
 @testable import api_statuslog
 
-class APIManagerTests: XCTestCase, APITest {
+class APIAccountTests: APIManagerTest {
     
-    var requests: [AnyCancellable] = []
-    
-    let successfulResponse: XCTestExpectation = .init(description: "")
-    let responseValidation: XCTestExpectation = .init(description: "")
+    let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
     func testGetStatusLog() {
         let manager = OMGAPI()
-
-        requests.append(manager.getCompleteStatusLog().sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
+        
+        manager.getCompleteStatusLog()
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
             }
-        }))
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
     func testGetLatestStatusLog() {
         let manager = OMGAPI()
-
-        requests.append(manager.getLatestStatusLog().sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
-            }
-        }))
-        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-    }
-    
-    func testGetStatuses() {
-        let manager = OMGAPI()
-
-        requests.append(manager.getStatuses(for: "calvin").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
-            }
-        }))
-        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-    }
-    
-    func testGetStatus() {
-        let manager = OMGAPI()
-
-        requests.append(manager.getStatus("63dd17bbb25fd", for: "calvin").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
-            }
-        }))
-        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-    }
-    
-    func testPostStatus() {
-        let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
         
-        let draft = DraftStatus(content: "Test Status", emoji: "🤔", externalUrl: "https://www.daringfireball.com")
-        
-        requests.append(manager.postStatus(draft, for: "calvin").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
+        manager.getLatestStatusLog()
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
             }
-        }))
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
-    func testEditPost() {
+    func testGetAddressStatusLog() {
         let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
         
-        let draft = DraftStatus(content: "Not Testing anymore", emoji: "🎉", externalUrl: "https://www.daringfireball.com")
-        
-        requests.append(manager.editStatus("63ddfdaf7ab49", for: "calvin", with: draft).sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
+        manager.getAddressStatusLog("calvin")
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
             }
-        }))
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
-    func testDeletePost() {
-        let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
+    func testGetAddressStatus() {
+        OMGAPI().getAddressStatus("63dd17bbb25fd", for: "calvin")
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
+            }
+            .store(in: &requests)
         
-        requests.append(manager.deleteStatus("63de04183522b", for: "calvin").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
-            }
-        }))
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
-    func testGetBio() {
-        let manager = OMGAPI()
-
-        requests.append(manager.statusLogBio(for: "calvin").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
+    func testPostAddressStatus() {
+        let draft = Status.Draft(content: "Some Status Update", emoji: "🦖", externalUrl: "https://daringfireball.com")
+        OMGAPI().postAddressStatus(draft, for: "calvin", with: account)
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
             }
-        }))
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
     
-    func testUpdateBio() {
-        let manager = OMGAPI()
-        manager.set(configuration: .developRegistered)
-
-        requests.append(manager.updateStatusLogBio(for: "calvin", newValue: "Some Bio", css: "cssString").sink(receiveValue: { result in
-            if let _ = self.receiveValue(result) {
-                // Check response
-                self.responseValidation.fulfill()
+    func testDeleteAddressStatus() {
+        OMGAPI().deleteAddressStatus("63e00cab93815", for: "calvin", with: account)
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
             }
-        }))
+            .store(in: &requests)
+        
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
+    }
+    
+    func testGetAddressBio() {
+        let manager = OMGAPI()
+        
+        manager.getStatusLogBio("calvin")
+            .sink { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
+            }
+            .store(in: &requests)
+        
+        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
+    }
+    
+    func testUpdateAddressBio() {
+        let manager = OMGAPI()
+        
+        manager.updateStatusLogBio(.init(content: "New content"), for: "calvin", with: account)
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    // Check response
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        
         wait(for: [successfulResponse, responseValidation], timeout: 5.0)
     }
 }

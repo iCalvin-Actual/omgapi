@@ -80,7 +80,7 @@ public class OMGAPI {
         return publisher(for: dataTask)
     }
     
-    public func publisher<R>(for task: URLSession.DataTaskPublisher) -> APIResultPublisher<R> {
+    private func publisher<R>(for task: URLSession.DataTaskPublisher) -> APIResultPublisher<R> {
         task
             .map { data, response in
                 do {
