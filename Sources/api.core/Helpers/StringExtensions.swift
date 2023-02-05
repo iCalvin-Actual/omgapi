@@ -12,7 +12,7 @@ public extension String {
         replacingOccurrences(of: "{email}", with: address)
     }
     func replacingAddress(_ address: String) -> String {
-        replacingOccurrences(of: "{address}", with: address)
+        replacingOccurrences(of: "{address}", with: address.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? address)
     }
 }
 

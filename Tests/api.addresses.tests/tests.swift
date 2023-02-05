@@ -3,95 +3,96 @@ import XCTest
 @testable import api_core
 @testable import api_addresses
 
-class APIManagerTests: XCTestCase, APITest {
+class APIAccountTests: APIManagerTest {
     
-    var requests: [AnyCancellable] = []
+    let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
     
-    let successfulResponse: XCTestExpectation = .init(description: "")
-    let responseValidation: XCTestExpectation = .init(description: "")
+    func testDirectory() {
+        let manager = APIManager()
+        
+        manager.getAddressDirectory()
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        
+        wait(for: [successfulResponse, responseValidation], timeout: 15.0)
+    }
     
-//    func testAddresses() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getAddresses()
-//            .sink(receiveValue: { result in
-//                if let _ = self.receiveValue(result) {
-//                    // Check response
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
-//    
-//    func testAddressAvailabilityTrue() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getAddressAvailability("icalvin")
-//            .sink(receiveValue: { result in
-//                if let response = self.receiveValue(result) {
-//                    XCTAssertEqual(response.available, true)
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
-//    
-//    func testAddressAvailabilityFalse() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getAddressAvailability("calvin")
-//            .sink(receiveValue: { result in
-//                if let response = self.receiveValue(result) {
-//                    XCTAssertEqual(response.available, false)
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
-//    
-//    func testAddressExpiration() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getAddressExpiration("calvin")
-//            .sink(receiveValue: { result in
-//                if let _ = self.receiveValue(result) {
-//                    // Check response
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
-//    
-//    func testAddressInfoAuthenticated() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getAddressInfo("calvin")
-//            .sink(receiveValue: { result in
-//                if let _ = self.receiveValue(result) {
-//                    // Check response
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
-//    
-//    func testAddressInfoUnauthenticated() {
-//        let manager = APIManager()
-//        manager.set(configuration: .developRegistered)
-//        
-//        requests.append(manager.getPublicAddressInfo("hotdogsladies")
-//            .sink(receiveValue: { result in
-//                if let _ = self.receiveValue(result) {
-//                    // Check response
-//                    self.responseValidation.fulfill()
-//                }
-//            }))
-//        wait(for: [successfulResponse, responseValidation], timeout: 5.0)
-//    }
+    func testAvailability() {
+        let manager = APIManager()
+        
+        let expectation = XCTestExpectation(description: "Not available")
+        let availableExpectation = XCTestExpectation(description: "Not available")
+        let emojiExpectation = XCTestExpectation(description: "Not available")
+        
+        manager.getAvailability(for: "calvin")
+            .sink { result in
+                switch result {
+                case .success(let available):
+                    XCTAssertEqual(available.available, false)
+                    expectation.fulfill()
+                case .failure:
+                    XCTFail("Failed")
+                }
+            }
+            .store(in: &requests)
+        
+        manager.getAvailability(for: "abcdtytyty")
+            .sink { result in
+                switch result {
+                case .success(let available):
+                    XCTAssertEqual(available.available, true)
+                    availableExpectation.fulfill()
+                case .failure:
+                    XCTFail("Failed")
+                }
+            }
+            .store(in: &requests)
+        manager.getAvailability(for: "😏")
+            .sink { result in
+                switch result {
+                case .success(let available):
+                    XCTAssertEqual(available.available, true)
+                    XCTAssertNotNil(available.punyCode)
+                    expectation.fulfill()
+                case .failure:
+                    XCTFail("Failed")
+                }
+            }
+            .store(in: &requests)
+        
+        wait(for: [expectation, availableExpectation, emojiExpectation], timeout: 15.0)
+    }
+    
+    func testDetails() {
+        let manager = APIManager()
+        
+        manager.getDetails(for: "calvin")
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        
+        wait(for: [successfulResponse, responseValidation], timeout: 15.0)
+    }
+    
+    func testExpirationDate() {
+        let manager = APIManager()
+        
+        manager.getExpirationDate(for: "calvin", with: account)
+            .sink(receiveValue: { result in
+                if let _ = self.receiveValue(result) {
+                    self.responseValidation.fulfill()
+                }
+            })
+            .store(in: &requests)
+        
+        wait(for: [successfulResponse, responseValidation], timeout: 15.0)
+    }
 }
 

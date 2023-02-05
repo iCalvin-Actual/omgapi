@@ -8,31 +8,32 @@
 import api_core
 import Foundation
 
-extension APIRequestConstructor {
-    func accountAddressesRequest() -> URLRequest? {
-        guard let emailAddress = emailAddress else {
-            return nil
-        }
-        return request(with: urlConstructor.accountAddresses(emailAddress: emailAddress))
+class GETAddressDirectoryRequest: APIRequest<EmptyRequeset, AddressDirectoryResponse> {
+    init() {
+        super.init(path: AddressPath.directory)
     }
 }
 
-extension APIRequestConstructor {
-    func addressInfoRequest(_ address: String) -> URLRequest {
-        request(with: urlConstructor.addressInfo(address: address))
+class GETAddressAvailabilityRequest: APIRequest<EmptyRequeset, AddressAvailabilityResponse> {
+    init(for address: String) {
+        super.init(path: AddressPath.availability(address))
     }
 }
 
-extension APIRequestConstructor {
-    func addressAvailabilityRequest(_ address: String) -> URLRequest {
-        request(with: urlConstructor.addressAvailability(address: address))
+class GETAddressInfoRequest: APIRequest<EmptyRequeset, AddressInfoResponse> {
+    init(for address: String, authorization: String? = nil) {
+        super.init(
+            authorization: authorization,
+            path: AddressPath.info(address)
+        )
     }
 }
 
-extension APIRequestConstructor {
-    func addressExpirationRequest(_ address: String) -> URLRequest {
-        request(with: urlConstructor.addressExpiration(address: address))
+class GETAddressExpirationRequest: APIRequest<EmptyRequeset, AddressInfoResponse.Expiration> {
+    init(for address: String, authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AddressPath.expiration(address)
+        )
     }
 }
-
-

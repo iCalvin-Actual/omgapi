@@ -8,28 +8,27 @@
 import api_core
 import Foundation
 
-enum AddressPath {
-}
-
-extension APIURLConstructor {
-    private var addresses: String           { "account/{email}/addresses/" }
-    private var addressAvailability: String { "address/{address}/availability/" }
-    private var addressExpiration: String   { "address/{address}/expiration/" }
-    private var addressInfo: String         { "address/{address}/info/"}
+enum AddressPath: APIPath {
+    private static let addressDirectory = "directory/"
+    private static let addressAvailability = "address/{address}/availability/"
+    private static let addressExpiration = "address/{address}/expiration/"
+    private static let addressInfo = "address/{address}/info/"
     
-    public func accountAddresses(emailAddress: String) -> URL {
-        URL(string: replacingEmail(emailAddress, in: addresses), relativeTo: baseURL)!
-    }
+    case directory
+    case availability   (_ address: String)
+    case expiration     (_ address: String)
+    case info           (_ address: String)
     
-    public func addressAvailability(address: String) -> URL {
-        URL(string: replacingAddress(address, in: addressAvailability), relativeTo: baseURL)!
-    }
-    
-    public func addressExpiration(address: String) -> URL {
-        URL(string: replacingAddress(address, in: addressExpiration), relativeTo: baseURL)!
-    }
-    
-    public func addressInfo(address: String) -> URL {
-        URL(string: replacingAddress(address, in: addressInfo), relativeTo: baseURL)!
+    var string: String {
+        switch self {
+        case .directory:
+            return Self.addressDirectory
+        case .availability(let address):
+            return Self.addressAvailability.replacingAddress(address)
+        case .expiration(let address):
+            return Self.addressExpiration.replacingAddress(address)
+        case .info(let address):
+            return Self.addressInfo.replacingAddress(address)
+        }
     }
 }
