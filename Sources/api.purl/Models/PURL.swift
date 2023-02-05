@@ -8,22 +8,16 @@
 import api_core
 import Foundation
 
-struct AccountPURL: Response {
-    let name: String
-    let url: String
-    let counter: String?
-    let listed: String?
-    
-    var isPublic: Bool {
-        listed.boolValue
+struct PURL {
+    struct Draft: RequestBody {
+        let name: String
+        let url: String
     }
-}
-
-struct DraftPURL: Encodable {
+    
+    let address: AddressName
     let name: String
     let url: String
+    
+    let counter: Int
+    let listed: Bool
 }
-
-typealias AccountPURLs = [AccountPURL]
-
-extension AccountPURLs: Response { }

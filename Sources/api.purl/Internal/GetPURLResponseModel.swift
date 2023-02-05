@@ -10,12 +10,12 @@ import Foundation
 
 struct GetPURLsResponseModel: CommonAPIResponse {
     let message: String?
-    let purls: [AccountPURL]
+    let purls: AddressPURLsResponse
 }
 
 struct GetPURLResponseModel: CommonAPIResponse {
     let message: String?
-    let purl: AccountPURL
+    let purl: AddressPURLResponse
 }
 
 struct UpdatePURLResponseModel: CommonAPIResponse {

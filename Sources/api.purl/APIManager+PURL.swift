@@ -9,67 +9,61 @@ import api_core
 import Combine
 import Foundation
 
-/*
- GET
- Auth: Yes
- Body: None
- Response: [
-   message: String?
-   purls: [AddressPURL]
- ]
-*/
-    /*
-     POST
-     Auth: Yes
-     Body: [
-       name: String
-       url: String
-     ]
-     Response: [
-       message: String?
-       name: String
-       url: String
-     ]
-    */
-    /*
-     GET
-     Auth: Yes
-     Body: None
-     Response: [
-       message: String?
-       purl: AddressPurl
-     ]
-     
-     DELETE
-     Auth: Yes
-     Body: None
-     Response: BasicResponse
-    */
-
 extension OMGAPI {
-    
-    func getPURLs(from address: String) -> APIResultPublisher<GetPURLsResponseModel> {
-        let request = requestConstructor.getPurls(for: address)
-        return requestPublisher(request)
+    func getPURLs(for address: AddressName) -> ResultPublisher<[PURL]> {
+        let request = GETAddressPURLs(address)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    return .success(response.purls.map({ PURL(address: address, name: $0.name, url: $0.url, counter: Int($0.counter ?? "") ?? 0, listed: $0.isPublic) }))
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func createPurl(for address: String, draft: DraftPURL) -> APIResultPublisher<AccountPURL> {
-        let request = requestConstructor.createPurl(name: draft.name, url: draft.url, for: address)
-        return requestPublisher(request)
+    func getPURL(_ purl: String, for address: AddressName, credential: APICredentials) -> ResultPublisher<PURL> {
+        let request = GETAddressPURL(purl, address: address, authorization: credential.authKey)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    let purl = PURL(address: address, name: response.purl.name, url: response.purl.url, counter: Int(response.purl.counter ?? "") ?? 0, listed: response.purl.isPublic)
+                    return .success(purl)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func getPurl(purl: String, for address: String) -> APIResultPublisher<GetPURLResponseModel> {
-        let request = requestConstructor.getPurl(purl: purl, from: address)
-        return requestPublisher(request)
+    func savePurl(_ draft: PURL.Draft, for address: AddressName, credential: APICredentials) -> ResultPublisher<PURL> {
+        let request = SETAddressPURL(draft, address: address, authorization: credential.authKey)
+        return publisher(for: request)
+            .flatMap({ result in
+                switch result {
+                case .success(let response):
+                    return self.getPURL(response.name, for: address, credential: credential)
+                case .failure(let error):
+                    return Just(.failure(error)).eraseToAnyPublisher()
+                }
+            })
+            .eraseToAnyPublisher()
     }
     
-    func updatePurl(purl: String, for address: String, with draft: DraftPURL) -> APIResultPublisher<UpdatePURLResponseModel> {
-        let request = requestConstructor.updatePurl(purl: purl, name: draft.name, url: draft.url, from: address)
-        return requestPublisher(request)
-    }
-    
-    func deletePurl(purl: String, from address: String) -> APIResultPublisher<BasicResponse> {
-        let request = requestConstructor.deletePurl(purl: purl, from: address)
-        return requestPublisher(request)
+    func deletePurl(_ title: String, from address: AddressName, credential: APICredentials) -> ResultPublisher<None> {
+        let request = DELETEAddressPURL(title, address: address, authorization: credential.authKey)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success:
+                    return .success(None.instance)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }
