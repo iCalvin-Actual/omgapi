@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+public extension OMGAPI {
     func getNowGarden() -> ResultPublisher<NowGarden> {
         let request = GETNowGardenRequest()
         return publisher(for: request)

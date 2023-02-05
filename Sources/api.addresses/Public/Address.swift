@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-struct Address {
+public struct Address {
     let name: AddressName
     let registered: TimeStamp
     let expired: Bool

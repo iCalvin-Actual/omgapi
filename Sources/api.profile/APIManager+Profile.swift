@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+public extension OMGAPI {
     
     func getPublicProfile(_ address: AddressName) -> ResultPublisher<PublicProfile> {
         let request = GETAddressProfile(address)

@@ -8,8 +8,8 @@
 import api_core
 import Foundation
 
-struct Now {
-    struct Draft: RequestBody {
+public struct Now {
+    public struct Draft: RequestBody {
         let content: String
         let listed: Bool
     }

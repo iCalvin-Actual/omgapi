@@ -51,29 +51,5 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.statuslog",
                dependencies: ["api.core"]),
-        .testTarget(
-            name: "api.account.tests",
-            dependencies: ["api.account"]),
-        .testTarget(
-            name: "api.addresses.tests",
-            dependencies: ["api.addresses"]),
-        .testTarget(
-            name: "api.profile.tests",
-            dependencies: ["api.profile"]),
-        .testTarget(
-            name: "api.now.tests",
-            dependencies: ["api.now"]),
-        .testTarget(
-            name: "api.purl.tests",
-            dependencies: ["api.purl"]),
-        .testTarget(
-            name: "api.pastebin.tests",
-            dependencies: ["api.pastebin"]),
-        .testTarget(
-            name: "api.weblog.tests",
-            dependencies: ["api.weblog"]),
-        .testTarget(
-            name: "api.statuslog.tests",
-            dependencies: ["api.statuslog"]),
     ]
 )

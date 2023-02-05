@@ -8,14 +8,14 @@
 import api_core
 import Foundation
 
-struct Status {
-    struct Draft: RequestBody {
+public struct Status {
+    public struct Draft: RequestBody {
         let id: String?
         let content: String
         let emoji: String?
         let externalUrl: String?
         
-        init(id: String? = nil, content: String, emoji: String? = nil, externalUrl: String? = nil) {
+        public init(id: String? = nil, content: String, emoji: String? = nil, externalUrl: String? = nil) {
             self.id = id
             self.content = content
             self.emoji = emoji
@@ -23,11 +23,11 @@ struct Status {
         }
     }
     
-    let id: String
-    let address: AddressName
-    let created: Date
+    public let id: String
+    public let address: AddressName
+    public let created: Date
     
-    let content: String
-    let emoji: String?
-    let externalURL: URL?
+    public let content: String
+    public let emoji: String?
+    public let externalURL: URL?
 }

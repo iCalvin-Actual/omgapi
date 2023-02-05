@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-struct Profile {
+public struct Profile {
     let address: String
     
     let content: String
@@ -18,8 +18,8 @@ struct Profile {
     let css: String?
 }
 
-struct PublicProfile {
-    struct Draft: RequestBody {
+public struct PublicProfile {
+    public struct Draft: RequestBody {
         let content: String
     }
     
@@ -27,5 +27,6 @@ struct PublicProfile {
     let content: String?
 }
 
-typealias ProfilePhoto = Data
+public typealias ProfilePhoto = Data
+
 extension ProfilePhoto: RequestBody { }

@@ -8,8 +8,8 @@
 import api_core
 import Foundation
 
-struct PURL {
-    struct Draft: RequestBody {
+public struct PURL {
+    public struct Draft: RequestBody {
         let name: String
         let url: String
     }

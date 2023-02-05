@@ -8,10 +8,10 @@
 import api_core
 import Foundation
 
-struct NowGardenEntry {
+public struct NowGardenEntry {
     let address: AddressName
     let url: String
     let updated: TimeStamp
 }
 
-typealias NowGarden = [NowGardenEntry]
+public typealias NowGarden = [NowGardenEntry]

@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+public extension OMGAPI {
     func getAddressDirectory() -> ResultPublisher<[AddressName]> {
         let directoryRequest = GETAddressDirectoryRequest()
         return publisher(for: directoryRequest)

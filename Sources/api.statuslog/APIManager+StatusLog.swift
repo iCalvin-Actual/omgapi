@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+public extension OMGAPI {
     func getCompleteStatusLog() -> ResultPublisher<PublicLog> {
         let request = GETCompleteStatusLog()
         return publisher(for: request)
@@ -84,7 +84,7 @@ extension OMGAPI {
             .map { result in
                 switch result {
                 case .success(let response):
-                    let status = StatusLog(address: address, bio: response, statuses: logs)
+                    let status = StatusLog(address: address, bio: .init(content: response), statuses: logs)
                     return .success(status)
                 case .failure(let error):
                     return .failure(error)

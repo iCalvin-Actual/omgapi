@@ -9,7 +9,7 @@ import api_core
 import Combine
 
 
-extension OMGAPI {
+public extension OMGAPI {
     func getAccount(for credentials: APICredentials) -> ResultPublisher<Account> {
         let ownerRequest = GETAccountNameAPIRequest(
             for: credentials.emailAddress,

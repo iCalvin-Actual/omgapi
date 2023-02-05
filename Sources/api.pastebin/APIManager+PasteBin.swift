@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+public extension OMGAPI {
     func getPasteBin(for address: AddressName) -> ResultPublisher<PasteBin> {
         let request = GETAddressPasteBin(address)
         return publisher(for: request)
