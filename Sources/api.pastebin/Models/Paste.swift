@@ -8,18 +8,19 @@
 import api_core
 import Foundation
 
-struct Paste: Response {
-    let title: String
-    let content: String
-    let modifiedOn: String?
-    let listed: String?
-    
-    var isPublic: Bool {
-        listed.boolValue
+
+public struct Paste {
+    public struct Draft: RequestBody {
+        let title: String
+        let content: String
     }
+    
+    let title: String
+    let author: String
+    let content: String
+    let modifiedOn: Date
+    let listed: Bool
+    
 }
 
-struct DraftPaste: Encodable {
-    let title: String
-    let content: String
-}
+public typealias PasteBin = [Paste]

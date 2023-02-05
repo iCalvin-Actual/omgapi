@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-class GETAccountInfoAPIRequest: APIRequest<Empty, AccountInfo> {
+class GETAccountInfoAPIRequest: APIRequest<None, AccountInfo> {
     init(for emailAddress: String, authorization: String) {
         super.init(
             authorization: authorization,
@@ -17,7 +17,7 @@ class GETAccountInfoAPIRequest: APIRequest<Empty, AccountInfo> {
     }
 }
 
-class GETAccountNameAPIRequest: APIRequest<Empty, AccountOwner> {
+class GETAccountNameAPIRequest: APIRequest<None, AccountOwner> {
     init(for emailAddress: String, authorization: String) {
         super.init(
             authorization: authorization,
@@ -40,7 +40,7 @@ class SETAccountNameAPIRequest: APIRequest<SETAccountNameAPIRequest.Parameters, 
     }
 }
 
-class GETAccountSettingsAPIRequest: APIRequest<Empty, AccountSettings> {
+class GETAccountSettingsAPIRequest: APIRequest<None, AccountSettings> {
     init(for emailAddress: String, authorization: String) {
         super.init(
             authorization: authorization,
@@ -63,7 +63,7 @@ class SETAccountSettingsAPIRequest: APIRequest<SETAccountSettingsAPIRequest.Para
     }
 }
 
-class GETAddressesAPIRequest: APIRequest<Empty, AddressCollection> {
+class GETAddressesAPIRequest: APIRequest<None, AddressCollection> {
     init(for emailAddress: String, authorization: String) {
         super.init(
             authorization: authorization,

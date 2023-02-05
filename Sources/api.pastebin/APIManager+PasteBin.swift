@@ -9,59 +9,62 @@ import api_core
 import Combine
 import Foundation
 
-/*
- GET
- Auth: Yes/No
- Body: None
- Response: [
- message: String?
- pastebin: [AddressPaste]
- ]
- 
- POST
- Auth: Yes
- Body: [
- title: String
- content: String
- ]
- Response: [
- message: String?
- title: String
- ]
- */
-
-/*
-GET
-Auth: No
-Body: None
-Resposne: [
-message: String?
-paste: AddressPsate
-]
-
-DELETE
-Auth: Yes
-Body: None
-Response: BasicResponse
-*/
 extension OMGAPI {
-    func getPasteBin(for address: String) -> APIResultPublisher<PasteBinResponseModel> {
-        let request = requestConstructor.getPastes(from: address)
-        return requestPublisher(request)
+    func getPasteBin(for address: AddressName) -> ResultPublisher<PasteBin> {
+        let request = GETAddressPasteBin(address)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    return .success(response.pastebin.map({ Paste(title: $0.title, author: address, content: $0.content, modifiedOn: $0.updated, listed: $0.listed.boolValue) }))
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func postPaste(draft: DraftPaste, with address: String) -> APIResultPublisher<NewPasteResponseModel> {
-        let request = requestConstructor.newPaste(from: address, title: draft.title, content: draft.content)
-        return requestPublisher(request)
+    func getPaste(title: String, from address: AddressName) -> ResultPublisher<Paste> {
+        let request = GETAddressPaste(title, from: address)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success(let response):
+                    let paste = Paste(title: response.paste.title, author: address, content: response.paste.content, modifiedOn: response.paste.updated, listed: response.paste.listed.boolValue)
+                    return .success(paste)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func getPaste(title: String, from address: String) -> APIResultPublisher<PasteResponseModel> {
-        let request = requestConstructor.getPaste(title: title, from: address)
-        return requestPublisher(request)
+    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredentials) -> ResultPublisher<Paste> {
+        let request = SETAddressPaste(draft: draft, from: address, authorization: credential.authKey)
+        return publisher(for: request)
+            .flatMap { result in
+                switch result {
+                case .success(let response):
+                    return self.getPaste(title: response.title, from: address)
+                case .failure(let error):
+                    return Just(.failure(error))
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
     }
     
-    func deletePaste(title: String, from address: String) -> APIResultPublisher<BasicResponse> {
-        let request = requestConstructor.deletePaste(title: title, from: address)
-        return requestPublisher(request)
+    func deletePaste(_ title: String, from address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
+        let request = DELETEAddressPaste(title, from: address, authorization: credential.authKey)
+        return publisher(for: request)
+            .map { result in
+                switch result {
+                case .success:
+                    return .success(None.instance)
+                case .failure(let error):
+                    return .failure(error)
+                }
+            }
+            .eraseToAnyPublisher()
     }
 }

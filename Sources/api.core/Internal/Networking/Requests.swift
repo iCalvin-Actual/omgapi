@@ -8,7 +8,7 @@
 import Foundation
 
 
-class GETServiceInfoAPIRequest: APIRequest<EmptyRequeset, ServiceInfoResponse> {
+class GETServiceInfoAPIRequest: APIRequest<None, ServiceInfoResponse> {
     init() {
         super.init(path: CommonPath.service)
     }

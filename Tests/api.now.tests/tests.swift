@@ -24,21 +24,22 @@ class APINowTests: APIManagerTest {
     
     func testUpdateNow() {
         let manager = OMGAPI()
+        let draft = Now.Draft(content: "Some New Content", listed: false)
+        var existingNow: String?
         
-        manager.set(configuration: .developRegistered)
+        manager.updateNow(draft, for: "calvin", credentials: account)
             .flatMap { result in
                 switch result {
                 case .success(let response):
                     existingNow = response.content
                     return manager.updateNow(draft, for: "calvin", credentials: self.account)
                 case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
+                    return AnyPublisher(Just(.failure(error)))
                 }
             }
-            .flatMap({ _ in
-                manager.updateNow(.init(content: existingNow ?? "", listed: true), for: "calvin", credentials: self.account)
-                    .eraseToAnyPublisher()
+            .flatMap({ _ -> ResultPublisher<Now> in
+                let newDraft = Now.Draft(content: existingNow ?? "", listed: true)
+                return manager.updateNow(newDraft, for: "calvin", credentials: self.account)
             })
             .sink(receiveValue: { result in
                 if case .success = result {

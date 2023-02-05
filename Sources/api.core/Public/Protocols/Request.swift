@@ -10,5 +10,8 @@ import Foundation
 public protocol RequestBody: Encodable {
 }
 
-public struct Empty: RequestBody {
+public struct None: RequestBody, Response {
+    public static let instance: None = { None() }()
+    
+    private init() { }
 }

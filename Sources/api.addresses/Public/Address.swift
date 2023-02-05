@@ -14,5 +14,3 @@ struct Address {
     let expired: Bool
     let verified: Bool
 }
-
-typealias AddressName = String

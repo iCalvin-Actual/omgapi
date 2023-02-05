@@ -8,19 +8,19 @@
 import api_core
 import Foundation
 
-class GETAddressDirectoryRequest: APIRequest<Empty, AddressDirectoryResponse> {
+class GETAddressDirectoryRequest: APIRequest<None, AddressDirectoryResponse> {
     init() {
         super.init(path: AddressPath.directory)
     }
 }
 
-class GETAddressAvailabilityRequest: APIRequest<Empty, AddressAvailabilityResponse> {
+class GETAddressAvailabilityRequest: APIRequest<None, AddressAvailabilityResponse> {
     init(for address: String) {
         super.init(path: AddressPath.availability(address))
     }
 }
 
-class GETAddressInfoRequest: APIRequest<Empty, AddressInfoResponse> {
+class GETAddressInfoRequest: APIRequest<None, AddressInfoResponse> {
     init(for address: String, authorization: String? = nil) {
         super.init(
             authorization: authorization,
@@ -29,7 +29,7 @@ class GETAddressInfoRequest: APIRequest<Empty, AddressInfoResponse> {
     }
 }
 
-class GETAddressExpirationRequest: APIRequest<Empty, AddressInfoResponse.Expiration> {
+class GETAddressExpirationRequest: APIRequest<None, AddressInfoResponse.Expiration> {
     init(for address: String, authorization: String) {
         super.init(
             authorization: authorization,

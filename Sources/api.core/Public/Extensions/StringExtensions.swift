@@ -36,3 +36,5 @@ public extension String {
         }
     }
 }
+
+public typealias AddressName = String

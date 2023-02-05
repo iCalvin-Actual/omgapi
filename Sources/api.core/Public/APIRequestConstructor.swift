@@ -24,7 +24,7 @@ public class APIRequestConstructor {
             request.addValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
         }
         
-        if let bodyParameters = apiRequest.body, O.Type.self != Empty.Type.self {
+        if let bodyParameters = apiRequest.body, O.Type.self != None.Type.self {
             do {
                 let bodyData = try Self.encoder.encode(bodyParameters)
                 request.httpBody = bodyData

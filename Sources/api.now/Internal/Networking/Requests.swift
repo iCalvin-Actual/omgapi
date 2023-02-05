@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-class GETNowGardenRequest: APIRequest<Empty, NowGardenResponse> {
+class GETNowGardenRequest: APIRequest<None, NowGardenResponse> {
     init() {
         super.init(
             path: NowPath.garden
@@ -16,7 +16,7 @@ class GETNowGardenRequest: APIRequest<Empty, NowGardenResponse> {
     }
 }
 
-class GETAddressNowRequest: APIRequest<Empty, AddressNowResponseModel> {
+class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
     init(for address: AddressName) {
         super.init(
             path: NowPath.now(address: address)
