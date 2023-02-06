@@ -9,13 +9,13 @@ import api_core
 import Foundation
 
 public struct Profile {
-    let address: String
+    public let address: String
     
-    let content: String
-    let theme: String
+    public let content: String
+    public let theme: String
     
-    let head: String?
-    let css: String?
+    public let head: String?
+    public let css: String?
 }
 
 public struct PublicProfile {
@@ -23,8 +23,8 @@ public struct PublicProfile {
         let content: String
     }
     
-    let address: String
-    let content: String?
+    public let address: String
+    public let content: String?
 }
 
 public typealias ProfilePhoto = Data
