@@ -8,12 +8,12 @@
 import Combine
 import Foundation
 
-public typealias APIResult<T: Response> = Result<T, OMGAPI.APIError>
+public typealias APIResult<T: Response> = Result<T, omg_api.APIError>
 public typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
 
-public typealias ResultPublisher<T> = AnyPublisher<Result<T, OMGAPI.APIError>, Never>
+public typealias ResultPublisher<T> = AnyPublisher<Result<T, omg_api.APIError>, Never>
 
-public class OMGAPI {
+public class omg_api {
     
     public enum APIError: Error {
         case inconceivable
@@ -61,7 +61,7 @@ public class OMGAPI {
     public init() {
     }
     
-    func apiResponse<B, R>(for request: APIRequest<B, R>) async throws -> R {
+    public func apiResponse<B, R>(for request: APIRequest<B, R>) async throws -> R {
         let urlRequest: URLRequest
         switch request.multipartBody {
         case true:
@@ -101,7 +101,7 @@ public class OMGAPI {
         task
             .map { data, response in
                 do {
-                    let result: APIResponse<R> = try OMGAPI.decoder.decode(APIResponse.self, from: data)
+                    let result: APIResponse<R> = try omg_api.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
                         return .failure(.create(from: result))
@@ -114,7 +114,7 @@ public class OMGAPI {
                     return .success(response)
                 }
                 catch {
-                    if let errorMessageResponse: APIResponse<BasicResponse> = try? OMGAPI.decoder.decode(APIResponse.self, from: data) {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)
@@ -128,7 +128,7 @@ public class OMGAPI {
         urlSession.dataTaskPublisher(for: request)
             .map { data, response in
                 do {
-                    let result: APIResponse<T> = try OMGAPI.decoder.decode(APIResponse.self, from: data)
+                    let result: APIResponse<T> = try omg_api.decoder.decode(APIResponse.self, from: data)
                     
                     guard result.request.success else {
                         return .failure(.create(from: result))
@@ -141,7 +141,7 @@ public class OMGAPI {
                     return .success(response)
                 }
                 catch {
-                    if let errorMessageResponse: APIResponse<BasicResponse> = try? OMGAPI.decoder.decode(APIResponse.self, from: data) {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)

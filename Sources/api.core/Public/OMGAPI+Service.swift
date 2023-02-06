@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension OMGAPI {
+extension omg_api {
     public func serviceInfo() async throws -> ServiceInfo {
         let request = GETServiceInfoAPIRequest()
         let response = try await apiResponse(for: request)

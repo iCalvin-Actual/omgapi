@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-public extension OMGAPI {
+public extension omg_api {
     func getPURLs(for address: AddressName) -> ResultPublisher<[PURL]> {
         let request = GETAddressPURLs(address)
         return publisher(for: request)

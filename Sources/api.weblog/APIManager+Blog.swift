@@ -9,7 +9,7 @@ import api_core
 import Combine
 import Foundation
 
-extension OMGAPI {
+extension omg_api {
 //    public func blogConfiguration(for address: String) -> APIResultPublisher<BlogConfigurationResponse> {
 //        let request = requestConstructor.blogConfiguration(for: address)
 //        return requestPublisher(request)

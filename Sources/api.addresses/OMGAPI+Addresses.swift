@@ -9,63 +9,38 @@ import api_core
 import Combine
 import Foundation
 
-public extension OMGAPI {
-    func getAddressDirectory() -> ResultPublisher<[AddressName]> {
-        let directoryRequest = GETAddressDirectoryRequest()
-        return publisher(for: directoryRequest)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(response.directory)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+public extension omg_api {
+    func addressDirectory() async throws -> [AddressName] {
+        let request = GETAddressDirectoryRequest()
+        let response = try await apiResponse(for: request)
+        return response.directory
     }
     
-    func getAvailability(for address: String) -> ResultPublisher<Availability> {
+    func availability(_ address: AddressName) async throws -> Availability {
         let request = GETAddressAvailabilityRequest(for: address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let availability = Availability(address: response.address, available: response.available, punyCode: response.punyCode)
-                    return .success(availability)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        return Availability(
+            address: response.address,
+            available: response.available,
+            punyCode: response.punyCode
+        )
     }
     
-    func getDetails(for address: String) -> ResultPublisher<Address> {
+    func details(_ address: AddressName) async throws -> Address {
         let request = GETAddressInfoRequest(for: address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let address = Address(name: response.address, registered: response.registration, expired: response.expiration.expired, verified: response.verification.verified)
-                    return .success(address)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        return Address(
+            name: response.address,
+            registered: response.registration,
+            expired: response.expiration.expired,
+            verified: response.verification.verified
+        )
     }
     
-    func getExpirationDate(for address: String, with credentials: APICredentials) -> ResultPublisher<Date> {
+    func expirationDate(_ address: AddressName, credentials: APICredentials) async throws -> Date {
         let request = GETAddressInfoRequest(for: address, authorization: credentials.authKey)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let date = Date(timeIntervalSince1970: Double(response.expiration.unixEpochTime ?? "") ?? 0)
-                    return .success(date)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        let date = Date(timeIntervalSince1970: Double(response.expiration.unixEpochTime ?? "") ?? 0)
+        return date
     }
 }
