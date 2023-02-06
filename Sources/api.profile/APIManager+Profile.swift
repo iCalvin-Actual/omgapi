@@ -11,77 +11,45 @@ import Foundation
 
 public extension omg_api {
     
-    func getPublicProfile(_ address: AddressName) -> ResultPublisher<PublicProfile> {
+    func publicProfile(_ address: AddressName) async throws -> PublicProfile {
         let request = GETAddressProfile(address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let profile = PublicProfile(address: address, content: response.html)
-                    return .success(profile)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        return PublicProfile(
+            address: address,
+            content: response.html
+        )
     }
     
-    func getProfile(_ address: AddressName, with credential: APICredentials) -> ResultPublisher<Profile> {
-        let request = GETAddressProfile(address, with: credential.authKey)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let profile = Profile(address: address, content: response.content ?? "", theme: response.theme ?? "", head: response.head, css: response.css)
-                    return .success(profile)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+    func profile(_ address: AddressName, with credential: APICredentials) async throws -> Profile {
+        let request = GETAddressProfile(address)
+        let response = try await apiResponse(for: request)
+        return Profile(
+            address: address,
+            content: response.content ?? "",
+            theme: response.theme ?? "",
+            head: response.head,
+            css: response.css
+        )
     }
     
-    func updateProfile(_ draft: PublicProfile.Draft, for address: AddressName, with credential: APICredentials) -> ResultPublisher<Profile> {
+    func save(_ draft: PublicProfile.Draft, for address: AddressName, credential: APICredentials) async throws -> PublicProfile {
         let request = SETAddressProfile(draft, for: address, with: credential.authKey)
-        return publisher(for: request)
-            .flatMap { result in
-                switch result {
-                case .success:
-                    return self.getProfile(address, with: credential)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
+        let _ = try await apiResponse(for: request)
+        return try await publicProfile(address)
     }
     
-    func getAddressPhoto(_ address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
-        let request = GETAddressProfile(address, with: credential.authKey)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(None.instance)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+    func photo(for address: AddressName) async throws -> ProfilePhoto? {
+        let profile = try await publicProfile(address)
+        guard profile.content?.contains("SPECIFIC STRING") ?? false else {
+            return nil
+        }
+        // Pull the URL from the HTML content
+        // Fetch the image data
+        return nil
     }
     
-    func updateAddressPhoto(_ photo: ProfilePhoto, for address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
+    func save(_ photo: ProfilePhoto, for address: AddressName, credential: APICredentials) async throws {
         let request = SETAddressPhoto(photo, for: address, with: credential.authKey)
-        return publisher(for: request)
-            .flatMap { result in
-                switch result {
-                case .success(let response):
-                    return self.getAddressPhoto(address, with: credential)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
+        let _ = try await apiResponse(for: request)
     }
 }

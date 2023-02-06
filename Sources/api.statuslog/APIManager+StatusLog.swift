@@ -11,191 +11,95 @@ import Foundation
 
 public extension omg_api {
     
-    func getCompleteStatusLog() async throws -> PublicLog {
+    func completeStatusLog() async throws -> PublicLog {
         let request = GETCompleteStatusLog()
-        
-        return try await withCheckedThrowingContinuation({ continuation in
-            getLatestStatusLog()
-                .sink { result in
-                    switch result {
-                    case .success(let log):
-                        continuation.resume(returning: log)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-                .store(in: &self.requests)
+        let response = try await apiResponse(for: request)
+        return PublicLog(statuses: response.statuses.map { status in
+            Status(
+                id: status.id,
+                address: status.address,
+                created: status.createdDate,
+                content: status.content,
+                emoji: status.emoji,
+                externalURL: status.externalURL
+            )
         })
     }
     
-    func handle<B, R>(request: APIRequest<B, R>) async throws -> R {
-        return try await withCheckedThrowingContinuation({ continuation in
-            self.publisher(for: request)
-                .sink { result in
-                    switch result {
-                    case .success(let log):
-                        continuation.resume(returning: log)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-                .store(in: &self.requests)
-        })
-    }
-    
-    func getCompleteStatusLog() -> ResultPublisher<PublicLog> {
-        let request = GETCompleteStatusLog()
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(PublicLog(statuses: response.statuses.map({ status in
-                        Status(
-                            id: status.id,
-                            address: status.address,
-                            created: status.createdDate,
-                            content: status.content,
-                            emoji: status.emoji,
-                            externalURL: status.externalURL
-                        )
-                    })))
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func getLatestStatusLog() -> ResultPublisher<PublicLog> {
+    func latestStatusLog() async throws -> PublicLog {
         let request = GETLatestStatusLogs()
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(PublicLog(statuses: response.statuses.map({ status in
-                        Status(
-                            id: status.id,
-                            address: status.address,
-                            created: status.createdDate,
-                            content: status.content,
-                            emoji: status.emoji,
-                            externalURL: status.externalURL
-                        )
-                    })))
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        return PublicLog(statuses: response.statuses.map { status in
+            Status(
+                id: status.id,
+                address: status.address,
+                created: status.createdDate,
+                content: status.content,
+                emoji: status.emoji,
+                externalURL: status.externalURL
+            )
+        })
     }
     
-    func getAddressStatusLog(_ address: AddressName) -> ResultPublisher<StatusLog> {
-        let logRequest = GETAddressStatuses(address)
+    func statusLog(from address: AddressName) async throws -> StatusLog {
+        async let logs = try logs(for: address)
+        async let bio = try bio(for: address)
         
-        var logs: [Status] = []
-        
-        return publisher(for: logRequest)
-            .flatMap({ result in
-                switch result {
-                case .success(let response):
-                    logs = response.statuses.map({ status in
-                        Status(
-                            id: status.id,
-                            address: status.address,
-                            created: status.createdDate,
-                            content: status.content,
-                            emoji: status.emoji,
-                            externalURL: status.externalURL
-                        )
-                    })
-                    return self.getStatusLogBio(address)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            })
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let status = StatusLog(address: address, bio: .init(content: response), statuses: logs)
-                    return .success(status)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        return await StatusLog(
+            address: address,
+            bio: try bio,
+            statuses: try logs
+        )
     }
     
-    func getAddressStatus(_ status: String, for address: AddressName) -> ResultPublisher<Status> {
-        let request = GETAddressStatus(status, from: address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let status = Status(id: response.status.id, address: response.status.address, created: response.status.createdDate, content: response.status.content, emoji: response.status.emoji, externalURL: response.status.externalURL)
-                    return .success(status)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+    func logs(for address: String) async throws -> [Status] {
+        let request = GETAddressStatuses(address)
+        let response = try await apiResponse(for: request)
+        return response.statuses.map { status in
+            Status(
+                id: status.id,
+                address: status.address,
+                created: status.createdDate,
+                content: status.content,
+                emoji: status.emoji,
+                externalURL: status.externalURL
+            )
+        }
     }
     
-    func postAddressStatus(_ draft: Status.Draft, for address: AddressName, with credentials: APICredentials) -> ResultPublisher<Status> {
-        let request = SETAddressStatus(draft, from: address, with: credentials.authKey)
-        return publisher(for: request)
-            .flatMap { result in
-                switch result {
-                case .success(let response):
-                    return self.getAddressStatus(response.id, for: address)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func deleteAddressStatus(_ status: String, for address: AddressName, with credentials: APICredentials) -> ResultPublisher<None> {
-        let request = DELETEAddressStatus(status, from: address, with: credentials.authKey)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success:
-                    return .success(None.instance)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func getStatusLogBio(_ address: String) -> ResultPublisher<String> {
+    func bio(for address: String) async throws -> StatusLog.Bio {
         let request = GETAddressStatusBio(address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(response.bio ?? "")
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        return .init(content: response.bio ?? "")
     }
     
-    func updateStatusLogBio(_ draft: StatusLog.Bio.Draft, for address: AddressName, with credentials: APICredentials) -> ResultPublisher<StatusLog> {
-        let request = SETAddressStatusBio(draft, for: address, authorization: credentials.authKey)
-        return publisher(for: request)
-            .flatMap { result in
-                switch result {
-                case .success:
-                    return self.getAddressStatusLog(address)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
+    func save(draft: StatusLog.Bio.Draft, for address: AddressName, credential: APICredentials) async throws -> StatusLog.Bio {
+        let request = SETAddressStatusBio(draft, for: address, authorization: credential.authKey)
+        let _ = try await apiResponse(for: request)
+        return try await bio(for: address)
+    }
+    
+    func status(_ status: String, from address: AddressName) async throws -> Status {
+        let request = GETAddressStatus(status, from: address)
+        let response = try await apiResponse(for: request)
+        return Status(
+            id: response.status.id,
+            address: response.status.address,
+            created: response.status.createdDate,
+            content: response.status.content,
+            emoji: response.status.emoji,
+            externalURL: response.status.externalURL
+        )
+    }
+    
+    func save(_ draft: Status.Draft, to address: AddressName, with credentials: APICredentials) async throws -> Status {
+        let request = SETAddressStatus(draft, from: address, with: credentials.authKey)
+        let response = try await apiResponse(for: request)
+        return try await status(response.id, from: address)
+    }
+    
+    func delete(_ status: String, from address: AddressName, with credentials: APICredentials) async throws {
+        let request = DELETEAddressStatus(status, from: address, with: credentials.authKey)
+        let _ = try await apiResponse(for: request)
     }
 }

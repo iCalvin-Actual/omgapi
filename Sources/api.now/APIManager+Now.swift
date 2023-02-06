@@ -9,6 +9,8 @@ import api_core
 import Combine
 import Foundation
 
+// let response = try await apiResponse(for: request)
+
 public extension omg_api {
     func nowGarden() async throws -> NowGarden {
         let request = GETNowGardenRequest()
@@ -21,8 +23,8 @@ public extension omg_api {
             )}
     }
     
-    func now(for address: AddressName) async throws -> Now {
-        let request = GETAddressNowRequest(for: address)
+    func now(for address: AddressName, credential: APICredentials? = nil) async throws -> Now {
+        let request = GETAddressNowRequest(for: address, authorization: credential?.authKey)
         let response = try await apiResponse(for: request)
         return Now(
             address: address,

@@ -9,13 +9,16 @@ import api_core
 import Foundation
 
 class GETAddressPURLs: APIRequest<None, GetPURLsResponseModel> {
-    init(_ address: AddressName) {
-        super.init(path: PURLPath.purls(address))
+    init(_ address: AddressName, authorization: String? = nil) {
+        super.init(
+            authorization: authorization,
+            path: PURLPath.purls(address)
+        )
     }
 }
 
 class GETAddressPURL: APIRequest<None, GetPURLResponseModel> {
-    init(_ purl: String, address: AddressName, authorization: String) {
+    init(_ purl: String, address: AddressName, authorization: String? = nil) {
         super.init(
             authorization: authorization,
             path: PURLPath.managePurl(purl, address: address)

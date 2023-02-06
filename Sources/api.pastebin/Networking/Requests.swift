@@ -9,14 +9,20 @@ import api_core
 import Foundation
 
 class GETAddressPasteBin: APIRequest<None, PasteBinResponseModel> {
-    init(_ address: AddressName) {
-        super.init(path: PasteBinPath.pastes(address))
+    init(_ address: AddressName, authorization: String? = nil) {
+        super.init(
+            authorization: authorization,
+            path: PasteBinPath.pastes(address)
+        )
     }
 }
 
 class GETAddressPaste: APIRequest<None, PasteResponseModel> {
-    init(_ title: String, from address: AddressName) {
-        super.init(path: PasteBinPath.paste(title, address: address))
+    init(_ title: String, from address: AddressName, authorization: String? = nil) {
+        super.init(
+            authorization: authorization,
+            path: PasteBinPath.paste(title, address: address)
+        )
     }
 }
 

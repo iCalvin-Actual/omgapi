@@ -17,8 +17,9 @@ class GETNowGardenRequest: APIRequest<None, NowGardenResponse> {
 }
 
 class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
-    init(for address: AddressName) {
+    init(for address: AddressName, authorization: String?) {
         super.init(
+            authorization: authorization,
             path: NowPath.now(address: address)
         )
     }

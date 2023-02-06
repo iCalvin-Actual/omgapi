@@ -23,6 +23,7 @@ public struct StatusLog {
         }
         public let content: String
     }
+    
     public let address: AddressName
     public let bio: Bio
     public let statuses: [Status]

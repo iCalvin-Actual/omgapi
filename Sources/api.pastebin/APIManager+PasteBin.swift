@@ -10,61 +10,49 @@ import Combine
 import Foundation
 
 public extension omg_api {
-    func getPasteBin(for address: AddressName) -> ResultPublisher<PasteBin> {
-        let request = GETAddressPasteBin(address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(response.pastebin.map({ Paste(title: $0.title, author: address, content: $0.content, modifiedOn: $0.updated, listed: $0.listed.boolValue) }))
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+    func pasteBin(for address: AddressName, credential: APICredentials?) async throws -> PasteBin {
+        let request = GETAddressPasteBin(address, authorization: credential?.authKey)
+        let response = try await apiResponse(for: request)
+        return response.pastebin.map { paste in
+            Paste(
+                title: paste.title,
+                author: address,
+                content: paste.content,
+                modifiedOn: paste.updated,
+                listed: paste.listed.boolValue
+            )
+        }
     }
     
-    func getPaste(title: String, from address: AddressName) -> ResultPublisher<Paste> {
+    func paste(_ title: String, from address: AddressName, credential: APICredentials?) async throws -> Paste {
         let request = GETAddressPaste(title, from: address)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    let paste = Paste(title: response.paste.title, author: address, content: response.paste.content, modifiedOn: response.paste.updated, listed: response.paste.listed.boolValue)
-                    return .success(paste)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+        let response = try await apiResponse(for: request)
+        let paste = response.paste
+        return Paste(
+            title: paste.title,
+            author: address,
+            content: paste.content,
+            modifiedOn: paste.updated,
+            listed: paste.listed.boolValue
+        )
     }
     
-    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredentials) -> ResultPublisher<Paste> {
-        let request = SETAddressPaste(draft: draft, from: address, authorization: credential.authKey)
-        return publisher(for: request)
-            .flatMap { result in
-                switch result {
-                case .success(let response):
-                    return self.getPaste(title: response.title, from: address)
-                case .failure(let error):
-                    return Just(.failure(error))
-                        .eraseToAnyPublisher()
-                }
-            }
-            .eraseToAnyPublisher()
+    func save(_ draft: Paste.Draft, to address: AddressName, credential: APICredentials) async throws -> Paste {
+        let request = SETAddressPaste(
+            draft: draft,
+            from: address,
+            authorization: credential.authKey
+        )
+        let _ = try await apiResponse(for: request)
+        return try await paste(draft.title, from: address, credential: credential)
     }
     
-    func deletePaste(_ title: String, from address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
-        let request = DELETEAddressPaste(title, from: address, authorization: credential.authKey)
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success:
-                    return .success(None.instance)
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
-            .eraseToAnyPublisher()
+    func delete(_ title: String, from address: AddressName, credential: APICredentials) async throws {
+        let request = DELETEAddressPaste(
+            title,
+            from: address,
+            authorization: credential.authKey
+        )
+        let _ = try await apiResponse(for: request)
     }
 }
