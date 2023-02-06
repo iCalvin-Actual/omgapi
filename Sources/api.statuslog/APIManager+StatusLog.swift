@@ -10,6 +10,39 @@ import Combine
 import Foundation
 
 public extension OMGAPI {
+    
+    func getCompleteStatusLog() async throws -> PublicLog {
+        let request = GETCompleteStatusLog()
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            getLatestStatusLog()
+                .sink { result in
+                    switch result {
+                    case .success(let log):
+                        continuation.resume(returning: log)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+                .store(in: &self.requests)
+        })
+    }
+    
+    func handle<B, R>(request: APIRequest<B, R>) async throws -> R {
+        return try await withCheckedThrowingContinuation({ continuation in
+            self.publisher(for: request)
+                .sink { result in
+                    switch result {
+                    case .success(let log):
+                        continuation.resume(returning: log)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+                .store(in: &self.requests)
+        })
+    }
+    
     func getCompleteStatusLog() -> ResultPublisher<PublicLog> {
         let request = GETCompleteStatusLog()
         return publisher(for: request)

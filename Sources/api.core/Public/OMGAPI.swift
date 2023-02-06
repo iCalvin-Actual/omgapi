@@ -13,13 +13,6 @@ public typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Ne
 
 public typealias ResultPublisher<T> = AnyPublisher<Result<T, OMGAPI.APIError>, Never>
 
-public enum APIConfiguration {
-    case anonymous
-    case registered(email: String, apiKey: String)
-    
-    static let developRegistered: APIConfiguration = .registered(email: "accounts@icalvin.dev", apiKey: "09f5b7cc519758e4809851dfc98cecf5")
-}
-
 public class OMGAPI {
     
     public enum APIError: Error {
@@ -63,15 +56,39 @@ public class OMGAPI {
     
     let urlSession: URLSession = .shared
     
+    public var requests: [AnyCancellable] = []
+    
     public init() {
     }
     
-    public func set(configuration: APIConfiguration) {
-        requestConstructor.updateConfiguration(configuration)
+    func apiResponse<B, R>(for request: APIRequest<B, R>) async throws -> R {
+        let urlRequest: URLRequest
+        switch request.multipartBody {
+        case true:
+            urlRequest = APIRequestConstructor.multipartUrlRequest(from: request)
+        case false:
+            urlRequest = APIRequestConstructor.urlRequest(from: request)
+        }
+        
+        let task = urlSession.dataTaskPublisher(for: urlRequest)
+        let publisher: APIResultPublisher<R> = publisher(for: task)
+        
+        return try await withCheckedThrowingContinuation({ continuation in
+            publisher
+                .sink { result in
+                    switch result {
+                    case .success(let log):
+                        continuation.resume(returning: log)
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+                .store(in: &self.requests)
+        })
     }
     
-    public func publisher<B, R>(forMultiPart apiRequest: APIRequest<B, R>) -> APIResultPublisher<R> {
-        let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.multipartUrlRequest(from: apiRequest))
+    public func multipartPublisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
+        let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.multipartUrlRequest(from: request))
         return publisher(for: dataTask)
     }
     
@@ -131,20 +148,6 @@ public class OMGAPI {
                 }
             }
             .replaceError(with: .failure(.inconceivable))
-            .eraseToAnyPublisher()
-    }
-    
-    public func getServiceInfo() -> ResultPublisher<String> {
-        let request = GETServiceInfoAPIRequest()
-        return publisher(for: request)
-            .map { result in
-                switch result {
-                case .success(let response):
-                    return .success(response.message ?? "")
-                case .failure(let error):
-                    return .failure(error)
-                }
-            }
             .eraseToAnyPublisher()
     }
 }

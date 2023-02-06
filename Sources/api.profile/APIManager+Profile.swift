@@ -72,7 +72,7 @@ public extension OMGAPI {
     
     func updateAddressPhoto(_ photo: ProfilePhoto, for address: AddressName, with credential: APICredentials) -> ResultPublisher<None> {
         let request = SETAddressPhoto(photo, for: address, with: credential.authKey)
-        return publisher(forMultiPart: request)
+        return publisher(for: request)
             .flatMap { result in
                 switch result {
                 case .success(let response):

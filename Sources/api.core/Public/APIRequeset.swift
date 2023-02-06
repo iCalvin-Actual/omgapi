@@ -9,15 +9,17 @@ import Foundation
 
 open class APIRequest<B: RequestBody, R: Response> {
     
-    var authorization: String?
-    var method: HTTPMethod
-    var path: APIPath
-    var body: B?
+    let authorization: String?
+    let method: HTTPMethod
+    let path: APIPath
+    let body: B?
+    let multipartBody: Bool
     
-    public init(authorization: String? = nil, method: HTTPMethod = .GET, path: APIPath, body: B? = nil) {
+    public init(authorization: String? = nil, method: HTTPMethod = .GET, path: APIPath, body: B? = nil, multipartBody: Bool = false) {
         self.authorization = authorization
         self.method = method
         self.path = path
         self.body = body
+        self.multipartBody = multipartBody
     }
 }
