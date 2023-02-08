@@ -9,8 +9,8 @@ import api_core
 import Foundation
 
 public struct Address {
-    let name: AddressName
-    let registered: TimeStamp
-    let expired: Bool
-    let verified: Bool
+    public let name: AddressName
+    public let registered: TimeStamp
+    public let expired: Bool
+    public let verified: Bool
 }
