@@ -11,8 +11,8 @@ import Foundation
 
 public struct Account {
     public struct Address {
-        let name: String
-        let registered: TimeStamp
+        public let name: String
+        public let registered: TimeStamp
     }
     
     private let owner: AccountOwner
