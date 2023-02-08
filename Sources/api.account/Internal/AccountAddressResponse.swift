@@ -8,12 +8,12 @@
 import api_core
 import Foundation
 
-struct AccountAddressResponse: Response {
+public struct AccountAddressResponse: Response {
     let message: String?
     let address: String
     let registration: TimeStamp
 }
 
-typealias AddressCollection = [AccountAddressResponse]
+public typealias AddressCollection = [AccountAddressResponse]
 extension AddressCollection: Response { }
 
