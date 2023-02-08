@@ -33,4 +33,5 @@ extension Account {
     public var name: String                                 { owner.name ?? "" }
     public var created: Date                                { info.created.date }
     public var communicationChoice: CommunicationPreference { settings.communication ?? .yesPlease }
+    public var registered: [Address]                        { addresses }
 }
