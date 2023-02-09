@@ -83,9 +83,11 @@ public extension omg_api {
         let infoPublisher = publisher(for: infoRequest)
         let settingsPublisher = publisher(for: settingsRequest)
         let addressesPublisher = publisher(for: addressesRequest)
+        print("Starting Fetch")
         
         return Publishers.Zip4(ownerPublisher, infoPublisher, settingsPublisher, addressesPublisher)
             .map({ ownerResult, infoResult, nameResult, addressesResult -> Result<Account, omg_api.APIError> in
+                print("Finished Fetching")
                 switch (ownerResult, infoResult, nameResult, addressesResult) {
                 case (.failure(let error), _, _, _):
                     // owner failure

@@ -9,9 +9,9 @@ import api_core
 import Foundation
 
 public struct AccountAddressResponse: Response {
-    let message: String?
-    let address: String
-    let registration: TimeStamp
+    public let message: String?
+    public let address: String
+    public let registration: TimeStamp
 }
 
 public typealias AddressCollection = [AccountAddressResponse]
