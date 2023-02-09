@@ -10,14 +10,19 @@ import Foundation
 
 public struct Now {
     public struct Draft: RequestBody {
-        let content: String
-        let listed: Bool
+        public let content: String
+        public let listed: Bool
+        
+        init(content: String, listed: Bool) {
+            self.content = content
+            self.listed = listed
+        }
     }
     
-    let address: AddressName
-    let content: String
-    let listed: Bool
+    public let address: AddressName
+    public let content: String
+    public let listed: Bool
     
-    let updated: Date
+    public let updated: Date
 }
 
