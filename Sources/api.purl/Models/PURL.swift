@@ -10,14 +10,14 @@ import Foundation
 
 public struct PURL {
     public struct Draft: RequestBody {
-        let name: String
-        let url: String
+        public let name: String
+        public let url: String
     }
     
-    let address: AddressName
-    let name: String
-    let url: String
+    public let address: AddressName
+    public let name: String
+    public let url: String
     
-    let counter: Int
-    let listed: Bool
+    public let counter: Int
+    public let listed: Bool
 }

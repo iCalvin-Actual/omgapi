@@ -9,9 +9,9 @@ import api_core
 import Foundation
 
 public struct NowGardenEntry {
-    let address: AddressName
-    let url: String
-    let updated: TimeStamp
+    public let address: AddressName
+    public let url: String
+    public let updated: TimeStamp
 }
 
 public typealias NowGarden = [NowGardenEntry]

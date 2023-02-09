@@ -10,10 +10,10 @@ import Foundation
 
 public struct Status {
     public struct Draft: RequestBody {
-        let id: String?
-        let content: String
-        let emoji: String?
-        let externalUrl: String?
+        public let id: String?
+        public let content: String
+        public let emoji: String?
+        public let externalUrl: String?
         
         public init(id: String? = nil, content: String, emoji: String? = nil, externalUrl: String? = nil) {
             self.id = id

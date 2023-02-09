@@ -9,7 +9,7 @@ import api_core
 import Foundation
 
 public struct Availability {
-    let address: String
-    let available: Bool
-    let punyCode: String?
+    public let address: String
+    public let available: Bool
+    public let punyCode: String?
 }

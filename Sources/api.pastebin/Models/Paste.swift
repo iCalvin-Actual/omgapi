@@ -11,15 +11,15 @@ import Foundation
 
 public struct Paste {
     public struct Draft: RequestBody {
-        let title: String
-        let content: String
+        public let title: String
+        public let content: String
     }
     
-    let title: String
-    let author: String
-    let content: String
-    let modifiedOn: Date
-    let listed: Bool
+    public let title: String
+    public let author: String
+    public let content: String
+    public let modifiedOn: Date
+    public let listed: Bool
     
 }
 
