@@ -8,7 +8,7 @@
 import api_core
 import Foundation
 
-class GETAddressProfile: APIRequest<None, AddressProfileResponseModel> {
+class GETAddressProfile: APIRequest<None, String> {
     init(_ address: AddressName, with authorization: String? = nil) {
         super.init(
             authorization: authorization,

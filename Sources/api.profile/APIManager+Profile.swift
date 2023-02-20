@@ -16,21 +16,22 @@ public extension omg_api {
         let response = try await apiResponse(for: request)
         return PublicProfile(
             address: address,
-            content: response.html
+            content: response
         )
     }
     
-    func profile(_ address: AddressName, with credential: APICredentials) async throws -> Profile {
-        let request = GETAddressProfile(address)
-        let response = try await apiResponse(for: request)
-        return Profile(
-            address: address,
-            content: response.content ?? "",
-            theme: response.theme ?? "",
-            head: response.head,
-            css: response.css
-        )
-    }
+    // Circle back after authentication. Only works for 'my' profiles
+//    func profile(_ address: AddressName, with credential: APICredentials) async throws -> Profile {
+//        let request = GETAddressProfile(address)
+//        let response = try await apiResponse(for: request)
+//        return Profile(
+//            address: address,
+//            content: response.content ?? "",
+//            theme: response.theme ?? "",
+//            head: response.head,
+//            css: response.css
+//        )
+//    }
     
     func save(_ draft: PublicProfile.Draft, for address: AddressName, credential: APICredentials) async throws -> PublicProfile {
         let request = SETAddressProfile(draft, for: address, with: credential.authKey)
