@@ -27,7 +27,10 @@ public class omg_api {
         
         case unhandled(_ statusCode: Int, message: String?)
         
-        static func create<R>(from response: APIResponse<R>) -> APIError {
+        static func create<R>(from response: APIResponse<R>?) -> APIError {
+            guard let response = response else {
+                return .inconceivable
+            }
             let status = response.request.statusCode
             var message: String?
             if let responseMessage = (response.response as? CommonAPIResponse)?.message {
@@ -101,7 +104,10 @@ public class omg_api {
         task
             .map { data, response in
                 do {
-                    if let apiResponse = try? omg_api.decoder.decode(APIResponse<R>.self, from: data) {
+                    if R.self is String.Type, let rawResponse = String(data: data, encoding: .utf8) {
+                        return .success(rawResponse as! R)
+                    } else {
+                        let apiResponse = try omg_api.decoder.decode(APIResponse<R>.self, from: data)
                         guard apiResponse.request.success else {
                             return .failure(.create(from: apiResponse))
                         }
@@ -111,12 +117,7 @@ public class omg_api {
                         }
                         
                         return .success(response)
-                    } else {
-                        let rawResponse = try omg_api.decoder.decode(R.self, from: data)
-                        return .success(rawResponse)
                     }
-                    
-                    
                 }
                 catch {
                     if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {

@@ -51,5 +51,17 @@ let package = Package(
                dependencies: ["api.core"]),
         .target(name: "api.statuslog",
                dependencies: ["api.core"]),
+        .testTarget(name: "api.tests",
+                   dependencies: [
+                    "api.core",
+                    "api.account",
+                    "api.addresses",
+                    "api.profile",
+                    "api.now",
+                    "api.purl",
+                    "api.pastebin",
+                    "api.weblog",
+                    "api.statuslog"
+                   ], path: "Tests/"),
     ]
 )
