@@ -20,7 +20,7 @@ public extension omg_api {
         )
     }
     
-    // Circle back after authentication. Only works for 'my' profiles
+    // Circle back after authentication. Only works for 'my' profilesbiwreqyes
 //    func profile(_ address: AddressName, with credential: APICredentials) async throws -> Profile {
 //        let request = GETAddressProfile(address)
 //        let response = try await apiResponse(for: request)

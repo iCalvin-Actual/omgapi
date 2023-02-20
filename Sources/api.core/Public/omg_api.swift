@@ -101,17 +101,22 @@ public class omg_api {
         task
             .map { data, response in
                 do {
-                    let result: APIResponse<R> = try omg_api.decoder.decode(APIResponse.self, from: data)
-                    
-                    guard result.request.success else {
-                        return .failure(.create(from: result))
+                    if let apiResponse = try? omg_api.decoder.decode(APIResponse<R>.self, from: data) {
+                        guard apiResponse.request.success else {
+                            return .failure(.create(from: apiResponse))
+                        }
+                        
+                        guard let response = apiResponse.response else {
+                            return .failure(.badResponseEncoding)
+                        }
+                        
+                        return .success(response)
+                    } else {
+                        let rawResponse = try omg_api.decoder.decode(R.self, from: data)
+                        return .success(rawResponse)
                     }
                     
-                    guard let response = result.response else {
-                        return .failure(.badResponseEncoding)
-                    }
                     
-                    return .success(response)
                 }
                 catch {
                     if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
