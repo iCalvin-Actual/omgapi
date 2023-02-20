@@ -7,11 +7,30 @@
 
 import Foundation
 
-public protocol APIPath {
+public protocol Path {
     var string: String  { get }
+    var baseUrl: URL?   { get }
     var url: URL        { get }
 }
 
-public extension APIPath {
-    var url: URL { URL(string: string, relativeTo: CommonPath.api.url)! }
+public protocol WebPath: Path {
+}
+
+extension WebPath {
+    public var baseUrl: URL? {
+        nil
+    }
+}
+
+public protocol APIPath: Path {
+}
+
+extension APIPath {
+    public var baseUrl: URL? {
+        CommonPath.api.url
+    }
+}
+
+public extension Path {
+    var url: URL { URL(string: string, relativeTo: baseUrl)! }
 }

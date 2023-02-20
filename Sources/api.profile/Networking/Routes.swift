@@ -9,8 +9,8 @@ import api_core
 import Foundation
 
 
-enum ProfilePath: APIPath {
-    private static let addressProfile = "address/{address}/web/"
+enum ProfilePath: WebPath {
+    private static let addressProfile = "{address}.omg.lol"
     private static let addressPhoto = "address/{address}/pfp"
     
     case profile(_ address: AddressName)

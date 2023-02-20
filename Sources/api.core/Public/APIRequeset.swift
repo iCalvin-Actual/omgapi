@@ -11,11 +11,11 @@ open class APIRequest<B: RequestBody, R: Response> {
     
     let authorization: String?
     let method: HTTPMethod
-    let path: APIPath
+    let path: Path
     let body: B?
     let multipartBody: Bool
     
-    public init(authorization: String? = nil, method: HTTPMethod = .GET, path: APIPath, body: B? = nil, multipartBody: Bool = false) {
+    public init(authorization: String? = nil, method: HTTPMethod = .GET, path: Path, body: B? = nil, multipartBody: Bool = false) {
         self.authorization = authorization
         self.method = method
         self.path = path
