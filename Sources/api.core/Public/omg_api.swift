@@ -120,9 +120,7 @@ public class omg_api {
                     }
                 }
                 catch {
-                    if let result = priorityDecoding?(data) {
-                        return .success(result)
-                    } else if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
+                    if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)
