@@ -47,7 +47,7 @@ public class omg_api {
         }
     }
     
-    static let decoder: JSONDecoder = {
+    public static let decoder: JSONDecoder = {
         var decoder = JSONDecoder()
         
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -64,7 +64,7 @@ public class omg_api {
     public init() {
     }
     
-    public func apiResponse<B, R>(for request: APIRequest<B, R>) async throws -> R {
+    public func apiResponse<B, R>(for request: APIRequest<B, R>, fallbackDecoding: ((Data) -> R?)? = nil) async throws -> R {
         let urlRequest: URLRequest
         switch request.multipartBody {
         case true:
@@ -74,7 +74,7 @@ public class omg_api {
         }
         
         let task = urlSession.dataTaskPublisher(for: urlRequest)
-        let publisher: APIResultPublisher<R> = publisher(for: task)
+        let publisher: APIResultPublisher<R> = publisher(for: task, fallbackDecoding: fallbackDecoding)
         
         return try await withCheckedThrowingContinuation({ continuation in
             publisher
@@ -92,15 +92,15 @@ public class omg_api {
     
     public func multipartPublisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
         let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.multipartUrlRequest(from: request))
-        return publisher(for: dataTask)
+        return publisher(for: dataTask, fallbackDecoding: nil)
     }
     
-    public func publisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
+    public func publisher<B, R>(for request: APIRequest<B, R>, fallbackDecoding: ((Data) -> R?)? = nil) -> APIResultPublisher<R> {
         let dataTask = urlSession.dataTaskPublisher(for: APIRequestConstructor.urlRequest(from: request))
-        return publisher(for: dataTask)
+        return publisher(for: dataTask, fallbackDecoding: fallbackDecoding)
     }
     
-    private func publisher<R>(for task: URLSession.DataTaskPublisher) -> APIResultPublisher<R> {
+    private func publisher<R>(for task: URLSession.DataTaskPublisher, fallbackDecoding: ((Data) -> R?)?) -> APIResultPublisher<R> {
         task
             .map { data, response in
                 do {
@@ -120,7 +120,9 @@ public class omg_api {
                     }
                 }
                 catch {
-                    if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
+                    if let result = fallbackDecoding?(data) {
+                        return .success(result)
+                    } else if let errorMessageResponse: APIResponse<BasicResponse> = try? omg_api.decoder.decode(APIResponse.self, from: data) {
                         return .failure(.create(from: errorMessageResponse))
                     }
                     return .failure(.badResponseEncoding)

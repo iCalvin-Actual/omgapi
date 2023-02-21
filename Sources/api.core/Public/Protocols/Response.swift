@@ -13,7 +13,7 @@ public struct APIResponse<R: Response>: Decodable {
         let success: Bool
     }
     let request: Request
-    let response: R?
+    public let response: R?
 }
 
 public protocol Response: Decodable {
