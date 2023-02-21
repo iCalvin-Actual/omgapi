@@ -41,7 +41,7 @@ Needs Validation
     - Paste
     - PURL
 
-</detail>
+</details>
 
 <details>
 <summary>
