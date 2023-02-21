@@ -4,6 +4,7 @@ import XCTest
 @testable import api_account
 @testable import api_profile
 @testable import api_statuslog
+@testable import api_now
 
 protocol APITest {
     
@@ -36,8 +37,7 @@ class APIManagerTest: XCTestCase, APITest {
     
     func testAccountInfo() async throws {
         let manager = omg_api()
-        let account = try await manager.statusLog(from: "app")
-        print("STOP")
+        let account = try await manager.now(for: "app")
         
         wait(for: [successfulResponse, responseValidation], timeout: 15.0)
     }

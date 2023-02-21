@@ -18,7 +18,7 @@ public extension omg_api {
                 address: address,
                 name: purl.name,
                 url: purl.url,
-                counter: Int(purl.counter ?? "") ?? 0,
+                counter: purl.counter ?? 0,
                 listed: purl.isPublic
             )
         })
@@ -35,7 +35,7 @@ public extension omg_api {
             address: address,
             name: response.purl.name,
             url: response.purl.url,
-            counter: Int(response.purl.counter ?? "") ?? 0,
+            counter: response.purl.counter ?? 0,
             listed: response.purl.isPublic
         )
     }

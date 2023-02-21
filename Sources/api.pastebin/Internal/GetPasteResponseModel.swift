@@ -13,7 +13,7 @@ struct PasteResponseModel: CommonAPIResponse {
     struct Paste: Response {
         let title: String
         let content: String
-        let modifiedOn: String?
+        let modifiedOn: Int?
         let listed: String?
         
         var isPublic: Bool {
@@ -21,7 +21,7 @@ struct PasteResponseModel: CommonAPIResponse {
         }
         
         var updated: Date {
-            let double = Double(modifiedOn ?? "") ?? 0
+            let double = Double(modifiedOn ?? 0)
             return Date(timeIntervalSince1970: double)
         }
     }

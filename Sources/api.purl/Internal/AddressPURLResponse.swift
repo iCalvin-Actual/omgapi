@@ -12,7 +12,7 @@ import Foundation
 struct AddressPURLResponse: Response {
     let name: String
     let url: String
-    let counter: String?
+    let counter: Int?
     let listed: String?
     
     var isPublic: Bool {
