@@ -11,11 +11,11 @@ import Foundation
 struct AddressNowResponseModel: CommonAPIResponse {
     struct Now: Response {
         let content: String
-        let updated: String
-        let listed: String?
+        let updated: Int
+        let listed: Int
         
         var updatedAt: Date {
-            let double = Double(updated) ?? 0
+            let double = Double(updated)
             return Date(timeIntervalSince1970: double)
         }
     }

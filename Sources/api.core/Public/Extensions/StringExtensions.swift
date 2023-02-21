@@ -21,6 +21,18 @@ public extension Optional<String> {
         self?.boolValue ?? false
     }
 }
+
+public extension Int {
+    var boolValue: Bool {
+        switch self {
+        case 0:
+            return false
+        default:
+            return true
+        }
+    }
+}
+
 public extension String {
     var boolValue: Bool {
         switch self.lowercased() {
