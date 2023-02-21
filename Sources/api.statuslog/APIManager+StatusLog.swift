@@ -69,7 +69,7 @@ public extension omg_api {
     
     func bio(for address: String) async throws -> StatusLog.Bio {
         let request = GETAddressStatusBio(address)
-        let response = try await apiResponse(for: request, fallbackDecoding: { data in
+        let response = try await apiResponse(for: request, priorityDecoding: { data in
             if let response = try? omg_api.decoder.decode(APIResponse<StatusLogBioResponseModel>.self, from: data) {
                 if response.response?.message?.lowercased().hasPrefix("couldn’t find a statuslog bio for") ?? false {
                     return response.response

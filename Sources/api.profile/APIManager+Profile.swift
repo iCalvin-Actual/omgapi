@@ -13,7 +13,9 @@ public extension omg_api {
     
     func publicProfile(_ address: AddressName) async throws -> PublicProfile {
         let request = GETAddressProfile(address)
-        let response = try await apiResponse(for: request)
+        let response = try await apiResponse(for: request, priorityDecoding: { data in
+            String(data: data, encoding: .utf8)
+        })
         return PublicProfile(
             address: address,
             content: response
