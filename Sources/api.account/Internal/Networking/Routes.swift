@@ -10,7 +10,7 @@ import Foundation
 
 enum AccountPath: APIPath {
     
-    private static let oAuthURL = "oauth/"
+    private static let oAuthExchange = "oauth/"
     private static let accountInfo = "account/{email}/info/"
     private static let accountName = "account/{email}/name/"
     private static let accountSettings = "account/{email}/settings/"
@@ -27,7 +27,7 @@ enum AccountPath: APIPath {
     var string: String {
         switch self {
         case .oauth:
-            return Self.oAuthURL
+            return Self.oAuthExchange
         case .addresses:
             return Self.accountAddresses
         case .info(let email):

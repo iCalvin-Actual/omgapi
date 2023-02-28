@@ -12,10 +12,16 @@ import Combine
 
 public extension omg_api {
     
-    func oAuthRequest(with clientId: String, and clientSecret: String) async throws -> URLRequest? {
-        let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret)
+    func authURL(with clientId: String, redirect: String) -> URL? {
+        URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId)&scope=everything&redirect_uri=\(redirect)&response_type=code")
+    }
+    
+    func oAuthExchange(with clientId: String, and clientSecret: String, redirect: String, code: String) async throws -> APICredentials? {
+        let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret, redirect: redirect, accessCode: code)
         
-        return APIRequestConstructor.urlRequest(from: oAuthRequest)
+        let response = try await self.apiResponse(for: oAuthRequest)
+        
+        return response.accessToken
     }
     
     func account(for emailAddress: String, with credentials: APICredentials) async throws -> Account {
