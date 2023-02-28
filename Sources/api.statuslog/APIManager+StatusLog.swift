@@ -81,7 +81,7 @@ public extension omg_api {
     }
     
     func save(draft: StatusLog.Bio.Draft, for address: AddressName, credential: APICredentials) async throws -> StatusLog.Bio {
-        let request = SETAddressStatusBio(draft, for: address, authorization: credential.authKey)
+        let request = SETAddressStatusBio(draft, for: address, authorization: credential)
         let _ = try await apiResponse(for: request)
         return try await bio(for: address)
     }
@@ -100,13 +100,13 @@ public extension omg_api {
     }
     
     func save(_ draft: Status.Draft, to address: AddressName, with credentials: APICredentials) async throws -> Status {
-        let request = SETAddressStatus(draft, from: address, with: credentials.authKey)
+        let request = SETAddressStatus(draft, from: address, with: credentials)
         let response = try await apiResponse(for: request)
         return try await status(response.id, from: address)
     }
     
     func delete(_ status: String, from address: AddressName, with credentials: APICredentials) async throws {
-        let request = DELETEAddressStatus(status, from: address, with: credentials.authKey)
+        let request = DELETEAddressStatus(status, from: address, with: credentials)
         let _ = try await apiResponse(for: request)
     }
 }

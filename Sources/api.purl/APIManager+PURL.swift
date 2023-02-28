@@ -28,7 +28,7 @@ public extension omg_api {
         let request = GETAddressPURL(
             name,
             address: address,
-            authorization: credential?.authKey
+            authorization: credential
         )
         let response = try await apiResponse(for: request)
         return PURL(
@@ -41,14 +41,14 @@ public extension omg_api {
     }
     
     func save(_ draft: PURL.Draft, for address: AddressName, credential: APICredentials) async throws -> PURL {
-        let request = SETAddressPURL(draft, address: address, authorization: credential.authKey)
+        let request = SETAddressPURL(draft, address: address, authorization: credential)
         let _ = try await apiResponse(for: request)
         return try await purl(draft.name, for: address, credential: credential)
     }
         
         
     func delete(_ title: String, from address: AddressName, credential: APICredentials) async throws {
-        let request = DELETEAddressPURL(title, address: address, authorization: credential.authKey)
+        let request = DELETEAddressPURL(title, address: address, authorization: credential)
         let _ = try await apiResponse(for: request)
     }
 }

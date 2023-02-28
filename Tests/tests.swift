@@ -35,7 +35,8 @@ class APIManagerTest: XCTestCase, APITest {
     let successfulResponse: XCTestExpectation = .init(description: "")
     let responseValidation: XCTestExpectation = .init(description: "")
     
-    let account: APICredentials = .init(emailAddress: "accounts@icalvin.dev", authKey: "09f5b7cc519758e4809851dfc98cecf5")
+    let email: String = "accounts@icalvin.dev"
+    let key: APICredentials = "09f5b7cc519758e4809851dfc98cecf5"
     
     func testAccountInfo() async throws {
         let manager = omg_api()

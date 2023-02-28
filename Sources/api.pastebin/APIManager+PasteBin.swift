@@ -11,7 +11,7 @@ import Foundation
 
 public extension omg_api {
     func pasteBin(for address: AddressName, credential: APICredentials?) async throws -> PasteBin {
-        let request = GETAddressPasteBin(address, authorization: credential?.authKey)
+        let request = GETAddressPasteBin(address, authorization: credential)
         let response = try await apiResponse(for: request)
         return response.pastebin.map { paste in
             Paste(
@@ -41,7 +41,7 @@ public extension omg_api {
         let request = SETAddressPaste(
             draft: draft,
             from: address,
-            authorization: credential.authKey
+            authorization: credential
         )
         let _ = try await apiResponse(for: request)
         return try await paste(draft.title, from: address, credential: credential)
@@ -51,7 +51,7 @@ public extension omg_api {
         let request = DELETEAddressPaste(
             title,
             from: address,
-            authorization: credential.authKey
+            authorization: credential
         )
         let _ = try await apiResponse(for: request)
     }

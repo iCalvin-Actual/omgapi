@@ -36,7 +36,7 @@ public extension omg_api {
 //    }
     
     func save(_ draft: PublicProfile.Draft, for address: AddressName, credential: APICredentials) async throws -> PublicProfile {
-        let request = SETAddressProfile(draft, for: address, with: credential.authKey)
+        let request = SETAddressProfile(draft, for: address, with: credential)
         let _ = try await apiResponse(for: request)
         return try await publicProfile(address)
     }
@@ -52,7 +52,7 @@ public extension omg_api {
     }
     
     func save(_ photo: ProfilePhoto, for address: AddressName, credential: APICredentials) async throws {
-        let request = SETAddressPhoto(photo, for: address, with: credential.authKey)
+        let request = SETAddressPhoto(photo, for: address, with: credential)
         let _ = try await apiResponse(for: request)
     }
 }

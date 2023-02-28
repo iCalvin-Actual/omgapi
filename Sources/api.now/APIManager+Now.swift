@@ -24,7 +24,7 @@ public extension omg_api {
     }
     
     func now(for address: AddressName, credential: APICredentials? = nil) async throws -> Now {
-        let request = GETAddressNowRequest(for: address, authorization: credential?.authKey)
+        let request = GETAddressNowRequest(for: address, authorization: credential)
         let response = try await apiResponse(for: request)
         return Now(
             address: address,
@@ -35,7 +35,7 @@ public extension omg_api {
     }
     
     func save(draft: Now.Draft, to address: AddressName, with credentials: APICredentials) async throws-> Now {
-        let request = SETAddressNowRequest(draft, for: address, authorization: credentials.authKey)
+        let request = SETAddressNowRequest(draft, for: address, authorization: credentials)
         let _ = try await apiResponse(for: request)
         return try await now(for: address)
     }

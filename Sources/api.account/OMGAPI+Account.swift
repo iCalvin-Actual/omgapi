@@ -12,22 +12,28 @@ import Combine
 
 public extension omg_api {
     
-    func account(with credentials: APICredentials) async throws -> Account {
+    func oAuthRequest(with clientId: String, and clientSecret: String) async throws -> URLRequest? {
+        let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret)
+        
+        return APIRequestConstructor.urlRequest(from: oAuthRequest)
+    }
+    
+    func account(for emailAddress: String, with credentials: APICredentials) async throws -> Account {
         let ownerRequest = GETAccountNameAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let infoRequest = GETAccountInfoAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let settingsRequest = GETAccountSettingsAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
-        let addressesRequest = GETAddressesAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+        let addressesRequest = GETAddressesForEmailAPIRequest(
+            for: emailAddress,
+            authorization: credentials
         )
         async let owner = try self.apiResponse(for: ownerRequest)
         async let info = try self.apiResponse(for: infoRequest)
@@ -42,42 +48,42 @@ public extension omg_api {
         )
     }
     
-    func setName(_ newValue: String, with credentials: APICredentials) async throws -> Account {
+    func setName(_ newValue: String, for emailAddress: String, with credentials: APICredentials) async throws -> Account {
         let setNameRequest = SETAccountNameAPIRequest(
             newValue: newValue,
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let _ = try await apiResponse(for: setNameRequest)
-        return try await account(with: credentials)
+        return try await account(for: emailAddress, with: credentials)
     }
     
-    func setCommunication(_ preference: CommunicationPreference, with credentials: APICredentials) async throws -> Account {
+    func setCommunication(_ preference: CommunicationPreference, for emailAddress: String, with credentials: APICredentials) async throws -> Account {
         let request = SETAccountSettingsAPIRequest(
             communicationPreference: preference,
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let _ = try await apiResponse(for: request)
-        return try await account(with: credentials)
+        return try await account(for: emailAddress, with: credentials)
     }
     
-    func getAccount(for credentials: APICredentials) -> ResultPublisher<Account> {
+    func getAccount(for emailAddress: String, with credentials: APICredentials) -> ResultPublisher<Account> {
         let ownerRequest = GETAccountNameAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let infoRequest = GETAccountInfoAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         let settingsRequest = GETAccountSettingsAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
-        let addressesRequest = GETAddressesAPIRequest(
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+        let addressesRequest = GETAddressesForEmailAPIRequest(
+            for: emailAddress,
+            authorization: credentials
         )
         let ownerPublisher = publisher(for: ownerRequest)
         let infoPublisher = publisher(for: infoRequest)
@@ -86,7 +92,6 @@ public extension omg_api {
         
         return Publishers.Zip4(ownerPublisher, infoPublisher, settingsPublisher, addressesPublisher)
             .map({ ownerResult, infoResult, nameResult, addressesResult -> Result<Account, omg_api.APIError> in
-                print("Finished Fetching")
                 switch (ownerResult, infoResult, nameResult, addressesResult) {
                 case (.failure(let error), _, _, _):
                     // owner failure
@@ -113,25 +118,25 @@ public extension omg_api {
             .eraseToAnyPublisher()
     }
     
-    func setName(_ newValue: String, with credentials: APICredentials) -> ResultPublisher<Account> {
+    func setName(_ newValue: String, for emailAddress: String, with credentials: APICredentials) -> ResultPublisher<Account> {
         let setNameRequest = SETAccountNameAPIRequest(
             newValue: newValue,
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         return publisher(for: setNameRequest)
-            .flatMap({ _ in self.getAccount(for: credentials) })
+            .flatMap({ _ in self.getAccount(for: emailAddress, with: credentials) })
             .eraseToAnyPublisher()
     }
     
-    func setCommunication(_ newValue: CommunicationPreference, with credentials: APICredentials) -> ResultPublisher<Account> {
+    func setCommunication(_ newValue: CommunicationPreference, for emailAddress: String, with credentials: APICredentials) -> ResultPublisher<Account> {
         let setPreferenceRequest = SETAccountSettingsAPIRequest(
             communicationPreference: newValue,
-            for: credentials.emailAddress,
-            authorization: credentials.authKey
+            for: emailAddress,
+            authorization: credentials
         )
         return publisher(for: setPreferenceRequest)
-            .flatMap({ _ in self.getAccount(for: credentials) })
+            .flatMap({ _ in self.getAccount(for: emailAddress, with: credentials) })
             .eraseToAnyPublisher()
     }
 }

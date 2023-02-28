@@ -38,7 +38,7 @@ public extension omg_api {
     }
     
     func expirationDate(_ address: AddressName, credentials: APICredentials) async throws -> Date {
-        let request = GETAddressInfoRequest(for: address, authorization: credentials.authKey)
+        let request = GETAddressInfoRequest(for: address, authorization: credentials)
         let response = try await apiResponse(for: request)
         let date = Date(timeIntervalSince1970: Double(response.expiration.unixEpochTime ?? "") ?? 0)
         return date

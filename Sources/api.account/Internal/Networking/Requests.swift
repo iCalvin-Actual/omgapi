@@ -8,6 +8,22 @@
 import api_core
 import Foundation
 
+class OAuthRequest: APIRequest<OAuthRequest.Parameters, BasicResponse> {
+    struct Parameters: RequestBody {
+        let clientId: String
+        let clientSecret: String
+    }
+    init(with clientId: String, and clientSecret: String) {
+        super.init(
+            path: AccountPath.oauth,
+            body: Parameters(
+                clientId: clientId,
+                clientSecret: clientSecret
+            )
+        )
+    }
+}
+
 class GETAccountInfoAPIRequest: APIRequest<None, AccountInfo> {
     init(for emailAddress: String, authorization: String) {
         super.init(
@@ -63,11 +79,20 @@ class SETAccountSettingsAPIRequest: APIRequest<SETAccountSettingsAPIRequest.Para
     }
 }
 
-class GETAddressesAPIRequest: APIRequest<None, AddressCollection> {
+class GETAddresses: APIRequest<None, AddressCollection> {
+    init(authorization: String) {
+        super.init(
+            authorization: authorization,
+            path: AccountPath.addresses
+        )
+    }
+}
+
+class GETAddressesForEmailAPIRequest: APIRequest<None, AddressCollection> {
     init(for emailAddress: String, authorization: String) {
         super.init(
             authorization: authorization,
-            path: AccountPath.addresses(emailAddress)
+            path: AccountPath.emailAddresses(emailAddress)
         )
     }
 }
