@@ -8,23 +8,10 @@
 import api_core
 import Foundation
 
-class OAuthRequest: APIRequest<OAuthRequest.Parameters, OAuthResponse> {
-    struct Parameters: RequestBody {
-        let clientId: String
-        let clientSecret: String
-        let redirectURI: String
-        let accessCode: String
-        let scope = "everything"
-    }
+class OAuthRequest: APIRequest<None, OAuthResponse> {
     init(with clientId: String, and clientSecret: String, redirect: String, accessCode: String) {
         super.init(
-            path: AccountPath.oauth,
-            body: Parameters(
-                clientId: clientId,
-                clientSecret: clientSecret,
-                redirectURI: redirect,
-                accessCode: accessCode
-            )
+            path: AccountPath.oauth(clientId, clientSecret, redirect, accessCode)
         )
     }
 }

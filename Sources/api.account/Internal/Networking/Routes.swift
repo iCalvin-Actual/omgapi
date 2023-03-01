@@ -10,14 +10,19 @@ import Foundation
 
 enum AccountPath: APIPath {
     
-    private static let oAuthExchange = "oauth/"
+    private static let oAuthExchange = "/oauth/?client_id={id}&client_secret={secret}&redirect_uri={redirect}&code={accessCode}&scope=everything"
     private static let accountInfo = "account/{email}/info/"
     private static let accountName = "account/{email}/name/"
     private static let accountSettings = "account/{email}/settings/"
     private static let accountAddresses = "account/addresses/"
     private static let emailAddresses = "account/{email}/addresses/"
     
-    case oauth
+    case oauth          (
+        _ clientId: String,
+        _ clientSecret: String,
+        _ redirect: String,
+        _ accessCode: String
+    )
     case addresses
     case info           (_ emailAddress: String)
     case name           (_ emailAddress: String)
@@ -26,8 +31,12 @@ enum AccountPath: APIPath {
     
     var string: String {
         switch self {
-        case .oauth:
+        case .oauth(let clientId, let clientSecret, let redirect, let accessCode):
             return Self.oAuthExchange
+                .replacingOccurrences(of: "{id}", with: clientId)
+                .replacingOccurrences(of: "{secret}", with: clientSecret)
+                .replacingOccurrences(of: "{redirect}", with: redirect)
+                .replacingOccurrences(of: "{accessCode}", with: accessCode)
         case .addresses:
             return Self.accountAddresses
         case .info(let email):
