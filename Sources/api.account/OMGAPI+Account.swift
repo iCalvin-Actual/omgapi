@@ -19,7 +19,9 @@ public extension omg_api {
     func oAuthExchange(with clientId: String, and clientSecret: String, redirect: String, code: String) async throws -> APICredentials? {
         let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret, redirect: redirect, accessCode: code)
         
-        let response = try await self.apiResponse(for: oAuthRequest)
+        let response = try await self.apiResponse(for: oAuthRequest, priorityDecoding: { data in
+            try? omg_api.decoder.decode(OAuthResponse.self, from: data)
+        })
         
         return response.accessToken
     }
