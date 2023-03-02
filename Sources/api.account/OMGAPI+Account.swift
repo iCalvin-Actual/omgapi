@@ -26,6 +26,14 @@ public extension omg_api {
         return response.accessToken
     }
     
+    func addresses(with credentials: APICredentials) async throws -> [AddressName] {
+        let request = GETAddresses(authorization: credentials)
+        
+        let response = try await self.apiResponse(for: request)
+        
+        return response.map({ $0.address })
+    }
+    
     func account(for emailAddress: String, with credentials: APICredentials) async throws -> Account {
         let ownerRequest = GETAccountNameAPIRequest(
             for: emailAddress,
