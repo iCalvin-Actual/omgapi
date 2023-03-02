@@ -14,7 +14,7 @@ enum AccountPath: APIPath {
     private static let accountInfo = "account/{email}/info/"
     private static let accountName = "account/{email}/name/"
     private static let accountSettings = "account/{email}/settings/"
-    private static let accountAddresses = "account/addresses/"
+    private static let accountAddresses = "account/application/addresses/"
     private static let emailAddresses = "account/{email}/addresses/"
     
     case oauth          (
