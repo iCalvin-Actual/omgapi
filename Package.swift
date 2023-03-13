@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "api.lol",
+    name: "omgapi",
     platforms: [
         .iOS(.v16),
         .macOS(.v13),
