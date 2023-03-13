@@ -12,19 +12,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "api.lol",
-            targets: [
-                "api.core",
-                "api.account",
-                "api.addresses",
-                "api.profile",
-                "api.now",
-                "api.purl",
-                "api.pastebin",
-                "api.weblog",
-                "api.statuslog"
-            ]
-        ),
+            name: "omgapi",
+            targets: ["omgapi"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -33,35 +22,11 @@ let package = Package(
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
-        .target(name: "api.core",
-               dependencies: []),
-        .target(name: "api.account",
-               dependencies: ["api.core"]),
-        .target(name: "api.addresses",
-               dependencies: ["api.core"]),
-        .target(name: "api.profile",
-               dependencies: ["api.core"]),
-        .target(name: "api.now",
-               dependencies: ["api.core"]),
-        .target(name: "api.purl",
-               dependencies: ["api.core"]),
-        .target(name: "api.pastebin",
-               dependencies: ["api.core"]),
-        .target(name: "api.weblog",
-               dependencies: ["api.core"]),
-        .target(name: "api.statuslog",
-               dependencies: ["api.core"]),
-        .testTarget(name: "api.tests",
-                   dependencies: [
-                    "api.core",
-                    "api.account",
-                    "api.addresses",
-                    "api.profile",
-                    "api.now",
-                    "api.purl",
-                    "api.pastebin",
-                    "api.weblog",
-                    "api.statuslog"
-                   ], path: "Tests/"),
+        .target(
+            name: "omgapi",
+            dependencies: []),
+        .testTarget(
+            name: "omgapiTests",
+            dependencies: ["omgapi"]),
     ]
 )
