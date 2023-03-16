@@ -27,6 +27,7 @@ struct AccountInfo: CommonAPIResponse {
     
     let email: String
     let created: TimeStamp
+    let name: String
 }
 
 struct AccountOwner: CommonAPIResponse {

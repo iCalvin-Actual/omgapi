@@ -159,26 +159,14 @@ public extension api {
     }
     
     func account(for emailAddress: String, with credentials: APICredential) async throws -> Account {
-        let ownerRequest = GETAccountNameAPIRequest(
-            for: emailAddress,
-            authorization: credentials
-        )
         let infoRequest = GETAccountInfoAPIRequest(
             for: emailAddress,
             authorization: credentials
         )
-        let addressesRequest = GETAddressesForEmailAPIRequest(
-            for: emailAddress,
-            authorization: credentials
-        )
-        async let owner = try self.apiResponse(for: ownerRequest)
-        async let info = try self.apiResponse(for: infoRequest)
-        async let addresses = try self.apiResponse(for: addressesRequest)
+        let info = try await self.apiResponse(for: infoRequest)
         
-        return await Account(
-            owner: try owner,
-            info: try info,
-            addresses: try addresses.map({ .init(name: $0.address, registered: $0.registration) })
+        return Account(
+            info: info
         )
     }
     
