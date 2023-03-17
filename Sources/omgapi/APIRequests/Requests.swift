@@ -146,6 +146,17 @@ class GETAddressPaste: APIRequest<None, PasteResponseModel> {
     }
 }
 
+class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
+    init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: PasteBinPath.pastes(address),
+            body: draft
+        )
+    }
+}
+
 // MARK: - PURL
 
 class GETAddressPURLs: APIRequest<None, GETPURLsResponseModel> {

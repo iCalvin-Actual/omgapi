@@ -138,6 +138,11 @@ struct PasteResponseModel: CommonAPIResponse {
     let paste: Paste
 }
 
+struct SavePasteResponseModel: CommonAPIResponse {
+    let message: String?
+    let title: String
+}
+
 // MARK: - PURL
 
 struct AddressPURLResponse: Response {

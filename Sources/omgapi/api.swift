@@ -259,6 +259,12 @@ public extension api {
         )
     }
     
+    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste {
+        let request = SETAddressPaste(draft, to: address, authorization: credential)
+        let response = try await apiResponse(for: request)
+        return try await paste(response.title, from: address, credential: credential)
+    }
+    
     // MARK: - PURL
     
     func purls(from address: AddressName, credential: APICredential?) async throws -> [PURL] {
