@@ -122,15 +122,15 @@ struct PasteResponseModel: CommonAPIResponse {
     struct Paste: Response {
         let title: String
         let content: String
-        let modifiedOn: Int?
-        let listed: String?
+        let modifiedOn: Int
+        let listed: Int?
         
         var isPublic: Bool {
-            listed.boolValue
+            listed?.boolValue ?? true
         }
         
         var updated: Date {
-            let double = Double(modifiedOn ?? 0)
+            let double = Double(modifiedOn)
             return Date(timeIntervalSince1970: double)
         }
     }

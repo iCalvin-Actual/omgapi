@@ -241,7 +241,7 @@ public extension api {
                 author: address,
                 content: paste.content,
                 modifiedOn: paste.updated,
-                listed: paste.listed.boolValue
+                listed: paste.isPublic
             )
         }
     }
@@ -255,7 +255,7 @@ public extension api {
             author: address,
             content: paste.content,
             modifiedOn: paste.updated,
-            listed: paste.listed.boolValue
+            listed: paste.isPublic
         )
     }
     
