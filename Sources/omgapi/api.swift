@@ -246,20 +246,29 @@ public extension api {
         }
     }
     
-    func paste(_ title: String, from address: AddressName, credential: APICredential?) async throws -> Paste {
+    func paste(_ title: String, from address: AddressName, credential: APICredential?) async throws -> Paste? {
         let request = GETAddressPaste(title, from: address)
-        let response = try await apiResponse(for: request)
-        let paste = response.paste
-        return Paste(
-            title: paste.title,
-            author: address,
-            content: paste.content,
-            modifiedOn: paste.updated,
-            listed: paste.isPublic
-        )
+        do {
+            let response = try await apiResponse(for: request)
+            let paste = response.paste
+            return Paste(
+                title: paste.title,
+                author: address,
+                content: paste.content,
+                modifiedOn: paste.updated,
+                listed: paste.isPublic
+            )
+        } catch let error as APIError {
+            switch error {
+            case .notFound:
+                return nil
+            default:
+                throw error
+            }
+        }
     }
     
-    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste {
+    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
         let request = SETAddressPaste(draft, to: address, authorization: credential)
         let response = try await apiResponse(for: request)
         return try await paste(response.title, from: address, credential: credential)
@@ -366,6 +375,9 @@ public extension api {
     }
     
     func logs(for address: String) async throws -> [Status] {
+        guard !address.isEmpty else {
+            return []
+        }
         let request = GETAddressStatuses(address)
         let response = try await apiResponse(for: request)
         return response.statuses.map { status in
