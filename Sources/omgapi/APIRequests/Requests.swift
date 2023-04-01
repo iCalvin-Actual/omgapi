@@ -183,7 +183,7 @@ class GETPublicProfile: APIRequest<None, String> {
     init(_ address: AddressName, with authorization: APICredential? = nil) {
         super.init(
             authorization: authorization,
-            path: ProfilePath.profile(address)
+            path: PublicPath.profile(address)
         )
     }
 }
@@ -193,6 +193,17 @@ class GETProfile: APIRequest<None, ProfileResponseModel> {
         super.init(
             authorization: authorization,
             path: ProfilePath.profile(address)
+        )
+    }
+}
+
+class SETProfile: APIRequest<Profile.Draft, BasicResponse> {
+    init(_ draft: Profile.Draft, from address: AddressName, with credential: APICredential) {
+        super.init(
+            authorization: credential,
+            method: .POST,
+            path: ProfilePath.profile(address),
+            body: draft
         )
     }
 }

@@ -179,7 +179,20 @@ enum PasteBinPath: APIPath {
 
 // MARK: -
 
-enum ProfilePath: WebPath {
+enum ProfilePath: APIPath {
+    private static let webpage = "address/{address}/web"
+    
+    case profile(_ address: AddressName)
+    
+    var string: String {
+        switch self {
+        case .profile(let address):
+            return Self.webpage.replacingAddress(address)
+        }
+    }
+}
+
+enum PublicPath: WebPath {
     private static let addressProfile = "https://{address}.omg.lol"
     private static let addressPhoto = "address/{address}/pfp"
     

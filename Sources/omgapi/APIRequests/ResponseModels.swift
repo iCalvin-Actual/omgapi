@@ -182,7 +182,7 @@ struct ProfileResponseModel: CommonAPIResponse {
     let css: String?
     let head: String?
     
-    let verified: Bool?
+    let verified: Int?
     
     let pfp: String?
     

@@ -331,6 +331,12 @@ public extension api {
         )
     }
     
+    func saveProfile(_ content: String, for address: AddressName, with credential: APICredential) async throws -> Profile {
+        let request = SETProfile(.init(content: content, publish: true), from: address, with: credential)
+        let _ = try await apiResponse(for: request)
+        return try await profile(address, with: credential)
+    }
+    
     // MARK: - Status
     
     func completeStatusLog() async throws -> PublicLog {

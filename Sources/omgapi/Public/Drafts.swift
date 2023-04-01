@@ -57,6 +57,7 @@ public extension PURL {
 public extension Profile {
     struct Draft: RequestBody {
         public let content: String
+        public let publish: Bool
     }
 }
 
