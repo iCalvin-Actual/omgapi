@@ -230,6 +230,12 @@ public extension api {
         )
     }
     
+    func saveNow(for address: AddressName, content: String, credential: APICredential) async throws -> Now? {
+        let draft = Now.Draft(content: content, listed: true)
+        let request = SETAddressNowRequest(for: address, draft: draft, authorization: credential)
+        let _ = try await apiResponse(for: request)
+        return try await now(for: address, credential: credential)
+    }
     // MARK: - PasteBin
     
     func pasteBin(for address: AddressName, credential: APICredential?) async throws -> PasteBin {

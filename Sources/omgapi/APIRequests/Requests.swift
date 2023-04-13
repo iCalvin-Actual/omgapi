@@ -126,6 +126,17 @@ class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
     }
 }
 
+class SETAddressNowRequest: APIRequest<Now.Draft, BasicResponse> {
+    init(for address: AddressName, draft: Now.Draft, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: NowPath.now(address: address),
+            body: draft
+        )
+    }
+}
+
 // MARK: - PasteBin
 
 class GETAddressPasteBin: APIRequest<None, PasteBinResponseModel> {
