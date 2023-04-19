@@ -312,6 +312,12 @@ public extension api {
         )
     }
     
+    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
+        let request = SETAddressPURL(draft, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+        return try await paste(draft.name, from: address, credential: credential)
+    }
+    
     // MARK: - Profile
     
     func publicProfile(_ address: AddressName) async throws -> PublicProfile {
@@ -428,5 +434,11 @@ public extension api {
             emoji: response.status.emoji,
             externalURL: response.status.externalURL
         )
+    }
+    
+    func saveStatus(_ draft: Status.Draft, to address: AddressName, credential: APICredential) async throws -> Status {
+        let request = SETAddressStatus(draft, with: address, authorization: credential)
+        let response = try await apiResponse(for: request)
+        return try await status(response.id, from: address)
     }
 }

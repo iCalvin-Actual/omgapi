@@ -188,6 +188,17 @@ class GETAddressPURL: APIRequest<None, GETPURLResponseModel> {
     }
 }
 
+class SETAddressPURL: APIRequest<PURL.Draft, BasicResponse> {
+    init(_ draft: PURL.Draft, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: PURLPath.managePurl(draft.name, address: address),
+            body: draft
+        )
+    }
+}
+
 // MARK: - Profile
 
 class GETPublicProfile: APIRequest<None, String> {
@@ -248,5 +259,16 @@ class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
 class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     init(_ status: String, from address: AddressName) {
         super.init(path: StatusPath.addressStatus(status, address))
+    }
+}
+
+class SETAddressStatus: APIRequest<Status.Draft, NewStatusResponseModel> {
+    init(_ draft: Status.Draft, with address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: StatusPath.addressLog(address),
+            body: draft
+        )
     }
 }
