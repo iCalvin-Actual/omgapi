@@ -43,10 +43,12 @@ public extension Paste {
     struct Draft: MDDraft {
         public let title: String
         public let content: String
+        public let listed: Bool
         
-        public init(title: String, content: String) {
+        public init(title: String, content: String, listed: Bool) {
             self.title = title
             self.content = content
+            self.listed = listed
         }
     }
 }
@@ -55,10 +57,12 @@ public extension PURL {
     struct Draft: MDDraft {
         public let name: String
         public let content: String
+        public let listed: Bool
         
-        public init(name: String, content: String) {
+        public init(name: String, content: String, listed: Bool) {
             self.name = name
             self.content = content
+            self.listed = listed
         }
     }
 }

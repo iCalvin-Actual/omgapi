@@ -149,6 +149,12 @@ struct AddressPURLResponse: Response {
     let name: String
     let url: String
     let counter: Int?
+}
+
+struct AddressPURLItemResponse: Response {
+    let name: String
+    let url: String
+    let counter: Int?
     let listed: String?
     
     var isPublic: Bool {
@@ -156,7 +162,7 @@ struct AddressPURLResponse: Response {
     }
 }
 
-typealias AddressPURLsResponse = [AddressPURLResponse]
+typealias AddressPURLsResponse = [AddressPURLItemResponse]
 
 struct GETPURLsResponseModel: CommonAPIResponse {
     let message: String?

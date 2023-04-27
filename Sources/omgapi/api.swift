@@ -302,14 +302,18 @@ public extension api {
             address: address,
             authorization: credential
         )
-        let response = try await apiResponse(for: request)
-        return PURL(
-            address: address,
-            name: response.purl.name,
-            url: response.purl.url,
-            counter: response.purl.counter ?? 0,
-            listed: response.purl.isPublic
-        )
+        do {
+            let response = try await apiResponse(for: request)
+            return PURL(
+                address: address,
+                name: response.purl.name,
+                url: response.purl.url,
+                counter: response.purl.counter ?? 0,
+                listed: true
+            )
+        } catch {
+            throw error
+        }
     }
     
     func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
