@@ -25,8 +25,5 @@ let package = Package(
         .target(
             name: "omgapi",
             dependencies: []),
-        .testTarget(
-            name: "omgapiTests",
-            dependencies: ["omgapi"]),
     ]
 )

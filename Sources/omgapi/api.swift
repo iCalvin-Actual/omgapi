@@ -136,10 +136,6 @@ public extension api {
     
     // MARK: - Account
     
-    func authURL(with clientId: String, redirect: String) -> URL? {
-        URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId)&scope=everything&redirect_uri=\(redirect)&response_type=code")
-    }
-    
     func oAuthExchange(with clientId: String, and clientSecret: String, redirect: String, code: String) async throws -> APICredential? {
         let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret, redirect: redirect, accessCode: code)
         
