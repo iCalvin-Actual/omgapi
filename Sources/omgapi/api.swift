@@ -40,7 +40,8 @@ public class api {
         let task = urlSession.dataTaskPublisher(for: urlRequest)
         let publisher: APIResultPublisher<R> = publisher(for: task, priorityDecoding: priorityDecoding)
         
-        return try await withCheckedThrowingContinuation({ continuation in
+        return try await withCheckedThrowingContinuation({ [weak self] continuation in
+            guard let self = self else { return }
             publisher
                 .sink { result in
                     switch result {
