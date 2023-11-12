@@ -272,3 +272,11 @@ class SETAddressStatus: APIRequest<Status.Draft, NewStatusResponseModel> {
         )
     }
 }
+
+// MARK: - Themes
+
+class GETThemes: APIRequest<None, ThemesResponseModel> {
+    init() {
+        super.init(path: ThemePath.themes)
+    }
+}

@@ -446,4 +446,24 @@ public extension api {
         let response = try await apiResponse(for: request)
         return try await status(response.id, from: address)
     }
+    
+    func themes() async throws -> [Theme] {
+        let request = GETThemes()
+        let response = try await apiResponse(for: request)
+        let themes = response.themes.values.map({ model in
+            Theme(
+                id: model.id,
+                name: model.name,
+                created: model.created,
+                updated: model.updated,
+                author: model.author,
+                authorUrl: model.authorUrl,
+                version: model.version,
+                license: model.license,
+                description: model.description,
+                previewCss: model.previewCss
+            )
+        })
+        return themes
+    }
 }

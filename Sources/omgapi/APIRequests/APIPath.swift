@@ -262,3 +262,22 @@ enum StatusPath: APIPath {
         }
     }
 }
+
+// MARK: -
+
+enum ThemePath: APIPath {
+    private static let themesList: String = "theme/list"
+    private static let theme: String = "theme/{id}/info"
+    
+    case themes
+    case theme(_ id: String)
+    
+    var string: String {
+        switch self {
+        case .theme(let id):
+            return Self.theme.replacingOccurrences(of: "{id}", with: id)
+        case .themes:
+            return Self.themesList
+        }
+    }
+}

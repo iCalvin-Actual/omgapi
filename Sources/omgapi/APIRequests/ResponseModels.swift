@@ -236,3 +236,24 @@ struct StatusLogResponseModel: CommonAPIResponse {
     let statuses: [AddressStatusModel]
 }
 
+// MARK: - Themes
+
+struct ThemesResponseModel: CommonAPIResponse {
+    let message: String?
+    let themes: [String: ThemeResponseModel]
+}
+
+struct ThemeResponseModel: Response {
+    let id: String
+    let name: String
+    let created: String
+    let updated: String
+    let author: String
+    let authorUrl: String
+    let version: String
+    let license: String
+    let description: String
+    let previewCss: String
+    let sampleProfile: String
+}
+

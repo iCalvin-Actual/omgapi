@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum APIError: Error {
+public enum APIError: Error, Equatable {
     case inconceivable
     
     case unauthenticated
