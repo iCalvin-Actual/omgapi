@@ -40,7 +40,8 @@ public class api {
         let task = urlSession.dataTaskPublisher(for: urlRequest)
         let publisher: APIResultPublisher<R> = publisher(for: task, priorityDecoding: priorityDecoding)
         
-        return try await withCheckedThrowingContinuation({ continuation in
+        return try await withCheckedThrowingContinuation({ [weak self] continuation in
+            guard let self = self else { return }
             publisher
                 .sink { result in
                     switch result {
@@ -135,6 +136,10 @@ public extension api {
     }
     
     // MARK: - Account
+    
+    func authURL(with clientId: String, redirect: String) -> URL? {
+        URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId)&scope=everything&redirect_uri=\(redirect)&response_type=code")
+    }
     
     func oAuthExchange(with clientId: String, and clientSecret: String, redirect: String, code: String) async throws -> APICredential? {
         let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret, redirect: redirect, accessCode: code)
