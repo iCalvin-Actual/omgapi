@@ -27,6 +27,7 @@ struct AccountInfo: CommonAPIResponse {
     
     let email: String
     let created: TimeStamp
+    let name: String
 }
 
 struct AccountOwner: CommonAPIResponse {
@@ -121,15 +122,15 @@ struct PasteResponseModel: CommonAPIResponse {
     struct Paste: Response {
         let title: String
         let content: String
-        let modifiedOn: Int?
-        let listed: String?
+        let modifiedOn: Int
+        let listed: Int?
         
         var isPublic: Bool {
-            listed.boolValue
+            listed?.boolValue ?? true
         }
         
         var updated: Date {
-            let double = Double(modifiedOn ?? 0)
+            let double = Double(modifiedOn)
             return Date(timeIntervalSince1970: double)
         }
     }
@@ -137,9 +138,20 @@ struct PasteResponseModel: CommonAPIResponse {
     let paste: Paste
 }
 
+struct SavePasteResponseModel: CommonAPIResponse {
+    let message: String?
+    let title: String
+}
+
 // MARK: - PURL
 
 struct AddressPURLResponse: Response {
+    let name: String
+    let url: String
+    let counter: Int?
+}
+
+struct AddressPURLItemResponse: Response {
     let name: String
     let url: String
     let counter: Int?
@@ -150,7 +162,7 @@ struct AddressPURLResponse: Response {
     }
 }
 
-typealias AddressPURLsResponse = [AddressPURLResponse]
+typealias AddressPURLsResponse = [AddressPURLItemResponse]
 
 struct GETPURLsResponseModel: CommonAPIResponse {
     let message: String?
@@ -176,7 +188,7 @@ struct ProfileResponseModel: CommonAPIResponse {
     let css: String?
     let head: String?
     
-    let verified: Bool?
+    let verified: Int?
     
     let pfp: String?
     
@@ -222,5 +234,26 @@ struct StatusResponseModel: CommonAPIResponse {
 struct StatusLogResponseModel: CommonAPIResponse {
     let message: String?
     let statuses: [AddressStatusModel]
+}
+
+// MARK: - Themes
+
+struct ThemesResponseModel: CommonAPIResponse {
+    let message: String?
+    let themes: [String: ThemeResponseModel]
+}
+
+struct ThemeResponseModel: Response {
+    let id: String
+    let name: String
+    let created: String
+    let updated: String
+    let author: String
+    let authorUrl: String
+    let version: String
+    let license: String
+    let description: String
+    let previewCss: String
+    let sampleProfile: String
 }
 

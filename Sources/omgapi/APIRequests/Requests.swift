@@ -126,6 +126,17 @@ class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
     }
 }
 
+class SETAddressNowRequest: APIRequest<Now.Draft, BasicResponse> {
+    init(for address: AddressName, draft: Now.Draft, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: NowPath.now(address: address),
+            body: draft
+        )
+    }
+}
+
 // MARK: - PasteBin
 
 class GETAddressPasteBin: APIRequest<None, PasteBinResponseModel> {
@@ -142,6 +153,17 @@ class GETAddressPaste: APIRequest<None, PasteResponseModel> {
         super.init(
             authorization: authorization,
             path: PasteBinPath.paste(title, address: address)
+        )
+    }
+}
+
+class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
+    init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: PasteBinPath.pastes(address),
+            body: draft
         )
     }
 }
@@ -166,13 +188,24 @@ class GETAddressPURL: APIRequest<None, GETPURLResponseModel> {
     }
 }
 
+class SETAddressPURL: APIRequest<PURL.Draft, BasicResponse> {
+    init(_ draft: PURL.Draft, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: PURLPath.managePurl(draft.name, address: address),
+            body: draft
+        )
+    }
+}
+
 // MARK: - Profile
 
 class GETPublicProfile: APIRequest<None, String> {
     init(_ address: AddressName, with authorization: APICredential? = nil) {
         super.init(
             authorization: authorization,
-            path: ProfilePath.profile(address)
+            path: PublicPath.profile(address)
         )
     }
 }
@@ -182,6 +215,17 @@ class GETProfile: APIRequest<None, ProfileResponseModel> {
         super.init(
             authorization: authorization,
             path: ProfilePath.profile(address)
+        )
+    }
+}
+
+class SETProfile: APIRequest<Profile.Draft, BasicResponse> {
+    init(_ draft: Profile.Draft, from address: AddressName, with credential: APICredential) {
+        super.init(
+            authorization: credential,
+            method: .POST,
+            path: ProfilePath.profile(address),
+            body: draft
         )
     }
 }
@@ -215,5 +259,24 @@ class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
 class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     init(_ status: String, from address: AddressName) {
         super.init(path: StatusPath.addressStatus(status, address))
+    }
+}
+
+class SETAddressStatus: APIRequest<Status.Draft, NewStatusResponseModel> {
+    init(_ draft: Status.Draft, with address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: StatusPath.addressLog(address),
+            body: draft
+        )
+    }
+}
+
+// MARK: - Themes
+
+class GETThemes: APIRequest<None, ThemesResponseModel> {
+    init() {
+        super.init(path: ThemePath.themes)
     }
 }

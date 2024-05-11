@@ -7,8 +7,12 @@
 
 import Foundation
 
+protocol MDDraft: RequestBody {
+    var content: String { get }
+}
+
 public extension Status {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let id: String?
         public let content: String
         public let emoji: String?
@@ -24,7 +28,7 @@ public extension Status {
 }
 
 public extension Now {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let content: String
         public let listed: Bool
         
@@ -36,27 +40,42 @@ public extension Now {
 }
 
 public extension Paste {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let title: String
         public let content: String
+        public let listed: Bool
+        
+        public init(title: String, content: String, listed: Bool) {
+            self.title = title
+            self.content = content
+            self.listed = listed
+        }
     }
 }
 
 public extension PURL {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let name: String
-        public let url: String
+        public let content: String
+        public let listed: Bool
+        
+        public init(name: String, content: String, listed: Bool) {
+            self.name = name
+            self.content = content
+            self.listed = listed
+        }
     }
 }
 
 public extension Profile {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let content: String
+        public let publish: Bool
     }
 }
 
 public extension StatusLog.Bio {
-    struct Draft: RequestBody {
+    struct Draft: MDDraft {
         public let content: String
     }
 }

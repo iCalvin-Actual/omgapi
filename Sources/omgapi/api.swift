@@ -18,12 +18,11 @@ public class api {
         
         return decoder
     }()
+    static var requests: [AnyCancellable] = []
     
     let requestConstructor = APIRequestConstructor()
     
     let urlSession: URLSession = .shared
-    
-    var requests: [AnyCancellable] = []
     
     public init() {
     }
@@ -51,7 +50,7 @@ public class api {
                         continuation.resume(throwing: error)
                     }
                 }
-                .store(in: &self.requests)
+                .store(in: &Self.requests)
         })
     }
     
@@ -160,26 +159,14 @@ public extension api {
     }
     
     func account(for emailAddress: String, with credentials: APICredential) async throws -> Account {
-        let ownerRequest = GETAccountNameAPIRequest(
-            for: emailAddress,
-            authorization: credentials
-        )
         let infoRequest = GETAccountInfoAPIRequest(
             for: emailAddress,
             authorization: credentials
         )
-        let addressesRequest = GETAddressesForEmailAPIRequest(
-            for: emailAddress,
-            authorization: credentials
-        )
-        async let owner = try self.apiResponse(for: ownerRequest)
-        async let info = try self.apiResponse(for: infoRequest)
-        async let addresses = try self.apiResponse(for: addressesRequest)
+        let info = try await self.apiResponse(for: infoRequest)
         
-        return await Account(
-            owner: try owner,
-            info: try info,
-            addresses: try addresses.map({ .init(name: $0.address, registered: $0.registration) })
+        return Account(
+            info: info
         )
     }
     
@@ -243,6 +230,12 @@ public extension api {
         )
     }
     
+    func saveNow(for address: AddressName, content: String, credential: APICredential) async throws -> Now? {
+        let draft = Now.Draft(content: content, listed: true)
+        let request = SETAddressNowRequest(for: address, draft: draft, authorization: credential)
+        let _ = try await apiResponse(for: request)
+        return try await now(for: address, credential: credential)
+    }
     // MARK: - PasteBin
     
     func pasteBin(for address: AddressName, credential: APICredential?) async throws -> PasteBin {
@@ -254,22 +247,37 @@ public extension api {
                 author: address,
                 content: paste.content,
                 modifiedOn: paste.updated,
-                listed: paste.listed.boolValue
+                listed: paste.isPublic
             )
         }
     }
     
-    func paste(_ title: String, from address: AddressName, credential: APICredential?) async throws -> Paste {
+    func paste(_ title: String, from address: AddressName, credential: APICredential?) async throws -> Paste? {
         let request = GETAddressPaste(title, from: address)
+        do {
+            let response = try await apiResponse(for: request)
+            let paste = response.paste
+            return Paste(
+                title: paste.title,
+                author: address,
+                content: paste.content,
+                modifiedOn: paste.updated,
+                listed: paste.isPublic
+            )
+        } catch let error as APIError {
+            switch error {
+            case .notFound:
+                return nil
+            default:
+                throw error
+            }
+        }
+    }
+    
+    func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
+        let request = SETAddressPaste(draft, to: address, authorization: credential)
         let response = try await apiResponse(for: request)
-        let paste = response.paste
-        return Paste(
-            title: paste.title,
-            author: address,
-            content: paste.content,
-            modifiedOn: paste.updated,
-            listed: paste.listed.boolValue
-        )
+        return try await paste(response.title, from: address, credential: credential)
     }
     
     // MARK: - PURL
@@ -294,14 +302,24 @@ public extension api {
             address: address,
             authorization: credential
         )
-        let response = try await apiResponse(for: request)
-        return PURL(
-            address: address,
-            name: response.purl.name,
-            url: response.purl.url,
-            counter: response.purl.counter ?? 0,
-            listed: response.purl.isPublic
-        )
+        do {
+            let response = try await apiResponse(for: request)
+            return PURL(
+                address: address,
+                name: response.purl.name,
+                url: response.purl.url,
+                counter: response.purl.counter ?? 0,
+                listed: true
+            )
+        } catch {
+            throw error
+        }
+    }
+    
+    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
+        let request = SETAddressPURL(draft, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+        return try await paste(draft.name, from: address, credential: credential)
     }
     
     // MARK: - Profile
@@ -327,6 +345,12 @@ public extension api {
             head: response.head,
             css: response.css
         )
+    }
+    
+    func saveProfile(_ content: String, for address: AddressName, with credential: APICredential) async throws -> Profile {
+        let request = SETProfile(.init(content: content, publish: true), from: address, with: credential)
+        let _ = try await apiResponse(for: request)
+        return try await profile(address, with: credential)
     }
     
     // MARK: - Status
@@ -373,6 +397,9 @@ public extension api {
     }
     
     func logs(for address: String) async throws -> [Status] {
+        guard !address.isEmpty else {
+            return []
+        }
         let request = GETAddressStatuses(address)
         let response = try await apiResponse(for: request)
         return response.statuses.map { status in
@@ -411,5 +438,31 @@ public extension api {
             emoji: response.status.emoji,
             externalURL: response.status.externalURL
         )
+    }
+    
+    func saveStatus(_ draft: Status.Draft, to address: AddressName, credential: APICredential) async throws -> Status {
+        let request = SETAddressStatus(draft, with: address, authorization: credential)
+        let response = try await apiResponse(for: request)
+        return try await status(response.id, from: address)
+    }
+    
+    func themes() async throws -> [Theme] {
+        let request = GETThemes()
+        let response = try await apiResponse(for: request)
+        let themes = response.themes.values.map({ model in
+            Theme(
+                id: model.id,
+                name: model.name,
+                created: model.created,
+                updated: model.updated,
+                author: model.author,
+                authorUrl: model.authorUrl,
+                version: model.version,
+                license: model.license,
+                description: model.description,
+                previewCss: model.previewCss
+            )
+        })
+        return themes
     }
 }

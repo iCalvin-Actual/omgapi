@@ -179,7 +179,20 @@ enum PasteBinPath: APIPath {
 
 // MARK: -
 
-enum ProfilePath: WebPath {
+enum ProfilePath: APIPath {
+    private static let webpage = "address/{address}/web"
+    
+    case profile(_ address: AddressName)
+    
+    var string: String {
+        switch self {
+        case .profile(let address):
+            return Self.webpage.replacingAddress(address)
+        }
+    }
+}
+
+enum PublicPath: WebPath {
     private static let addressProfile = "https://{address}.omg.lol"
     private static let addressPhoto = "address/{address}/pfp"
     
@@ -246,6 +259,25 @@ enum StatusPath: APIPath {
             return Self.addressStatus.replacingAddress(address).replacingStatus(status)
         case .addressBio(let address):
             return Self.addressLogBio.replacingAddress(address)
+        }
+    }
+}
+
+// MARK: -
+
+enum ThemePath: APIPath {
+    private static let themesList: String = "theme/list"
+    private static let theme: String = "theme/{id}/info"
+    
+    case themes
+    case theme(_ id: String)
+    
+    var string: String {
+        switch self {
+        case .theme(let id):
+            return Self.theme.replacingOccurrences(of: "{id}", with: id)
+        case .themes:
+            return Self.themesList
         }
     }
 }
