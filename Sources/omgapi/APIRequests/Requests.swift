@@ -117,6 +117,14 @@ class GETNowGardenRequest: APIRequest<None, NowGardenResponse> {
     }
 }
 
+class GETAddressNowPageRequest: APIRequest<None, String> {
+    init(_ address: AddressName) {
+        super.init(
+            path: NowPagePath.nowPage(address: address)
+        )
+    }
+}
+
 class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
     init(for address: AddressName, authorization: APICredential?) {
         super.init(

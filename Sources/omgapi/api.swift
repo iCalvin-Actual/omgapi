@@ -218,6 +218,17 @@ public extension api {
             )}
     }
     
+    func nowWebpage(for address: AddressName) async throws -> NowPage {
+        let request = GETAddressNowPageRequest(address)
+        let response = try await apiResponse(for: request) { data in
+            String(data: data, encoding: .utf8)
+        }
+        return NowPage(
+            address: address,
+            content: response
+        )
+    }
+    
     func now(for address: AddressName, credential: APICredential? = nil) async throws -> Now {
         let request = GETAddressNowRequest(for: address, authorization: credential)
         let response = try await apiResponse(for: request)

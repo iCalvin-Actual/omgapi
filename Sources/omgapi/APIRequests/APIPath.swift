@@ -139,6 +139,19 @@ enum AddressPath: APIPath {
 
 // MARK: -
 
+enum NowPagePath: WebPath {
+    private static let addressNowPage = "https://{address}.omg.lol/now"
+    
+    case nowPage(address: AddressName)
+    
+    var string: String {
+        switch self {
+        case .nowPage(let address):
+            return Self.addressNowPage.replacingAddress(address)
+        }
+    }
+}
+
 enum NowPath: APIPath {
     private static let addressNow = "address/{address}/now/"
     private static let nowGarden = "now/garden/"

@@ -14,3 +14,8 @@ public struct Now {
     
     public let updated: Date
 }
+
+public struct NowPage {
+    public let address: AddressName
+    public let content: String
+}
