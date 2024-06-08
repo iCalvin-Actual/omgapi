@@ -326,6 +326,16 @@ public extension api {
         }
     }
     
+    func purlContent(_ name: String, for address: AddressName, credential: APICredential?) async throws -> String? {
+        let request = GETAddressPURLContent(purl: name, address: address, authorization: credential)
+        do {
+            let response = try await apiResponse(for: request, priorityDecoding: { String(data: $0, encoding: .utf8) })
+            return response
+        } catch {
+            throw error
+        }
+    }
+    
     func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
         let request = SETAddressPURL(draft, address: address, authorization: credential)
         let _ = try await apiResponse(for: request)

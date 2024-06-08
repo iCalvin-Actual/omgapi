@@ -196,6 +196,15 @@ class GETAddressPURL: APIRequest<None, GETPURLResponseModel> {
     }
 }
 
+class GETAddressPURLContent: APIRequest<None, String> {
+    init(purl: String, address: AddressName, authorization: APICredential? = nil) {
+        super.init(
+            authorization: authorization,
+            path: PublicPath.purl(address, purl: purl)
+        )
+    }
+}
+
 class SETAddressPURL: APIRequest<PURL.Draft, BasicResponse> {
     init(_ draft: PURL.Draft, address: AddressName, authorization: APICredential) {
         super.init(

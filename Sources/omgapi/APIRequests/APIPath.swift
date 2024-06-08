@@ -208,16 +208,24 @@ enum ProfilePath: APIPath {
 enum PublicPath: WebPath {
     private static let addressProfile = "https://{address}.omg.lol"
     private static let addressPhoto = "address/{address}/pfp"
+    private static let addressPurl = "https://{address}.url.lol/{purl}"
     
     case profile(_ address: AddressName)
     case photo(_ address: AddressName)
+    case purl(_ address: AddressName, purl: String)
     
     var string: String {
         switch self {
         case .profile(let address):
-            return Self.addressProfile.replacingAddress(address)
+            return Self.addressProfile
+                .replacingAddress(address)
         case .photo(let address):
-            return Self.addressPhoto.replacingAddress(address)
+            return Self.addressPhoto
+                .replacingAddress(address)
+        case .purl(let address, let purl):
+            return Self.addressPurl
+                .replacingAddress(address)
+                .replacingPURL(purl)
         }
     }
 }
