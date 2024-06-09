@@ -378,7 +378,8 @@ public extension api {
     func completeStatusLog() async throws -> PublicLog {
         let request = GETCompleteStatusLog()
         let response = try await apiResponse(for: request)
-        return PublicLog(statuses: response.statuses.map { status in
+        let statuses = response.statuses ?? []
+        return PublicLog(statuses: statuses.map { status in
             Status(
                 id: status.id,
                 address: status.address,
@@ -393,7 +394,8 @@ public extension api {
     func latestStatusLog() async throws -> PublicLog {
         let request = GETLatestStatusLogs()
         let response = try await apiResponse(for: request)
-        return PublicLog(statuses: response.statuses.map { status in
+        let statuses = response.statuses ?? []
+        return PublicLog(statuses: statuses.map { status in
             Status(
                 id: status.id,
                 address: status.address,
@@ -422,7 +424,8 @@ public extension api {
         }
         let request = GETAddressStatuses(address)
         let response = try await apiResponse(for: request)
-        return response.statuses.map { status in
+        let statuses = response.statuses ?? []
+        return statuses.map { status in
             Status(
                 id: status.id,
                 address: status.address,

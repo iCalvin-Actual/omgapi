@@ -233,7 +233,7 @@ struct StatusResponseModel: CommonAPIResponse {
 
 struct StatusLogResponseModel: CommonAPIResponse {
     let message: String?
-    let statuses: [AddressStatusModel]
+    let statuses: [AddressStatusModel]?
 }
 
 // MARK: - Themes
