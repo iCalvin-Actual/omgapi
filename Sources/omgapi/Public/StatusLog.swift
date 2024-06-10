@@ -11,8 +11,8 @@ public struct PublicLog {
     public let statuses: [Status]
 }
 
-public struct StatusLog {
-    public struct Bio {
+public struct StatusLog: Sendable {
+    public struct Bio: Sendable {
         public let content: String
     }
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Status {
+public struct Status: Sendable {
     public let id: String
     public let address: AddressName
     public let created: Date

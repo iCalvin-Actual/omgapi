@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Internal
 
-public class api {
+public actor api {
     static let decoder: JSONDecoder = {
         var decoder = JSONDecoder()
         
@@ -408,13 +408,13 @@ public extension api {
     }
     
     func statusLog(from address: AddressName) async throws -> StatusLog {
-        async let logs = try logs(for: address)
-        async let bio = try bio(for: address)
+        let logs = try await logs(for: address)
+        let bio = try await bio(for: address)
         
-        return await StatusLog(
+        return StatusLog(
             address: address,
-            bio: try bio,
-            statuses: try logs
+            bio: bio,
+            statuses: logs
         )
     }
     
