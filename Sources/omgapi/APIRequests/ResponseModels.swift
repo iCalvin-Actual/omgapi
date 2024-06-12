@@ -22,7 +22,7 @@ struct OAuthResponse: Response {
     let accessToken: String?
 }
 
-struct AccountInfo: CommonAPIResponse {
+struct AccountInfo: CommonAPIResponse, Sendable {
     let message: String?
     
     let email: String

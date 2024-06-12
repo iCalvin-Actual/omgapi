@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Address {
+public struct Address: Sendable {
     public struct Availability {
         public let address: AddressName
         public let available: Bool

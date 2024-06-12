@@ -18,7 +18,8 @@ public actor api {
         
         return decoder
     }()
-    static var requests: [AnyCancellable] = []
+    
+    var requests: [AnyCancellable] = []
     
     let requestConstructor = APIRequestConstructor()
     
@@ -49,7 +50,7 @@ public actor api {
                         continuation.resume(throwing: error)
                     }
                 }
-                .store(in: &Self.requests)
+                .store(in: &requests)
         })
     }
     

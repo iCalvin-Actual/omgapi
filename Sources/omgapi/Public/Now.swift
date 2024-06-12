@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Now {
+public struct Now: Sendable {
     public let address: AddressName
     public let content: String
     public let listed: Bool
@@ -15,7 +15,7 @@ public struct Now {
     public let updated: Date
 }
 
-public struct NowPage {
+public struct NowPage: Sendable {
     public let address: AddressName
     public let content: String
 }

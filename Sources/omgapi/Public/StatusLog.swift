@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PublicLog {
+public struct PublicLog: Sendable {
     public let statuses: [Status]
 }
 

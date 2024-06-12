@@ -7,13 +7,12 @@
 
 import Foundation
 
-public struct Paste {
+public struct Paste: Sendable {
     public let title: String
     public let author: String
     public let content: String
     public let modifiedOn: Date
     public let listed: Bool
-    
 }
 
 public typealias PasteBin = [Paste]

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Profile {
+public struct Profile: Sendable {
     public let address: String
     
     public let content: String
@@ -17,7 +17,7 @@ public struct Profile {
     public let css: String?
 }
 
-public struct PublicProfile {
+public struct PublicProfile: Sendable {
     public let address: String
     public let content: String?
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ServiceInfo {
+public struct ServiceInfo: Sendable {
     public let summary: String
     
     public let members: Int

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct NowGardenEntry {
+public struct NowGardenEntry: Sendable {
     public let address: AddressName
     public let url: String
     public let updated: TimeStamp

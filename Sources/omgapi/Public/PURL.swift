@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PURL {    
+public struct PURL: Sendable {    
     public let address: AddressName
     public let name: String
     public let url: String

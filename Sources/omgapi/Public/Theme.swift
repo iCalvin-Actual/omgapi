@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Theme {
+public struct Theme: Sendable {
     public let id: String
     public let name: String
     

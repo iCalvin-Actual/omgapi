@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct TimeStamp: Codable {
+public struct TimeStamp: Codable, Sendable {
     public let message: String?
     public let date: Date
     

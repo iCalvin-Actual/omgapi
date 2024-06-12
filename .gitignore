@@ -2,3 +2,4 @@ Package.swift
 Sources/UIDotAppDotLOL.swift
 .DS_Store
 .swiftpm/
+*.xcuserstate

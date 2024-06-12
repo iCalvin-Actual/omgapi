@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Account {
+public struct Account: Sendable {
     private let info: AccountInfo
     
     internal init(info: AccountInfo) {
