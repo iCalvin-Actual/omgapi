@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MDDraft: RequestBody {
+protocol MDDraft: RequestBody, Sendable {
     var content: String { get }
 }
 
