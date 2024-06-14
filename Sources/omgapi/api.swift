@@ -136,6 +136,7 @@ public extension api {
     
     // MARK: - Account
     
+    nonisolated
     func authURL(with clientId: String, redirect: String) -> URL? {
         URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId)&scope=everything&redirect_uri=\(redirect)&response_type=code")
     }
