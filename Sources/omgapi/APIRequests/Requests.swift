@@ -279,6 +279,17 @@ class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     }
 }
 
+class DELETEAddressStatus: APIRequest<Status.Draft, BasicResponse> {
+    init(_ draft: Status.Draft, from address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: StatusPath.addressLog(address),
+            body: draft
+        )
+    }
+}
+
 class SETAddressStatus: APIRequest<Status.Draft, NewStatusResponseModel> {
     init(_ draft: Status.Draft, with address: AddressName, authorization: APICredential) {
         super.init(

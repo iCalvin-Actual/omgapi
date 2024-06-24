@@ -470,6 +470,16 @@ public extension api {
         )
     }
     
+    func deleteStatus(_ status: Status.Draft, from address: AddressName, credential: APICredential) async throws -> Status? {
+        guard let id = status.id else {
+            return nil
+        }
+        let request = DELETEAddressStatus(status, from: address, authorization: credential)
+        let backup = try await self.status(id, from: address)
+        let _ = try await apiResponse(for: request)
+        return backup
+    }
+    
     func saveStatus(_ draft: Status.Draft, to address: AddressName, credential: APICredential) async throws -> Status {
         let request = SETAddressStatus(draft, with: address, authorization: credential)
         let response = try await apiResponse(for: request)
