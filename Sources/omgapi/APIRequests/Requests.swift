@@ -205,6 +205,16 @@ class GETAddressPURLContent: APIRequest<None, String> {
     }
 }
 
+class DELETEAddressPURLContent: APIRequest<None, BasicResponse> {
+    init(purl: String, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: PURLPath.managePurl(purl, address: address)
+        )
+    }
+}
+
 class SETAddressPURL: APIRequest<PURL.Draft, BasicResponse> {
     init(_ draft: PURL.Draft, address: AddressName, authorization: APICredential) {
         super.init(

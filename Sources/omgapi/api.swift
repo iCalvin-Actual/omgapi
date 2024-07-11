@@ -343,10 +343,15 @@ public extension api {
         }
     }
     
-    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
+    func deletePURL(_ name: String, for address: AddressName, credential: APICredential) async throws {
+        let request = DELETEAddressPURLContent(purl: name, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
+    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> PURL? {
         let request = SETAddressPURL(draft, address: address, authorization: credential)
         let _ = try await apiResponse(for: request)
-        return try await paste(draft.name, from: address, credential: credential)
+        return try await purl(draft.name, for: address, credential: credential)
     }
     
     // MARK: - Profile
