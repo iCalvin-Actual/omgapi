@@ -165,6 +165,16 @@ class GETAddressPaste: APIRequest<None, PasteResponseModel> {
     }
 }
 
+class DELETEAddressPasteContent: APIRequest<None, BasicResponse> {
+    init(paste: String, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: PasteBinPath.managePaste(paste, address: address)
+        )
+    }
+}
+
 class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
     init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
         super.init(

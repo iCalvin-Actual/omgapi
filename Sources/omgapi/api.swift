@@ -291,6 +291,11 @@ public extension api {
         }
     }
     
+    func deletePaste(_ name: String, for address: AddressName, credential: APICredential) async throws {
+        let request = DELETEAddressPasteContent(paste: name, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
     func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
         let request = SETAddressPaste(draft, to: address, authorization: credential)
         let response = try await apiResponse(for: request)
