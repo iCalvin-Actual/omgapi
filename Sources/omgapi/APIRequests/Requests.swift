@@ -175,7 +175,6 @@ class DELETEAddressPasteContent: APIRequest<None, BasicResponse> {
     }
 }
 
-
 class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
     init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
         super.init(
