@@ -17,7 +17,12 @@ struct APIResponse<R: Response>: Decodable {
         let success: Bool
     }
     let request: Request
-    let response: R?
+    let result: R?
+    
+    enum CodingKeys: String, CodingKey {
+        case request
+        case result = "response"
+    }
 }
 
 protocol CommonAPIResponse: Response {

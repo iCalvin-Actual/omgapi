@@ -59,6 +59,12 @@ public extension PURL {
         public let content: String
         public let listed: Bool
         
+        enum CodingKeys: String, CodingKey {
+            case name
+            case content = "url"
+            case listed
+        }
+        
         public init(name: String, content: String, listed: Bool) {
             self.name = name
             self.content = content

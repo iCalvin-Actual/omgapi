@@ -25,7 +25,7 @@ public enum APIError: Error, Equatable {
         }
         let status = response.request.statusCode
         var message: String?
-        if let responseMessage = (response.response as? CommonAPIResponse)?.message {
+        if let responseMessage = (response.result as? CommonAPIResponse)?.message {
             message = responseMessage
         }
         switch status {
