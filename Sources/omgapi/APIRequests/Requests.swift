@@ -165,6 +165,16 @@ class GETAddressPaste: APIRequest<None, PasteResponseModel> {
     }
 }
 
+class DELETEAddressPasteContent: APIRequest<None, BasicResponse> {
+    init(paste: String, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: PasteBinPath.managePaste(paste, address: address)
+        )
+    }
+}
+
 class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
     init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
         super.init(
@@ -201,6 +211,16 @@ class GETAddressPURLContent: APIRequest<None, String> {
         super.init(
             authorization: authorization,
             path: PublicPath.purl(address, purl: purl)
+        )
+    }
+}
+
+class DELETEAddressPURLContent: APIRequest<None, BasicResponse> {
+    init(purl: String, address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: PURLPath.managePurl(purl, address: address)
         )
     }
 }
@@ -276,6 +296,17 @@ class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
 class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     init(_ status: String, from address: AddressName) {
         super.init(path: StatusPath.addressStatus(status, address))
+    }
+}
+
+class DELETEAddressStatus: APIRequest<Status.Draft, BasicResponse> {
+    init(_ draft: Status.Draft, from address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: StatusPath.addressLog(address),
+            body: draft
+        )
     }
 }
 

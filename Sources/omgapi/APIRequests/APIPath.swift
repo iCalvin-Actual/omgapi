@@ -175,9 +175,11 @@ enum NowPath: APIPath {
 enum PasteBinPath: APIPath {
     private static let addressPastes = "address/{address}/pastebin/"
     private static let addressPaste = "address/{address}/pastebin/{paste}/"
+    private static let managePaste = "address/{address}/pastebin/{paste}"
     
     case paste(_ title: String, address: AddressName)
     case pastes(_ address: AddressName)
+    case managePaste(_ paste: String, address: AddressName)
     
     var string: String {
         switch self {
@@ -185,7 +187,8 @@ enum PasteBinPath: APIPath {
             return Self.addressPaste.replacingPaste(title).replacingAddress(address)
         case .pastes(let address):
             return Self.addressPastes.replacingAddress(address)
-            
+        case .managePaste(let title, address: let address):
+            return Self.managePaste.replacingPaste(title).replacingAddress(address)
         }
     }
 }

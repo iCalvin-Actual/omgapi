@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Address: Sendable {
-    public struct Availability {
+    public struct Availability: Sendable {
         public let address: AddressName
         public let available: Bool
         public let punyCode: String?

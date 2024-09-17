@@ -19,8 +19,6 @@ public actor api {
         return decoder
     }()
     
-    var requests: [AnyCancellable] = []
-    
     let requestConstructor = APIRequestConstructor()
     
     let urlSession: URLSession = .shared
@@ -37,21 +35,28 @@ public actor api {
             urlRequest = APIRequestConstructor.urlRequest(from: request)
         }
         
-        let task = urlSession.dataTaskPublisher(for: urlRequest)
-        let publisher: APIResultPublisher<R> = publisher(for: task, priorityDecoding: priorityDecoding)
-        
-        return try await withCheckedThrowingContinuation({ continuation in
-            publisher
-                .sink { result in
-                    switch result {
-                    case .success(let log):
-                        continuation.resume(returning: log)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
+        let (data, _) = try await urlSession.data(for: urlRequest)
+        do {
+            if let result = priorityDecoding?(data) {
+                return result
+            } else {
+                let apiResponse = try api.decoder.decode(APIResponse<R>.self, from: data)
+                guard apiResponse.request.success else {
+                    throw APIError.unhandled(apiResponse.request.statusCode, message: "Request \(request.path) in failed state")
                 }
-                .store(in: &requests)
-        })
+                
+                guard let result = apiResponse.result else {
+                    throw APIError.badResponseEncoding
+                }
+                return result
+            }
+        }
+        catch {
+            if let errorMessageResponse: APIResponse<BasicResponse> = try? api.decoder.decode(APIResponse.self, from: data) {
+                throw APIError.create(from: errorMessageResponse)
+            }
+            throw APIError.badResponseEncoding
+        }
     }
     
     func multipartPublisher<B, R>(for request: APIRequest<B, R>) -> APIResultPublisher<R> {
@@ -76,7 +81,7 @@ public actor api {
                             return .failure(.create(from: apiResponse))
                         }
                         
-                        guard let response = apiResponse.response else {
+                        guard let response = apiResponse.result else {
                             return .failure(.badResponseEncoding)
                         }
                         
@@ -104,7 +109,7 @@ public actor api {
                         return .failure(.create(from: result))
                     }
                     
-                    guard let response = result.response else {
+                    guard let response = result.result else {
                         return .failure(.badResponseEncoding)
                     }
                     
@@ -286,6 +291,11 @@ public extension api {
         }
     }
     
+    func deletePaste(_ name: String, for address: AddressName, credential: APICredential) async throws {
+        let request = DELETEAddressPasteContent(paste: name, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
     func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
         let request = SETAddressPaste(draft, to: address, authorization: credential)
         let response = try await apiResponse(for: request)
@@ -338,10 +348,15 @@ public extension api {
         }
     }
     
-    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
+    func deletePURL(_ name: String, for address: AddressName, credential: APICredential) async throws {
+        let request = DELETEAddressPURLContent(purl: name, address: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
+    func savePURL(_ draft: PURL.Draft, to address: AddressName, credential: APICredential) async throws -> PURL? {
         let request = SETAddressPURL(draft, address: address, authorization: credential)
         let _ = try await apiResponse(for: request)
-        return try await paste(draft.name, from: address, credential: credential)
+        return try await purl(draft.name, for: address, credential: credential)
     }
     
     // MARK: - Profile
@@ -443,8 +458,8 @@ public extension api {
         let request = GETAddressStatusBio(address)
         let response = try await apiResponse(for: request, priorityDecoding: { data in
             if let response = try? api.decoder.decode(APIResponse<StatusLogBioResponseModel>.self, from: data) {
-                if response.response?.message?.lowercased().hasPrefix("couldn’t find a statuslog bio for") ?? false {
-                    return response.response
+                if response.result?.message?.lowercased().hasPrefix("couldn’t find a statuslog bio for") ?? false {
+                    return response.result
                 }
             }
             return nil
@@ -463,6 +478,16 @@ public extension api {
             emoji: response.status.emoji,
             externalURL: response.status.externalURL
         )
+    }
+    
+    func deleteStatus(_ status: Status.Draft, from address: AddressName, credential: APICredential) async throws -> Status? {
+        guard let id = status.id else {
+            return nil
+        }
+        let request = DELETEAddressStatus(status, from: address, authorization: credential)
+        let backup = try await self.status(id, from: address)
+        let _ = try await apiResponse(for: request)
+        return backup
     }
     
     func saveStatus(_ draft: Status.Draft, to address: AddressName, credential: APICredential) async throws -> Status {
