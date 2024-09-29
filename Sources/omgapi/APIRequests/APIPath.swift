@@ -264,12 +264,18 @@ enum StatusPath: APIPath {
     private static let addressStatuses = "address/{address}/statuses"
     private static let addressStatus = "address/{address}/statuses/{status}"
     private static let addressLogBio = "address/{address}/statuses/bio"
+    private static let addressFollowing = "address/{address}/statuses/following"
+    private static let addressFollowers = "address/{address}/statuses/followers"
+    private static let addressFollow = "address/{address}/statuses/follow/{target}"
     
     case completeLog
     case latestLogs
     case addressLog(_ address: AddressName)
     case addressStatus(_ status: String, _ address: AddressName)
     case addressBio(_ address: String)
+    case addressFollowing(_ address: String)
+    case addressFollowers(_ address: String)
+    case addressFollow(_ address: String, _ target: String)
     
     var string: String {
         switch self {
@@ -283,6 +289,12 @@ enum StatusPath: APIPath {
             return Self.addressStatus.replacingAddress(address).replacingStatus(status)
         case .addressBio(let address):
             return Self.addressLogBio.replacingAddress(address)
+        case .addressFollowing(let address):
+            return Self.addressFollowing.replacingAddress(address)
+        case .addressFollowers(let address):
+            return Self.addressFollowers.replacingAddress(address)
+        case .addressFollow(let address, let target):
+            return Self.addressFollow.replacingAddress(address).replacingTarget(target)
         }
     }
 }

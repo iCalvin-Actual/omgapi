@@ -218,6 +218,18 @@ struct StatusLogBioResponseModel: CommonAPIResponse {
     let css: String?
 }
 
+struct StatusLogFollowersModel: CommonAPIResponse {
+    let message: String?
+    let followers: [AddressName]
+    let followersCount: Int
+}
+
+struct StatusLogFollowingModel: CommonAPIResponse {
+    let message: String?
+    let following: [AddressName]
+    let followingCount: Int
+}
+
 struct NewStatusResponseModel: CommonAPIResponse {
     let message: String?
     let id: String
