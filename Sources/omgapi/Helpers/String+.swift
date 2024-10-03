@@ -23,6 +23,9 @@ extension String {
     func replacingStatus(_ status: String) -> String {
         replacingOccurrences(of: "{status}", with: status)
     }
+    func replacingTarget(_ target: String) -> String {
+        replacingOccurrences(of: "{target}", with: target)
+    }
 }
 
 extension Optional<String> {

@@ -293,6 +293,38 @@ class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
     }
 }
 
+class GETAddressFollowing: APIRequest<None, StatusLogFollowingModel> {
+    init(_ address: AddressName) {
+        super.init(path: StatusPath.addressFollowing(address))
+    }
+}
+
+class GETAddressFollowers: APIRequest<None, StatusLogFollowersModel> {
+    init(_ address: AddressName) {
+        super.init(path: StatusPath.addressFollowers(address))
+    }
+}
+
+class SETAddressFollowing: APIRequest<None, BasicResponse> {
+    init(_ address: AddressName, _ target: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: StatusPath.addressFollow(address, target)
+        )
+    }
+}
+
+class DELETEAddressFollowing: APIRequest<None, BasicResponse> {
+    init(_ address: AddressName, _ target: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .DELETE,
+            path: StatusPath.addressFollow(address, target)
+        )
+    }
+}
+
 class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     init(_ status: String, from address: AddressName) {
         super.init(path: StatusPath.addressStatus(status, address))

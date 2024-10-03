@@ -467,6 +467,28 @@ public extension api {
         return .init(content: response.bio ?? "")
     }
     
+    func followers(for address: AddressName) async throws -> [AddressName] {
+        let request = GETAddressFollowers(address)
+        let response = try await apiResponse(for: request)
+        return response.followers
+    }
+    
+    func following(from address: AddressName) async throws -> [AddressName] {
+        let request = GETAddressFollowing(address)
+        let response = try await apiResponse(for: request)
+        return response.following
+    }
+    
+    func follow(_ target: AddressName, from address: AddressName, credential: APICredential) async throws {
+        let request = SETAddressFollowing(address, target, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
+    func unfollow(_ target: AddressName, from address: AddressName, credential: APICredential) async throws {
+        let request = DELETEAddressFollowing(address, target, authorization: credential)
+        let _ = try await apiResponse(for: request)
+    }
+    
     func status(_ status: String, from address: AddressName) async throws -> Status {
         let request = GETAddressStatus(status, from: address)
         let response = try await apiResponse(for: request)
