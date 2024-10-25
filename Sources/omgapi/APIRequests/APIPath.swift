@@ -317,3 +317,43 @@ enum ThemePath: APIPath {
         }
     }
 }
+
+// Mark: - Pics
+
+enum PicsPath: APIPath {
+    private static let picFeed: String = "pics"
+    private static let upload: String = "address/{address}/pics/upload"
+    private static let addressPics: String = "address/{address}/pics"
+    private static let addressPic: String = "address/{address}/pics/{target}"
+    
+    case picsFeed
+    case upload(_ address: String)
+    case addressPics(_ address: String)
+    case addressPic(_ address: String, _ target: String)
+    
+    var string: String {
+        switch self {
+        case .picsFeed:
+            return Self.picFeed
+        case .upload(let address):
+            return Self.upload.replacingAddress(address)
+        case .addressPics(let address):
+            return Self.addressPics.replacingAddress(address)
+        case .addressPic(let address, let target):
+            return Self.addressPic.replacingAddress(address).replacingTarget(target)
+        }
+    }
+}
+
+enum CDNPath: WebPath {
+    private static let cdnPic = "https://cdn.some.pics/{address}/{target}{extension}"
+    
+    case pic(_ address: String, _ target: String, _ extension: String)
+    
+    var string: String {
+        switch self {
+        case .pic(let address, let target, let ext):
+            return Self.cdnPic.replacingAddress(address).replacingTarget(target).replacingExtension(ext)
+        }
+    }
+}

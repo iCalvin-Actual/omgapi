@@ -26,6 +26,9 @@ extension String {
     func replacingTarget(_ target: String) -> String {
         replacingOccurrences(of: "{target}", with: target)
     }
+    func replacingExtension(_ ext: String) -> String {
+        replacingOccurrences(of: "{ext}", with: ext)
+    }
 }
 
 extension Optional<String> {

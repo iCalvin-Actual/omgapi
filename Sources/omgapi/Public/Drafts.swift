@@ -7,7 +7,10 @@
 
 import Foundation
 
-protocol MDDraft: RequestBody, Sendable {
+protocol Draft: RequestBody, Sendable {
+}
+
+protocol MDDraft: Draft {
     var content: String { get }
 }
 
@@ -83,5 +86,12 @@ public extension Profile {
 public extension StatusLog.Bio {
     struct Draft: MDDraft {
         public let content: String
+    }
+}
+
+public extension Pic {
+    struct Draft: omgapi.Draft {
+        public let description: String
+        public let tags: String
     }
 }

@@ -269,3 +269,25 @@ struct ThemeResponseModel: Response {
     let sampleProfile: String
 }
 
+// MARK: - Pics
+
+struct PicResposne: Response {
+    let id: String
+    let address: String
+    let created: String
+    let mime: String
+    let size: String
+    let description: String
+    let exif: [String: String]
+}
+
+struct PicsResponseModel: CommonAPIResponse {
+    let message: String?
+    let pics: [PicResposne]
+}
+
+struct PicResponseModel: CommonAPIResponse {
+    let message: String?
+    let pic: PicResposne
+}
+

@@ -10,6 +10,8 @@ import Foundation
 protocol RequestBody: Encodable {
 }
 
+extension Data: RequestBody { }
+
 struct None: RequestBody, Response {
     static let instance: None = { None() }()
     

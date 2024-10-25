@@ -537,4 +537,72 @@ public extension api {
         })
         return themes
     }
+    
+    func getPicsFeed() async throws -> [Pic] {
+        let request = GETPicsFeed()
+        let response = try await apiResponse(for: request)
+        let pics = response.pics.map({ model in
+            Pic(
+                id: model.id,
+                address: model.address,
+                created: .init(timeIntervalSince1970: Double(model.created) ?? 0),
+                size: Double(model.size) ?? 0,
+                mime: model.mime,
+                exif: model.exif,
+                description: model.description
+            )
+        })
+        return pics
+    }
+    
+    func getAddressPics(_ address: AddressName) async throws -> [Pic] {
+        let request = GETAddressPics(address)
+        let response = try await apiResponse(for: request)
+        let pics = response.pics.map({ model in
+            Pic(
+                id: model.id,
+                address: model.address,
+                created: .init(timeIntervalSince1970: Double(model.created) ?? 0),
+                size: Double(model.size) ?? 0,
+                mime: model.mime,
+                exif: model.exif,
+                description: model.description
+            )
+        })
+        return pics
+    }
+    
+    func getAddressPic(_ address: AddressName, id: String) async throws -> Pic {
+        let request = GETAddressPic(address, target: id)
+        let response = try await apiResponse(for: request)
+        let pic = Pic(
+            id: response.pic.id,
+            address: response.pic.address,
+            created: .init(timeIntervalSince1970: Double(response.pic.created) ?? 0),
+            size: Double(response.pic.size) ?? 0,
+            mime: response.pic.mime,
+            exif: response.pic.exif,
+            description: response.pic.description
+        )
+        return pic
+    }
+    
+    func uploadPic(_ data: Data, info: Pic.Draft, _ address: AddressName, credential: APICredential) async throws -> Pic {
+        let request = POSTAddressPic(image: data, address, credential: credential)
+        let response = try await apiResponse(for: request)
+        let id = response.pic.id
+        return try await updatePicDetails(draft: info, address, id: id, credential: credential)
+    }
+    
+    func updatePicDetails(draft: Pic.Draft, _ address: AddressName, id: String, credential: APICredential) async throws -> Pic {
+        let request = PATCHAddressPic(draft: draft, address, target: id, credential: credential)
+        let _ = try await apiResponse(for: request)
+        return try await getAddressPic(address, id: id)
+    }
+    
+    func getPicData(_ address: AddressName, id: String, ext: String) async throws -> Data {
+        let request = GETPicData(address, target: id, ext: ext)
+        let response = try await apiResponse(for: request)
+        return response
+    }
 }

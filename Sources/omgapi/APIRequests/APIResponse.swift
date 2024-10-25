@@ -34,6 +34,7 @@ struct BasicResponse: CommonAPIResponse {
 }
 
 extension String: Response { }
+extension Data: Response { }
 
 extension Array where Element == Response { }
 

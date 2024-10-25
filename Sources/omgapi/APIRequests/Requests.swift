@@ -360,3 +360,62 @@ class GETThemes: APIRequest<None, ThemesResponseModel> {
         super.init(path: ThemePath.themes)
     }
 }
+
+// MARK: - Pics
+
+class GETPicsFeed: APIRequest<None, PicsResponseModel> {
+    init() {
+        super.init(path: PicsPath.picsFeed)
+    }
+}
+
+class GETAddressPics: APIRequest<None, PicsResponseModel> {
+    init(_ address: String) {
+        super.init(path: PicsPath.addressPics(address))
+    }
+}
+
+class GETAddressPic: APIRequest<None, PicResponseModel> {
+    init(_ address: String, target: String) {
+        super.init(path: PicsPath.addressPic(address, target))
+    }
+}
+
+class PATCHAddressPic: APIRequest<Pic.Draft, BasicResponse> {
+    init(draft: Pic.Draft, _ address: String, target: String, credential: APICredential) {
+        super.init(
+            authorization: credential,
+            method: .PATCH,
+            path: PicsPath.addressPic(address, target),
+            body: draft
+        )
+    }
+}
+
+class POSTAddressPic: APIRequest<Data, PicResponseModel> {
+    init(image: Data, _ address: String, credential: APICredential) {
+        super.init(
+            authorization: credential,
+            method: .POST,
+            path: PicsPath.upload(address),
+            body: image,
+            multipartBody: true
+        )
+    }
+}
+
+class DELETEAddressPic: APIRequest<None, BasicResponse> {
+    init(_ address: String, target: String, credential: APICredential) {
+        super.init(
+            authorization: credential,
+            method: .DELETE,
+            path: PicsPath.addressPic(address, target)
+        )
+    }
+}
+
+class GETPicData: APIRequest<None, Data> {
+    init(_ address: String, target: String, ext: String) {
+        super.init(path: CDNPath.pic(address, target, ext))
+    }
+}
