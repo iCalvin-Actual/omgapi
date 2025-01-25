@@ -188,7 +188,7 @@ class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
 
 // MARK: - PURL
 
-class GETAddressPURLs: APIRequest<None, GETPURLsResponseModel> {
+class GETAddressPURLs: APIRequest<None, PURLsResponseModel> {
     init(_ address: AddressName, authorization: APICredential? = nil) {
         super.init(
             authorization: authorization,
@@ -197,7 +197,7 @@ class GETAddressPURLs: APIRequest<None, GETPURLsResponseModel> {
     }
 }
 
-class GETAddressPURL: APIRequest<None, GETPURLResponseModel> {
+class GETAddressPURL: APIRequest<None, PURLResponseModel> {
     init(_ purl: String, address: AddressName, authorization: APICredential? = nil) {
         super.init(
             authorization: authorization,

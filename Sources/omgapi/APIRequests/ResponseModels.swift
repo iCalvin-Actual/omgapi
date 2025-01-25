@@ -164,12 +164,12 @@ struct AddressPURLItemResponse: Response {
 
 typealias AddressPURLsResponse = [AddressPURLItemResponse]
 
-struct GETPURLsResponseModel: CommonAPIResponse {
+struct PURLsResponseModel: CommonAPIResponse {
     let message: String?
     let purls: AddressPURLsResponse
 }
 
-struct GETPURLResponseModel: CommonAPIResponse {
+struct PURLResponseModel: CommonAPIResponse {
     let message: String?
     let purl: AddressPURLResponse
 }

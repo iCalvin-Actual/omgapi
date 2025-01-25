@@ -7,6 +7,28 @@
 
 import Foundation
 
+extension Optional<String> {
+    var boolValue: Bool {
+        self?.boolValue ?? false
+    }
+}
+
+extension String {
+    var boolValue: Bool {
+        switch self.lowercased() {
+        case "true", "t", "yes", "y":
+            return true
+        case "false", "f", "no", "n", "":
+            return false
+        default:
+            if let int = Int(self) {
+                return int != 0
+            }
+            return false
+        }
+    }
+}
+
 extension String {
     func replacingEmail(_ address: String) -> String {
         replacingOccurrences(of: "{email}", with: address)
@@ -28,28 +50,6 @@ extension String {
     }
     func replacingExtension(_ ext: String) -> String {
         replacingOccurrences(of: "{ext}", with: ext)
-    }
-}
-
-extension Optional<String> {
-    var boolValue: Bool {
-        self?.boolValue ?? false
-    }
-}
-
-extension String {
-    var boolValue: Bool {
-        switch self.lowercased() {
-        case "true", "t", "yes", "y":
-            return true
-        case "false", "f", "no", "n", "":
-            return false
-        default:
-            if let int = Int(self) {
-                return int != 0
-            }
-            return false
-        }
     }
 }
 
