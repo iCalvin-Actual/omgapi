@@ -7,16 +7,28 @@
 
 import Foundation
 
+/// A user account wrapper that provides public access to account details.
+///
+/// Initialized internally from an `AccountInfo` object.
 public struct Account: Sendable {
+    /// Internal account metadata from the API.
     private let info: AccountInfo
-    
+
+    /// Creates an `Account` from a decoded `AccountInfo`.
+    ///
+    /// - Parameter info: The backing account info model.
     internal init(info: AccountInfo) {
         self.info = info
     }
 }
 
 extension Account {
+    /// The email address associated with the account.
     public var emailAddress: String                         { info.email }
+
+    /// The display name or full name of the account holder.
     public var name: String                                 { info.name }
+
+    /// The date when the account was created.
     public var created: Date                                { info.created.date }
 }

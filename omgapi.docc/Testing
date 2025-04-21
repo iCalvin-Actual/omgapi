@@ -1,0 +1,15 @@
+# Testing
+
+@Metadata {
+  @Title("Testing")
+  @PageKind("article")
+}
+
+## Running Tests
+
+```
+sh
+swift test
+```
+
+The `Mock/` folder includes stubbed endpoint responses to support testing without network access. You can use these mocks in unit tests to simulate API calls and validate decoding logic.

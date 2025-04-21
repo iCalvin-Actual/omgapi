@@ -7,7 +7,10 @@
 
 import Foundation
 
+/// Useful extensions to `Int`
 extension Int {
+    /// Collapses any value into a `Bool`.
+    /// `0` will return `false`, any other value returns `true`
     var boolValue: Bool {
         switch self {
         case 0:
@@ -15,5 +18,14 @@ extension Int {
         default:
             return true
         }
+    }
+}
+
+/// Useful extensions to optional `Int`
+extension Int? {
+    /// Optional compatible implemetation of `Int.boolValue`
+    /// Will return `false` when `nil`
+    var boolValue: Bool {
+        self?.boolValue ?? false
     }
 }

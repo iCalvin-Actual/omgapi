@@ -7,5 +7,8 @@
 
 import Foundation
 
+/// A type alias representing an omg.lol address.
 public typealias AddressName = String
+
+/// A type alias representing an API credential, typically a bearer token.
 public typealias APICredential = String
