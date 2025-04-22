@@ -9,6 +9,9 @@ import Foundation
 
 /// Represents errors that can occur while interacting with the omg.lol API.
 public enum APIError: Error, Equatable {
+    /// Placeholder value to indicate no error actually occured
+    case none
+    
     /// An internal value used only for cases that shouldn't happen in normal usage
     case inconceivable
 
@@ -41,11 +44,6 @@ public enum APIError: Error, Equatable {
         }
 
         let status = response.request.statusCode
-        var message: String?
-
-        if let responseMessage = (response.result as? CommonAPIResponse)?.message {
-            message = responseMessage
-        }
 
         switch status {
         case 401:
@@ -53,6 +51,15 @@ public enum APIError: Error, Equatable {
         case 404:
             return .notFound
         default:
+            if response.request.success {
+                return .none
+            }
+            var message: String?
+
+            if let responseMessage = (response.result as? CommonAPIResponse)?.message {
+                message = responseMessage
+            }
+            
             return .unhandled(status, message: message)
         }
     }

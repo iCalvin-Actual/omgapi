@@ -27,5 +27,6 @@ let package = Package(
             dependencies: [],
             swiftSettings: [.enableExperimentalFeature("StrictConcurrency")]
         ),
+        .testTarget(name: "omgapiTests", dependencies: ["omgapi"])
     ]
 )

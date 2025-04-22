@@ -8,7 +8,7 @@
 import Foundation
 
 /// A helper class to construct `URLRequest` instances from `APIRequest` definitions.
-class APIRequestConstructor {
+final class APIRequestConstructor: Sendable {
     
     /// Shared JSON encoder used for encoding request bodies.
     static let encoder: JSONEncoder = {
@@ -56,7 +56,7 @@ class APIRequestConstructor {
     ///
     /// - Parameter apiRequest: The request data including method, path, and authorization.
     /// - Returns: A base `URLRequest` without an HTTP body.
-    private static func standardURLRequest<O, I>(from apiRequest: APIRequest<O, I>) -> URLRequest {
+    static func standardURLRequest<O, I>(from apiRequest: APIRequest<O, I>) -> URLRequest {
         var request = URLRequest(url: apiRequest.path.url)
         request.httpMethod = apiRequest.method.rawValue
         
@@ -71,7 +71,7 @@ class APIRequestConstructor {
     /// - Parameter body: The request body to encode.
     /// - Returns: Encoded `Data` for JSON.
     /// - Throws: An error if encoding fails.
-    private static func createBodyData<T: Encodable>(for body: T) throws -> Data {
+    static func createBodyData<T: Encodable>(for body: T) throws -> Data {
         try Self.encoder.encode(body)
     }
     
@@ -83,7 +83,7 @@ class APIRequestConstructor {
     /// - Parameter body: The request body to encode and include in the multipart form.
     /// - Returns: A `Data` object representing the multipart body.
     /// - Throws: An error if encoding the body to JSON fails.
-    private static func createMultipartData<T: Encodable>(for body: T) throws -> Data {
+    static func createMultipartData<T: Encodable>(for body: T) throws -> Data {
         let encoded = try createBodyData(for: body)
         var multipartData = Data()
         

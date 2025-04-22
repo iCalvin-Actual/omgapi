@@ -46,8 +46,8 @@ public struct TimeStamp: Codable, Sendable {
             epochString = "\(try container.decode(Int.self, forKey: .epoch))"
         }
 
-        if let epochString = epochString {
-            self.date = Date(timeIntervalSince1970: Double(epochString) ?? 0)
+        if let epochString = epochString, let epoch = Double(epochString) {
+            self.date = Date(timeIntervalSince1970: epoch)
         } else {
             self.date = Date()
         }

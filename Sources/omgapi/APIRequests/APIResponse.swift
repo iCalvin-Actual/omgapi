@@ -25,6 +25,11 @@ struct APIResponse<R: Response>: Decodable {
         
         /// Whether the API call was reported as successful.
         let success: Bool
+        
+        init(statusCode: Int, success: Bool) {
+            self.statusCode = statusCode
+            self.success = success
+        }
     }
 
     /// Metadata about the request.
@@ -36,6 +41,11 @@ struct APIResponse<R: Response>: Decodable {
     enum CodingKeys: String, CodingKey {
         case request
         case result = "response"
+    }
+    
+    init(request: Request, result: R?) {
+        self.request = request
+        self.result = result
     }
 }
 

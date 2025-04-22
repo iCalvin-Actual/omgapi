@@ -19,7 +19,7 @@ struct None: RequestBody, Response {
     /// Shared static instance of `None`.
     static let instance: None = { None() }()
     
-    private init() { }
+    internal init() { }
 }
 
 /// A generic API request model that includes authorization, method, path, and optional body.
