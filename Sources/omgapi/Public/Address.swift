@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents an omg.lol address and its associated metadata.
+/// Represents an address registered on omg.lol
 public struct Address: Sendable {
     
     /// Encapsulates availability details for an address.

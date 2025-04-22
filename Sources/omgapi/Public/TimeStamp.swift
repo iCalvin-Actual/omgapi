@@ -8,7 +8,6 @@
 import Foundation
 
 /// Represents a timestamp returned by the omg.lol API,
-/// optionally including a message and a decoded `Date` value.
 public struct TimeStamp: Codable, Sendable {
     /// Optional human-readable message accompanying the timestamp.
     public let message: String?
@@ -24,7 +23,7 @@ public struct TimeStamp: Codable, Sendable {
     /// Initializes a new `TimeStamp` with a given `Date`.
     ///
     /// - Parameter date: The date to wrap in the timestamp.
-    public init(_ date: Date) {
+    init(_ date: Date) {
         self.message = nil
         self.date = date
     }

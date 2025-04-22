@@ -1,73 +1,101 @@
 # omgapi
 
-A Swift package providing a client interface for the [omg.lol](https://omg.lol) API.
+A lightweight Swift wrapper for the [omg.lol API](https://api.omg.lol)
+
+## Overview
+
+omgapi is a Swift package that provides type-safe access to the omg.lol service, allowing apps to authenticate, read, and write omg.lol data like profiles, status updates, now pages, pastes, and more.
+
+It supports both read-only access to public data and authenticated access for writing or managing private member content.
 
 ## Features
 
-- Type-safe API client for omg.lol
-- Codable-based request and response models
-- Supports various omg.lol services:
-  - Address lookup
-  - Follower/following lists
-  - Profile info
-  - Statuslog
-  - Pastebin and DNS (planned)
-
-## Requirements
-
-- Swift 5.9+
-- iOS 15+ / macOS 12+ / watchOS 8+ / tvOS 15+
-
-## Installation
-
-### Swift Package Manager
-
-Add the following to your `Package.swift`:
-
-\`\`\`swift
-dependencies: [
-    .package(url: "https://github.com/calvinklugh/omgapi.git", from: "0.1.0")
-]
-///
+- ✅ Fetch and update member profiles
+- ✅ Create and manage Now pages and pastes
+- ✅ Post to and delete from the omg.lol statuslog
+- ✅ Handle PURLs, bios, followers, and themes
+- ✅ Lightweight `Draft` structs for posting content
+- ✅ Errors wrapped in a consistent `APIError` enum
 
 ## Usage
 
-\`\`\`swift
-import OMGAPI
+Initialize an instance of `api` to access all supported endpoints:
 
-let omg = OMGAPIClient()
+```swift
+import omgapi
 
-Task {
-    let profile = try await omg.fetchProfile(for: "calvin")
-    print(profile.profile.bio)
+let api = omgapi.api()
+```
+
+### Example: Get info about an address
+
+```swift
+let addressInfo = try await api.details("app")
+```
+
+### Example: Update a status
+
+```swift
+let draft = Status.Draft(content: "New post!", emoji: "🌀")
+let updated = try await api.saveStatus(draft, to: "youraddress", credential: yourCredential)
+```
+
+## Authentication
+
+Most endpoints support unauthenticated access to public data. Supports OAuth flow to write content or access private info.
+
+
+```swift
+var code: String? { didSet { exchange() } }
+
+@Published
+var credential: APICredential?
+
+/// Presents a login prompt 
+func promptForLogin() {
+  let loginURL = api.authURL(with: Secrets.clientId, redirect)
+  let authSession = ASWebAuthenticationSession(
+    url: loginURL,
+    callbackURLScheme: callback,
+    completion: { self.code = handleRedirect($0) }
+  )
+  authSession.start()
 }
-\`\`\`
 
-## Project Structure
+func exchange() {
+  guard let code else { return }
+  credential = 
+}
 
-- `OMGAPIClient.swift`: Core API client
-- `Routes/`: Feature-specific endpoint groupings
-- `Models/`: Codable structs for decoding responses
-- `Mock/`: Testing mocks for endpoints
-- `Errors.swift`: Error cases and decoding logic
-- `OMGAPI+Extensions.swift`: Optional helpers
+func handleRedirect(_ redirect: URL) -> String? {
+  // decoding logic to pull code
+  return code
+}
+ 
+```
 
-## Testing
+## Installation
 
-\`\`\`sh
-swift test
-\`\`\`
+Use Swift Package Manager:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/your-username/omgapi", branch: "main")
+]
+```
 
 ## Documentation
 
-Generate DocC with:
+View full  documentation at: [api.omg.lol](https://api.omg.lol)
 
-\`\`\`sh
-xcodebuild docbuild \
-  -scheme omgapi \
-  -destination 'platform=iOS Simulator,name=iPhone 14'
-\`\`\`
+To build locally with with SwiftPM:
+
+```sh
+swift package generate-documentation
+```
+
+Or build within Xcode 'Build Documentation'
 
 ## License
 
-MIT © Calvin Klugh
+MIT

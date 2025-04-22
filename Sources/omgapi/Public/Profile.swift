@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents a full omg.lol profile, including metadata and visual customization.
+/// Represents an Address' complete profile
 public struct Profile: Sendable {
     /// The omg.lol address the profile belongs to.
     public let address: String
@@ -25,7 +25,7 @@ public struct Profile: Sendable {
     public let css: String?
 }
 
-/// Represents a public view of an omg.lol profile.
+/// Represents a public view of an omg.lol Address profile
 public struct PublicProfile: Sendable {
     /// The omg.lol address the profile belongs to.
     public let address: String

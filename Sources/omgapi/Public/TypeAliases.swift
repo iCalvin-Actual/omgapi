@@ -12,3 +12,21 @@ public typealias AddressName = String
 
 /// A type alias representing an API credential, typically a bearer token.
 public typealias APICredential = String
+
+
+public extension AddressName {
+    /// Helper method of AddressName to prepare Address for display in the UI
+    ///
+    /// If self begins with the character `"@"` it will return self,
+    /// otherwise it will prepend `"@"` to the beginning of self.
+    ///
+    /// ```swift
+    /// print("calvin".addressDisplayString)
+    /// // prints "@calvin"
+    /// ```
+    var addressDisplayString: String {
+        guard self.prefix(1) != "@" else { return self }
+        
+        return "@\(self)"
+    }
+}

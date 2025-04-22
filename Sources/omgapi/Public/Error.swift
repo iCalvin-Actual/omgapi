@@ -9,13 +9,13 @@ import Foundation
 
 /// Represents errors that can occur while interacting with the omg.lol API.
 public enum APIError: Error, Equatable {
-    /// An unknown or logically impossible error occurred.
+    /// An internal value used only for cases that shouldn't happen in normal usage
     case inconceivable
 
-    /// The request was unauthenticated (e.g., missing or invalid credentials).
+    /// The request had missing or invalid credentials
     case unauthenticated
 
-    /// The requested resource could not be found.
+    /// The requested resource either does not exist or is not public
     case notFound
 
     /// The request body was malformed or invalid.

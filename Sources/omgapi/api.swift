@@ -5,16 +5,47 @@
 //  Created by Calvin Chestnut on 3/5/23.
 //
 
-import Combine
 import Foundation
 
 
 // MARK: - Internal
 
-/// The main client interface for interacting with omg.lol's API.
+/// Main client interface for interacting with api.omg.lol in omgapi
 ///
-/// Provides async methods and Combine publishers to perform authenticated and unauthenticated
-/// network operations such as fetching profiles, posting status updates, managing pastes, and more.
+/// In general all access goes through the ``api`` interface, which acts as it's own Swift `actor`. Models are returned by the api asyncronously, the api itself is state-less. Each function requests all the data it needs, and returns everything relevant it receives.
+///
+/// Public omg.lol resources like ``Profile``, ``Status``, and ``NowGarden`` don't require any authentication. If that content isn't marked public however then the `api` will throw `APIError.notFound`.
+///
+/// Private resources can be fetched by providing an appropriate ``APICredential`` to the given request. If the `credential` property is marked as `optional` then providing `nil` will only return public resources. `APICredential` is generally only marked `nonoptional` if the function makes no sense in a public context, otherwise it's always `optional`.
+///
+/// Learn more in <doc:Authentication>
+///
+/// ## Getting started
+///
+/// Construct an ``api`` instance with the default ``init()`` to begine using
+/// ```swift
+/// let api = omgapi.api()
+/// ```
+///
+/// Most api calls will be async
+/// ```swift
+/// async let info = try? api.serviceInfo()
+/// let info = try? await api.serviceInfo()
+/// ```
+///
+/// Make sure to handle common errors. See <doc:APIError> for more guidance
+/// ```swift
+/// do {
+///    let profile = try await api.publicProfile("PrivateAddress")
+/// } catch {
+///    switch error as? APIError {
+///    case .notFound:
+///      // Handle private profile
+///    default:
+///      throw error
+///    }
+/// }
+/// ```
 public actor api {
     static let decoder: JSONDecoder = {
         var decoder = JSONDecoder()
@@ -28,6 +59,7 @@ public actor api {
     
     let urlSession: URLSession = .shared
     
+    /// Creates a new instance of the api interface
     public init() {
     }
     
@@ -458,8 +490,8 @@ public extension api {
     
     // MARK: - Status
     
-    /// Retrieves the complete public statuslog feed from omg.lol.
-    /// - Returns: A `PublicLog` containing all recent statuses.
+    /// Retrieves the complete public statuslog feed from omg.lol from the beginning of time.
+    /// - Returns: A `PublicLog` containing all  statuses posted to omg.lol.
     func completeStatusLog() async throws -> PublicLog {
         let request = GETCompleteStatusLog()
         let response = try await apiResponse(for: request)
@@ -476,7 +508,7 @@ public extension api {
         })
     }
     
-    /// Retrieves the latest entries in the public statuslog feed.
+    /// Retrieves the latest latest entry from each address in a sequential log..
     /// - Returns: A `PublicLog` of recent statuses.
     func latestStatusLog() async throws -> PublicLog {
         let request = GETLatestStatusLogs()
@@ -498,13 +530,13 @@ public extension api {
     /// - Parameter address: The omg.lol address.
     /// - Returns: A `StatusLog` containing metadata and statuses.
     func statusLog(from address: AddressName) async throws -> StatusLog {
-        let logs = try await logs(for: address)
-        let bio = try await bio(for: address)
+        async let logs = try logs(for: address)
+        async let bio = try bio(for: address)
         
         return StatusLog(
             address: address,
-            bio: bio,
-            statuses: logs
+            bio: try await bio,
+            statuses: try await logs
         )
     }
     
