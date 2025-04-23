@@ -1,0 +1,4 @@
+{
+    "request": { "success": true, "statusCode": 200 },
+    "result": { "messageInt": 12345 }
+}

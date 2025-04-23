@@ -32,6 +32,15 @@ extension WebPath {
     }
 }
 
+protocol LocalPath: Path {
+}
+
+extension LocalPath {
+    var baseUrl: URL? {
+        nil
+    }
+}
+
 /// A marker protocol for paths intended to resolve to omg.lol API URLs.
 protocol APIPath: Path {
 }

@@ -50,10 +50,9 @@ public enum APIError: Error, Equatable {
             return .unauthenticated
         case 404:
             return .notFound
+        case 200:
+            return .badResponseEncoding
         default:
-            if response.request.success {
-                return .none
-            }
             var message: String?
 
             if let responseMessage = (response.result as? CommonAPIResponse)?.message {

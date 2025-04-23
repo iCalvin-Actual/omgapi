@@ -420,11 +420,11 @@ struct PicResposne: Response {
     /// The omg.lol address associated with the Pic.
     let address: String
     /// The timestamp when the Pic was uploaded.
-    let created: String
+    let created: TimeInterval
     /// MIME type of the uploaded image (e.g., "image/jpeg").
     let mime: String
     /// File size as a human-readable string (e.g., "512 KB").
-    let size: String
+    let size: Int
     /// Optional description provided by the uploader.
     let description: String
     /// Dictionary of EXIF metadata extracted from the image.

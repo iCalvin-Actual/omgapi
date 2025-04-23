@@ -603,16 +603,15 @@ struct DecodingTests {
         #expect(decoded.author == "Admin")
         #expect(decoded.sampleProfile == "# Classic!")
     }
-}
 
     @Test func testDecodePicResponse() throws {
         let json = """
         {
             "id": "pic123",
             "address": "user.omg.lol",
-            "created": "2024-12-01T12:00:00Z",
+            "created": 1745410733,
             "mime": "image/jpeg",
-            "size": "512 KB",
+            "size": 512,
             "description": "A lovely sunset",
             "exif": {
                 "Camera": "Canon EOS",
@@ -625,7 +624,7 @@ struct DecodingTests {
         #expect(decoded.id == "pic123")
         #expect(decoded.address == "user.omg.lol")
         #expect(decoded.mime == "image/jpeg")
-        #expect(decoded.size == "512 KB")
+        #expect(decoded.size == 512)
         #expect(decoded.description == "A lovely sunset")
         #expect(decoded.exif["Camera"] == "Canon EOS")
     }
@@ -638,9 +637,9 @@ struct DecodingTests {
                 {
                     "id": "pic001",
                     "address": "user1",
-                    "created": "2023-01-01T10:00:00Z",
+                    "created": 1745410733,
                     "mime": "image/png",
-                    "size": "256 KB",
+                    "size": 256,
                     "description": "A beach photo",
                     "exif": { "Exposure": "1/100s" }
                 }
@@ -662,9 +661,9 @@ struct DecodingTests {
             "pic": {
                 "id": "pic999",
                 "address": "someone.omg.lol",
-                "created": "2023-11-30T09:00:00Z",
+                "created": 1745410733,
                 "mime": "image/gif",
-                "size": "128 KB",
+                "size": 128,
                 "description": "Funny loop",
                 "exif": { "Loop": "Forever" }
             }
@@ -677,3 +676,4 @@ struct DecodingTests {
         #expect(decoded.pic.mime == "image/gif")
         #expect(decoded.pic.exif["Loop"] == "Forever")
     }
+}

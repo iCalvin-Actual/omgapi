@@ -71,15 +71,21 @@ public actor api {
     /// - Returns: A decoded value of type `R`.
     /// - Throws: `APIError` if the request fails or decoding is unsuccessful.
     func apiResponse<B, R>(for request: APIRequest<B, R>, priorityDecoding: ((Data) -> R?)? = nil) async throws -> R {
-        let urlRequest: URLRequest
-        switch request.multipartBody {
-        case true:
-            urlRequest = APIRequestConstructor.multipartUrlRequest(from: request)
-        case false:
-            urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let data: Data
+        if request.path is LocalPath {
+            data = FileManager.default.contents(atPath: request.path.string) ?? .init()
+        } else {
+            let urlRequest: URLRequest
+            switch request.multipartBody {
+            case true:
+                urlRequest = APIRequestConstructor.multipartUrlRequest(from: request)
+            case false:
+                urlRequest = APIRequestConstructor.urlRequest(from: request)
+            }
+            
+            let (fetchedData, _) = try await urlSession.data(for: urlRequest)
+            data = fetchedData
         }
-        
-        let (data, _) = try await urlSession.data(for: urlRequest)
         do {
             if let result = priorityDecoding?(data) {
                 return result
@@ -294,7 +300,7 @@ public extension api {
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for private pastes.
     /// - Returns: A `PasteBin` array.
-    func pasteBin(for address: AddressName, credential: APICredential?) async throws -> PasteBin {
+    func pasteBin(for address: AddressName, credential: APICredential? = nil) async throws -> PasteBin {
         let request = GETAddressPasteBin(address, authorization: credential)
         let response = try await apiResponse(for: request)
         return response.pastebin.map { paste in
@@ -365,7 +371,7 @@ public extension api {
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for authentication.
     /// - Returns: An array of `PURL` objects.
-    func purls(from address: AddressName, credential: APICredential?) async throws -> [PURL] {
+    func purls(from address: AddressName, credential: APICredential? = nil) async throws -> [PURL] {
         let request = GETAddressPURLs(address)
         let response = try await apiResponse(for: request)
         return response.purls.map({ purl in
@@ -693,8 +699,8 @@ public extension api {
             Pic(
                 id: model.id,
                 address: model.address,
-                created: .init(timeIntervalSince1970: Double(model.created) ?? 0),
-                size: Double(model.size) ?? 0,
+                created: .init(timeIntervalSince1970: model.created),
+                size: Double(model.size),
                 mime: model.mime,
                 exif: model.exif,
                 description: model.description
@@ -713,8 +719,8 @@ public extension api {
             Pic(
                 id: model.id,
                 address: model.address,
-                created: .init(timeIntervalSince1970: Double(model.created) ?? 0),
-                size: Double(model.size) ?? 0,
+                created: .init(timeIntervalSince1970: model.created),
+                size: Double(model.size),
                 mime: model.mime,
                 exif: model.exif,
                 description: model.description
@@ -734,8 +740,8 @@ public extension api {
         let pic = Pic(
             id: response.pic.id,
             address: response.pic.address,
-            created: .init(timeIntervalSince1970: Double(response.pic.created) ?? 0),
-            size: Double(response.pic.size) ?? 0,
+            created: .init(timeIntervalSince1970: response.pic.created),
+            size: Double(response.pic.size),
             mime: response.pic.mime,
             exif: response.pic.exif,
             description: response.pic.description
