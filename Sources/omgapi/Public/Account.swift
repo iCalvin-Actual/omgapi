@@ -7,26 +7,24 @@
 
 import Foundation
 
+/// A type alias representing an API credential, typically a bearer token.
+public typealias APICredential = String
+
 /// A user account wrapper that provides access to account details.
 public struct Account: Sendable {
-    /// Internal account metadata from the API.
-    private let info: AccountInfo
-
     /// Creates an `Account` from a decoded `AccountInfo`.
     ///
     /// - Parameter info: The backing account info model.
-    internal init(info: AccountInfo) {
-        self.info = info
+    init(info: AccountInfoResponseModel) {
+        self.emailAddress = info.email
+        self.name = info.name
+        self.created = info.created.date
     }
-}
-
-extension Account {
-    /// The email address associated with the account.
-    public var emailAddress: String                         { info.email }
-
-    /// The given display name of the account holder.
-    public var name: String                                 { info.name }
-
-    /// The date when the account was created.
-    public var created: Date                                { info.created.date }
+    
+    /// User's email address.
+    public let emailAddress: String
+    /// Account creation timestamp.
+    public let created: Date
+    /// Display name or username.
+    public let name: String
 }

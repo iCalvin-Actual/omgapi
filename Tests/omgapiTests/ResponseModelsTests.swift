@@ -11,7 +11,7 @@ import Testing
 
 struct LogicTests {
     @Test func testPasteIsPublicDefaultsTrueWhenListedIsNil() {
-        let paste = PasteResponseModel.Paste(
+        let paste = AddressPasteResponseModel.Paste(
             title: "Test",
             content: "Content",
             modifiedOn: 123456789,
@@ -22,7 +22,7 @@ struct LogicTests {
     
     @Test func testPasteUpdatedTimestamp() {
         let ts = 123456789
-        let paste = PasteResponseModel.Paste(
+        let paste = AddressPasteResponseModel.Paste(
             title: "Test",
             content: "Content",
             modifiedOn: ts,
@@ -38,7 +38,7 @@ struct LogicTests {
     }
     
     @Test func testPURLItemIsPublicFromString() {
-        let purl = AddressPURLItemResponse(
+        let purl = AddressPURLItemResponseModel(
             name: "my-link",
             url: "https://example.com",
             counter: 1,
@@ -48,7 +48,7 @@ struct LogicTests {
     }
     
     @Test func testStatusModelCreatedDate() {
-        let status = AddressStatusModel(
+        let status = AddressStatusResponseModel(
             id: "abc",
             address: "someone",
             created: "123456789",

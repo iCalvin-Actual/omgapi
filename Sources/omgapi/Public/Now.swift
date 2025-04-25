@@ -7,8 +7,10 @@
 
 import Foundation
 
-/// Represents a "now" status entry for an omg.lol address.
-public struct Now: Sendable {
+/// A collection of entries in the Now Garden.
+public typealias NowGarden = [Now.Reference]
+
+public struct Now {
     /// The omg.lol address associated with this now entry.
     public let address: AddressName
 
@@ -22,11 +24,42 @@ public struct Now: Sendable {
     public let updated: Date
 }
 
-/// Represents the rendered Now page for an omg.lol address.
-public struct NowPage: Sendable {
-    /// The omg.lol address for which this page is rendered.
-    public let address: AddressName
+extension Now {
+    /// Represents the rendered Now page for an omg.lol address.
+    public struct Page: Sendable {
+        /// The omg.lol address for which this page is rendered.
+        public let address: AddressName
 
-    /// The HTML or rendered content of the Now page.
-    public let content: String
+        /// The HTML or rendered content of the Now page.
+        public let content: String
+    }
+    
+    /// A single entry in the omg.lol Now Garden.
+    ///
+    /// Represents a public Now page listed in the Now Garden.
+    public struct Reference: Sendable {
+        /// The omg.lol address associated with this entry.
+        public let address: AddressName
+        
+        /// The public URL of the Now page.
+        public let url: String
+        
+        /// The timestamp indicating when the Now page was last updated.
+        public let updated: Date
+    }
+}
+
+extension Now {
+    /// A draft version of a Now entry, used when creating or updating content.
+    ///
+    /// Includes the content body and a flag indicating whether the entry should be listed publicly.
+    public struct Draft: MDDraft {
+        public let content: String
+        public let listed: Bool
+        
+        public init(content: String, listed: Bool) {
+            self.content = content
+            self.listed = listed
+        }
+    }
 }

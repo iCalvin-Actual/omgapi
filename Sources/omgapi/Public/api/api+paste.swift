@@ -46,7 +46,7 @@ public extension api {
                 modifiedOn: paste.updated,
                 listed: paste.isPublic
             )
-        } catch let error as APIError {
+        } catch let error as api.Error {
             switch error {
             case .notFound:
                 return nil

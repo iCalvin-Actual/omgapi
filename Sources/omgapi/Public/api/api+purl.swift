@@ -14,7 +14,7 @@ public extension api {
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for authentication.
     /// - Returns: An array of `PURL` objects.
-    func purls(from address: AddressName, credential: APICredential? = nil) async throws -> [PURL] {
+    func purls(from address: AddressName, credential: APICredential? = nil) async throws -> PURLs {
         let request = GETAddressPURLs(address)
         let response = try await apiResponse(for: request)
         return response.purls.map({ purl in

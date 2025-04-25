@@ -6,9 +6,11 @@ Acting as a user in omgapi
 
 [`api.omg.lol`](https://api.omg.lol/#token-get-oauth-exchange-an-authorization-code-for-an-access-token) uses a standard OAuth flow to access an account. Users do not need to provide the app or omgapi any credentials or APIKeys, they simply will log in via the website and after choosing to enable API access for the app client.
 
+Everything is build around a simple `String` typealias ``APICredential``. After performing a simple OAuth handshake the api provides the client with an `APICredential` and the client should pass that credential for any authenticated requests going forward.
+
 To support optional authentication complete the following steps.
 
-### Register client
+### Register your client
 
 Before you'll be able to authenticate on behalf of an omg.lol account, you'll first need to register your client application with omg.lol.
 
@@ -22,7 +24,7 @@ Once your application is regestered you'll receive a clientID and clientSecret. 
 
 ### Start OAuth flow
 
-Once you have your `clientID` you'll be able to call ``authURL(with:redirect:)`` to construct the root login URL. You'll want to give the user an oppertunity to login to their omg.lol account by presenting a webpage with that URL, making sure to provide a redirect URL that will be called upon successful authentication.
+Once you have your `clientID` you'll be able to call `api.authURL(with:redirect:)` to construct the root login URL. You'll want to give the user an oppertunity to login to their omg.lol account by presenting a webpage with that URL, making sure to provide a redirect URL that will be called upon successful authentication.
 
 ```swift
 let clientID: String = Secrets.omgClientID

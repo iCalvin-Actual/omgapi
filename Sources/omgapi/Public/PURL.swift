@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// A collection of PURL instances
+public typealias PURLs = [PURL]
+
 /// Represents a Persistent URL (PURL) associated with an omg.lol address.
 public struct PURL: Sendable {
     /// The omg.lol address that owns the PURL.
@@ -23,4 +26,27 @@ public struct PURL: Sendable {
 
     /// Whether the PURL is publicly listed.
     public let listed: Bool
+}
+
+extension PURL {
+    /// A draft representation of a PURL record.
+    ///
+    /// Includes the PURL name, target URL, and listing visibility.
+    public struct Draft: MDDraft {
+        public let name: String
+        public let content: String
+        public let listed: Bool
+        
+        enum CodingKeys: String, CodingKey {
+            case name
+            case content = "url"
+            case listed
+        }
+        
+        public init(name: String, content: String, listed: Bool) {
+            self.name = name
+            self.content = content
+            self.listed = listed
+        }
+    }
 }

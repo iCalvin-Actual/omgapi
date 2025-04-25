@@ -1,4 +1,4 @@
-# ``APIError``
+# ``api/Error``
 
 All requests from the ``api`` can throw. This may indicate a simple usage error like sending an invalid resource name or requesting a public profile from a private address. It also may indicate an internal issue encoding data to/from the APIRequst.
 

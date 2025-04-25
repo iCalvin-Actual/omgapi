@@ -7,6 +7,15 @@
 
 import Foundation
 
+/// Represents a public view of an omg.lol Address profile
+public struct PublicProfile: Sendable {
+    /// The omg.lol address the profile belongs to.
+    public let address: String
+
+    /// The published content of the profile, if available.
+    public let content: String?
+}
+
 /// Represents an Address' complete profile
 public struct Profile: Sendable {
     /// The omg.lol address the profile belongs to.
@@ -25,11 +34,12 @@ public struct Profile: Sendable {
     public let css: String?
 }
 
-/// Represents a public view of an omg.lol Address profile
-public struct PublicProfile: Sendable {
-    /// The omg.lol address the profile belongs to.
-    public let address: String
-
-    /// The published content of the profile, if available.
-    public let content: String?
+extension Profile {
+    /// A draft profile used for updating omg.lol profile content.
+    ///
+    /// Includes the content body and a flag indicating whether it should be published.
+    public struct Draft: MDDraft {
+        public let content: String
+        public let publish: Bool
+    }
 }

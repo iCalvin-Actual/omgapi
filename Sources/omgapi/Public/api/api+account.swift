@@ -32,7 +32,7 @@ public extension api {
         let oAuthRequest = OAuthRequest(with: clientId, and: clientSecret, redirect: redirect, accessCode: code)
         
         let response = try await self.apiResponse(for: oAuthRequest, priorityDecoding: { data in
-            try? api.decoder.decode(OAuthResponse.self, from: data)
+            try? api.decoder.decode(OAuthResponseModel.self, from: data)
         })
         
         return response.accessToken
@@ -42,7 +42,7 @@ public extension api {
     ///
     /// - Parameter credentials: The API credential used to authenticate.
     /// - Returns: An array of `AddressName`.
-    func addresses(with credentials: APICredential) async throws -> [AddressName] {
+    func addresses(with credentials: APICredential) async throws -> AddressDirectory {
         let request = GETAddresses(authorization: credentials)
         
         let response = try await self.apiResponse(for: request)

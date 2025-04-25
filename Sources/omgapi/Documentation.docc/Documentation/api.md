@@ -55,7 +55,6 @@ Credential required
 - ``now(for:credential:)``
 - ``pasteBin(for:credential:)``
 - ``purls(from:credential:)``
-- ``statusLog(from:)``
 - ``logs(for:)``
 - ``getAddressPics(_:)``
 

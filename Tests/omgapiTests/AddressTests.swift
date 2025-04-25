@@ -9,7 +9,7 @@
 import Testing
 
 struct AccountTests {
-    @Test func testPopulateFromInfo() {
+    @Test func testPopulateFromInfo() async {
         let infoOne = AccountInfo(
             message: "Sample account A",
             email: "user@domain.com",

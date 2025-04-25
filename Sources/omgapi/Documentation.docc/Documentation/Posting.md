@@ -6,7 +6,7 @@ Creating and editing content with omgapi
 
 The omgapi library provides a set of `Draft` types that allow you to create or update content across omg.lol services like Now pages, Pastes, Profiles, Statuses, PURLs, and more.
 
-Each `Draft` struct mirrors a supported resource on omg.lol and contains the fields required to create or update that content. To update existing content, simply pass a ``Draft`` with the same ``id`` or ``name`` as the original post — most API endpoints treat this as an edit operation.
+Each `Draft` struct mirrors a supported resource on omg.lol and contains the fields required to create or update that content. To update existing content, simply pass a `Draft` with the same `id` or `name` as the original post — most API endpoints treat this as an edit operation.
 
 ### Example: Updating a Status
 

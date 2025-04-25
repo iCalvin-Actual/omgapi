@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// A collection of pastebin entries.
+public typealias PasteBin = [Paste]
+
 /// Represents a single pastebin entry associated with an omg.lol address.
 public struct Paste: Sendable {
     /// The title or identifier of the paste.
@@ -25,5 +28,19 @@ public struct Paste: Sendable {
     public let listed: Bool
 }
 
-/// A collection of pastebin entries.
-public typealias PasteBin = [Paste]
+extension Paste {
+    /// A draft representation of a Pastebin entry.
+    ///
+    /// Includes the title, content body, and listing visibility.
+    public struct Draft: MDDraft {
+        public let title: String
+        public let content: String
+        public let listed: Bool
+        
+        public init(title: String, content: String, listed: Bool) {
+            self.title = title
+            self.content = content
+            self.listed = listed
+        }
+    }
+}

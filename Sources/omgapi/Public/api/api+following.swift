@@ -12,7 +12,7 @@ public extension api {
     /// Fetches the list of addresses following a given omg.lol address.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of follower addresses.
-    func followers(for address: AddressName) async throws -> [AddressName] {
+    func followers(for address: AddressName) async throws -> AddressDirectory {
         let request = GETAddressFollowers(address)
         let response = try await apiResponse(for: request)
         return response.followers
@@ -21,7 +21,7 @@ public extension api {
     /// Fetches the list of addresses followed by a given omg.lol address.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of followed addresses.
-    func following(from address: AddressName) async throws -> [AddressName] {
+    func following(from address: AddressName) async throws -> AddressDirectory {
         let request = GETAddressFollowing(address)
         let response = try await apiResponse(for: request)
         return response.following

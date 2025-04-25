@@ -1,75 +1,122 @@
 # ``omgapi``
 
-A lightweight Swift wrapper for the [omg.lol API](https://api.omg.lol)
+Swift wrapper to api.omg.lol
 
-## What is omg.lol and why does it need a Swift API?
+## What is omg.lol
 
-[omg.lol](https://home.omg.lol/referred-by/app) offers personal web tools like profiles, status updates, now pages, and more — all tied to your unique address. This Swift wrapper provides convenient, type-safe access to [api.omg.lol](https://api.omg.lol), making it easy to build native apps and tools around the service.
+[omg.lol](https://home.omg.lol/referred-by/app) offers personal web tools like profiles, status updates, now pages, and more — all tied to your unique address. Even if you don't have an address you can view public content from the omg.lol community from a web browser or any client app that uses the [omg.lol api](https://api.omg.lol).
+
+## What is omgapi
+
+This [Swift package](https://github.com/iCalvin-Actual/omgapi) allows convenient, type-safe access to omg.lol, making it easy to build native apps and tools around the service.
+
+See omg.lol for more about the service. Please note that this is an unofficial third party SDK It could not have been possible without the documentation at api.omg.lol and Email/Discord support from the community, this API is officially not related to the omg.lol team and exists as a token of appreciation.
+
+## Where does this data come from
+
+Everything on `omg.lol` is owned/published by a paid Address on the service and hosted by omg.lol. All published resources can either be made public or private by the owner of that Address. omgapi allows access to public data, but also allows the client to request/provide an API Credential from omg.lol to view private data or post/edit content on the service. omgapi takes no responsibility for the content hosted by the omg.lol service.
+
+## Who makes this
+
+Hi! I'm [Calvin](https://calvin.status.lol). I made [an app client to omg.lol](https://app.omg.lol) and overoptimized this API Package, figured I might as well make it public. 
+
+## Getting started
+
+To start working with omgapi, all you need to do is create an instance of the ``api``. 
+```
+let client = api()
+```
+This API is stateless, and takes no parameters. You don't need to authenticate, just start making requests.
+```
+async let info = try client.serviceInfo()
+```
+
+All functions in the API are async and will throw an ``api/Error`` if it runs into an issue. Make sure to properly catch those expected cases as you go.
+```
+do {
+  async let profile = try client.publicProfile(searchAddress)
+  searchAddressExists = true
+}
+catch {
+  switch error as? api.Error {
+
+  // `api.Error` includ
+es an .unexpected case so this should never happen
+  case nil: throw error
+
+  // Expected error case handled by the UI
+  case .notFound: searchAddressExists = false
+  
+  // Handle defined errors cases with logs or alerts
+  default:  displayError(error)
+  }
+}
+```
 
 ## Topics
 
 ### Essentials
 
-All access to api.omg.lol happens in `api`
+``api`` is the gateway to everything, start here to learn more about `omg.lol` and `omgapi`.
 
 - ``api``
+- ``api/Error``
+- ``ServiceInfo``
 
-### Authenticating
+### String Extensions
 
-Authentication is not needed unless you intend to access non-public content or act on behalf of a member's account.
+Many ``api`` functions accept simple String values which are represented using typealiases for clarity.
+
+- ``APICredential``
+- ``AddressName``
+- ``Swift/String/addressDisplayString``
+
+### Public Feeds
+
+The `omg.lol` community it built on top of simple lists.
+
+- ``AddressDirectory``
+- ``NowGarden``
+
+### Address Data
+
+View public data for any AddressName.
+
+- ``AddressInfo``
+- ``PublicProfile``
+- ``PicReel``
+- ``PURLs``
+- ``PasteBin``
+
+### Acting on a user's behalf
+
+Edit and post content. Access private data.
 
 - <doc:Authentication>
-
-### Posting Content
-
-`omgapi` supports posting content using ``Draft`` structs your app can construct and submit via ``api`` methods.
-
 - <doc:Posting>
 
-### Handling Errors
+### StatusLog
 
-All functions of ``api`` can throw. View documentation to familiarize yourself with the failure cases of omgapi.
+Statuses allow omg.lol addresses to share small posts attached to an emoji.
 
-- <doc:APIError>
-
-### Core Models
-
-- ``AddressName``
-- ``APICredential``
-- ``ServiceInfo``
-- ``Address``
-- ``Account``
-- ``TimeStamp``
-
-### Profile
-
-Display content from the Address' main landing page.
-
-- ``Profile``
-- ``PublicProfile``
-- ``Theme``
+- <doc:Following>
+- ``StatusLog``
+- ``AddressBio``
+- ``Status``
 
 ### Now Pages
 
-/now pages are one of the most popular features of omg.lol. The following models are used to represent `/now` pages in different contexts.
+Most relevant right now.
 
-- ``NowGarden``
 - ``Now``
-- ``NowGardenEntry``
-- ``NowPage``
+- ``Now/Page``
+- ``Now/Reference``
 
-### Statuses
+### Additional Address Content
 
-- ``StatusLog``
-- ``Status``
-- ``PublicLog``
+Swift models to represent content about or posted by any Address on omg.lol.
 
-### Additional Address Features
-
+- ``Theme``
+- ``Pic``
 - ``PURL``
 - ``Paste``
-- ``PasteBin``
-- ``Pic``
-
-
-

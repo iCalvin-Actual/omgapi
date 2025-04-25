@@ -12,6 +12,30 @@ import Foundation
 protocol Response: Decodable {
 }
 
+/// Conforms `String` to `Response` to allow raw string payloads.
+extension String: Response { }
+extension Data: Response { }
+
+/// A type alias for handling decoded API responses with result or error.
+typealias APIResult<T: Response> = Result<T, api.Error>
+
+/// A publisher that emits one `APIResult` and completes.
+typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
+
+/// A generic result-based publisher that emits one `Result` and completes.
+typealias ResultPublisher<T> = AnyPublisher<Result<T, api.Error>, Never>
+
+/// A protocol for simple omg.lol API responses that include a message.
+protocol CommonAPIResponse: Response {
+    /// Optional message returned by the API.
+    var message: String? { get }
+}
+
+/// A basic response object containing an optional message.
+struct BasicResponse: CommonAPIResponse {
+    let message: String?
+}
+
 /// A generic container for decoding omg.lol API responses.
 ///
 /// The top-level object contains a `request` section for metadata and a `response`
@@ -48,30 +72,3 @@ struct APIResponse<R: Response>: Decodable {
         self.result = result
     }
 }
-
-/// A protocol for simple omg.lol API responses that include a message.
-protocol CommonAPIResponse: Response {
-    /// Optional message returned by the API.
-    var message: String? { get }
-}
-
-/// A basic response object containing an optional message.
-struct BasicResponse: CommonAPIResponse {
-    let message: String?
-}
-
-/// Conforms `String` to `Response` to allow raw string payloads.
-extension String: Response { }
-extension Data: Response { }
-
-/// Placeholder extension (empty) for arrays of `Response` values.
-extension Array where Element == Response { }
-
-/// A type alias for handling decoded API responses with result or error.
-typealias APIResult<T: Response> = Result<T, APIError>
-
-/// A publisher that emits one `APIResult` and completes.
-typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
-
-/// A generic result-based publisher that emits one `Result` and completes.
-typealias ResultPublisher<T> = AnyPublisher<Result<T, APIError>, Never>

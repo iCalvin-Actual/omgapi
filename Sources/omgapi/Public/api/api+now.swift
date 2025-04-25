@@ -15,22 +15,22 @@ public extension api {
         let request = GETNowGardenRequest()
         let response = try await apiResponse(for: request)
         return response.garden
-            .map { NowGardenEntry(
+            .map { Now.Reference(
                 address: $0.address,
                 url: $0.url,
-                updated: $0.updated
+                updated: $0.updated.date
             )}
     }
     
     /// Retrieves the raw HTML content of a Now page for a specific address.
     /// - Parameter address: The omg.lol address to retrieve.
     /// - Returns: A `NowPage` object containing HTML content.
-    func nowWebpage(for address: AddressName) async throws -> NowPage {
+    func nowWebpage(for address: AddressName) async throws -> Now.Page {
         let request = GETAddressNowPageRequest(address)
         let response = try await apiResponse(for: request) { data in
             String(data: data, encoding: .utf8)
         }
-        return NowPage(
+        return Now.Page(
             address: address,
             content: response
         )

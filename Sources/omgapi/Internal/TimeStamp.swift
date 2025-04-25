@@ -8,12 +8,12 @@
 import Foundation
 
 /// Represents a timestamp returned by the omg.lol API,
-public struct TimeStamp: Codable, Sendable {
+struct TimeStamp: Codable, Sendable {
     /// Optional human-readable message accompanying the timestamp.
-    public let message: String?
+    let message: String?
 
     /// The decoded `Date` representation of the timestamp.
-    public let date: Date
+    let date: Date
 
     private enum CodingKeys: String, CodingKey {
         case message
@@ -29,13 +29,13 @@ public struct TimeStamp: Codable, Sendable {
     }
 
     /// A timestamp representing the current moment.
-    public static var now: TimeStamp { .init(.now) }
+    static var now: TimeStamp { .init(.now) }
 
     /// Decodes a `TimeStamp` from an API response.
     ///
     /// The `unixEpochTime` field is expected as a `String` or `Int`.
     /// If decoding fails, a fallback value of `Date()` is used.
-    public init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.message = try container.decodeIfPresent(String.self, forKey: .message)
 
@@ -56,7 +56,7 @@ public struct TimeStamp: Codable, Sendable {
     /// Encodes the `TimeStamp` for transmission to an API.
     ///
     /// The `date` is encoded as a stringified epoch time.
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(message, forKey: .message)
         let epoch = date.timeIntervalSince1970

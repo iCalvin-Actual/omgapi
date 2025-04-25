@@ -33,7 +33,7 @@ import Foundation
 /// let info = try? await api.serviceInfo()
 /// ```
 ///
-/// Make sure to handle common errors. See <doc:APIError> for more guidance
+/// Make sure to handle common errors. See ``api/Error`` for more guidance
 /// ```swift
 /// do {
 ///    let profile = try await api.publicProfile("PrivateAddress")
@@ -92,20 +92,79 @@ public actor api {
             } else {
                 let apiResponse = try api.decoder.decode(APIResponse<R>.self, from: data)
                 guard apiResponse.request.success else {
-                    throw APIError.unhandled(apiResponse.request.statusCode, message: "Request \(request.path) in failed state")
+                    throw Error.unhandled(apiResponse.request.statusCode, message: "Request \(request.path) in failed state")
                 }
                 
                 guard let result = apiResponse.result else {
-                    throw APIError.badResponseEncoding
+                    throw Error.badResponseEncoding
                 }
                 return result
             }
         }
         catch {
             if let errorMessageResponse: APIResponse<BasicResponse> = try? api.decoder.decode(APIResponse.self, from: data) {
-                throw APIError.create(from: errorMessageResponse)
+                throw Error.create(from: errorMessageResponse)
             }
-            throw APIError.badResponseEncoding
+            throw Error.badResponseEncoding
+        }
+    }
+}
+
+extension api {
+    /// Expected error cases when working with omgapi
+    public enum Error: Swift.Error, Equatable {
+        /// Placeholder value to indicate no error actually occured
+        case none
+        
+        /// An internal value used only for cases that shouldn't happen in normal usage
+        case inconceivable
+
+        /// The request had missing or invalid credentials
+        case unauthenticated
+
+        /// The requested resource either does not exist or is not public
+        case notFound
+
+        /// The request body was malformed or invalid.
+        case badBody
+
+        /// The response could not be decoded from the expected format.
+        case badResponseEncoding
+
+        /// A non-specific error with an unhandled HTTP status code and optional message.
+        ///
+        /// - Parameters:
+        ///   - statusCode: The HTTP status code returned by the server.
+        ///   - message: An optional error message from the API.
+        case unhandled(_ statusCode: Int, message: String?)
+
+        /// Creates an appropriate `APIError` based on an `APIResponse`.
+        ///
+        /// - Parameter response: The decoded response from the API, if any.
+        /// - Returns: A corresponding `APIError` instance.
+        static func create<R>(from response: APIResponse<R>?) -> Error {
+            guard let response = response else {
+                return .inconceivable
+            }
+
+            let status = response.request.statusCode
+
+            switch status {
+            case 401:
+                return .unauthenticated
+            case 404:
+                return .notFound
+            case 200:
+                return .badResponseEncoding
+            default:
+                var message: String?
+
+                if let responseMessage = (response.result as? CommonAPIResponse)?.message {
+                    message = responseMessage
+                }
+                
+                return .unhandled(status, message: message)
+            }
         }
     }
 }

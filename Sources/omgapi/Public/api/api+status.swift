@@ -11,11 +11,11 @@ public extension api {
     
     /// Retrieves the complete public statuslog feed from omg.lol from the beginning of time.
     /// - Returns: A `PublicLog` containing all  statuses posted to omg.lol.
-    func completeStatusLog() async throws -> PublicLog {
+    func completeStatusLog() async throws -> StatusLog {
         let request = GETCompleteStatusLog()
         let response = try await apiResponse(for: request)
         let statuses = response.statuses ?? []
-        return PublicLog(statuses: statuses.map { status in
+        return statuses.map { status in
             Status(
                 id: status.id,
                 address: status.address,
@@ -24,16 +24,16 @@ public extension api {
                 emoji: status.emoji,
                 externalURL: status.externalURL
             )
-        })
+        }
     }
     
     /// Retrieves the latest latest entry from each address in a sequential log..
     /// - Returns: A `PublicLog` of recent statuses.
-    func latestStatusLog() async throws -> PublicLog {
+    func latestStatusLog() async throws -> StatusLog {
         let request = GETLatestStatusLogs()
         let response = try await apiResponse(for: request)
         let statuses = response.statuses ?? []
-        return PublicLog(statuses: statuses.map { status in
+        return statuses.map { status in
             Status(
                 id: status.id,
                 address: status.address,
@@ -42,27 +42,13 @@ public extension api {
                 emoji: status.emoji,
                 externalURL: status.externalURL
             )
-        })
-    }
-    
-    /// Combines the statuslog bio and posts for a single omg.lol address.
-    /// - Parameter address: The omg.lol address.
-    /// - Returns: A `StatusLog` containing metadata and statuses.
-    func statusLog(from address: AddressName) async throws -> StatusLog {
-        async let logs = try logs(for: address)
-        async let bio = try bio(for: address)
-        
-        return StatusLog(
-            address: address,
-            bio: try await bio,
-            statuses: try await logs
-        )
+        }
     }
     
     /// Retrieves all statuses posted by a specific omg.lol address.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of `Status` entries.
-    func logs(for address: String) async throws -> [Status] {
+    func logs(for address: String) async throws -> StatusLog {
         guard !address.isEmpty else {
             return []
         }
@@ -84,7 +70,7 @@ public extension api {
     /// Retrieves the bio text for a statuslog, if set.
     /// - Parameter address: The omg.lol address.
     /// - Returns: A `StatusLog.Bio` object.
-    func bio(for address: String) async throws -> StatusLog.Bio {
+    func bio(for address: String) async throws -> AddressBio {
         let request = GETAddressStatusBio(address)
         let response = try await apiResponse(for: request, priorityDecoding: { data in
             if let response = try? api.decoder.decode(APIResponse<StatusLogBioResponseModel>.self, from: data) {

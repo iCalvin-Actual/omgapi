@@ -8,8 +8,9 @@
 
 import Foundation
 
-/// Represents a Pic uploaded to omg.lol, including metadata and ownership information.
+public typealias PicReel = [Pic]
 
+/// Represents a Pic uploaded to omg.lol, including metadata and ownership information.
 public struct Pic: Sendable {
     /// Unique identifier for the Pic.
     let id: String
@@ -47,5 +48,15 @@ public struct Pic: Sendable {
         self.mime = mime
         self.exif = exif
         self.description = description
+    }
+}
+
+extension Pic {
+    /// A draft representation of a Pic object.
+    ///
+    /// Includes a description and tags for the image.
+    public struct Draft: omgapi.Draft {
+        public let description: String
+        public let tags: String
     }
 }

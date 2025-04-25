@@ -11,7 +11,7 @@ public extension api {
     
     /// Retrieves the global public omg.lol Pics feed.
     /// - Returns: An array of `Pic` objects.
-    func getPicsFeed() async throws -> [Pic] {
+    func getPicsFeed() async throws -> PicReel {
         let request = GETPicsFeed()
         let response = try await apiResponse(for: request)
         let pics = response.pics.map({ model in
@@ -31,7 +31,7 @@ public extension api {
     /// Retrieves all Pics uploaded by a specific address.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of `Pic` objects.
-    func getAddressPics(_ address: AddressName) async throws -> [Pic] {
+    func getAddressPics(_ address: AddressName) async throws -> PicReel {
         let request = GETAddressPics(address)
         let response = try await apiResponse(for: request)
         let pics = response.pics.map({ model in
