@@ -82,3 +82,9 @@ class SETProfile: APIRequest<Profile.Draft, BasicResponse> {
         )
     }
 }
+
+class GETAvatar: APIRequest<None, Data> {
+    init(_ address: AddressName) {
+        super.init(path: AddressPath.avatar(address))
+    }
+}

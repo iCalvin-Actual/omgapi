@@ -7,22 +7,24 @@
 
 import Foundation
 
-/// Represents high-level metadata about the omg.lol service.
+/// A snapshot of the size of the omg.lol community
 public struct ServiceInfo: Sendable {
-    /// A human-readable summary of the service status or state.
+    /// A human-readable summary of the service state.
     public let summary: String
 
-    /// The total number of registered omg.lol members.
+    /// The total number of registered omg.lol member Accounts.
     public let members: Int
 
-    /// The total number of omg.lol addresses.
+    /// The total number of ``AddressName`` instances registered by Members.
     public let addresses: Int
 
-    /// The total number of created omg.lol profiles.
+    /// The total number of profile pages hosted through omg.lol
     public let profiles: Int
 }
 
 /// Represents a visual theme available for omg.lol profiles.
+///
+/// Themes allow for simple styling of markdown content that usually makes up a web page.
 public struct Theme: Sendable {
     /// A unique identifier for the theme.
     public let id: String

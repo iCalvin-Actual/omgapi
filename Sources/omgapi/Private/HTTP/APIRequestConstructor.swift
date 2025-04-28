@@ -61,7 +61,7 @@ final class APIRequestConstructor: Sendable {
         request.httpMethod = apiRequest.method.rawValue
         
         if let key = apiRequest.authorization {
-            request.addValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+            request.addValue(key.headerValue, forHTTPHeaderField: "Authorization")
         }
         return request
     }

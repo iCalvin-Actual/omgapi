@@ -1,6 +1,5 @@
 # ``api``
 
-
 ## Topics
 
 ### Creating a new instance
@@ -9,44 +8,57 @@
 
 - ``init()``
 
+### Error handling
+
+Noting is so perfect it can't throw a time or two.
+
+- ``api/Error``
+
 ### omg.lol info
+
+General information about the omg.lol community and the availability of new Addresses.
 
 - ``serviceInfo()``
 - ``availability(_:)``
 
 ### Authentication
 
-Learn more about usage in <doc:Authentication>
+Learn more about usage in ``APICredential``
 
 - ``authURL(with:redirect:)``
 - ``oAuthExchange(with:and:redirect:code:)``
 
 ### Working with Accounts
 
-Credential required
+Credential required.
 
 - ``account(for:with:)``
 - ``addresses(with:)``
 
 ### Private info about an Address
 
-Credential required
+Credential required.
 
 - ``expirationDate(_:credentials:)``
 - ``profile(_:with:)``
 
 ### Public directories
 
-- ``addressDirectory()``
+The open web enables this whole community.
+
+- ``directory()``
 - ``nowGarden()``
-- ``completeStatusLog()``
-- ``latestStatusLog()``
+- ``completeStatuslog()``
+- ``latestStatuslog()``
 - ``themes()``
-- ``getPicsFeed()``
+- ``picsFeed()``
 
 ### Public info about an Address
 
+People share all sorts of things.
+
 - ``details(_:)``
+- ``avatar(_:)``
 - ``bio(for:)``
 - ``following(from:)``
 - ``followers(for:)``
@@ -56,7 +68,7 @@ Credential required
 - ``pasteBin(for:credential:)``
 - ``purls(from:credential:)``
 - ``logs(for:)``
-- ``getAddressPics(_:)``
+- ``pics(from:)``
 
 ### Get a specific resource
 
@@ -64,7 +76,7 @@ Credential required
 - ``purl(_:for:credential:)``
 - ``purlContent(_:for:credential:)``
 - ``status(_:from:)``
-- ``getAddressPic(_:id:)``
+- ``addressPic(_:id:)``
 - ``getPicData(_:id:ext:)``
 
 ### Managing an Address
@@ -72,7 +84,8 @@ Credential required
 Credential required
 
 - ``saveProfile(_:for:with:)``
-- ``saveNow(for:content:credential:)``
+- ``saveNow(_:for:credential:)``
+- ``saveBio(_:for:credential:)``
 - ``follow(_:from:credential:)``
 - ``unfollow(_:from:credential:)``
 

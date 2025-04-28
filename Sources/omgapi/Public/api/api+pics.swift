@@ -9,9 +9,10 @@ import Foundation
 
 public extension api {
     
-    /// Retrieves the global public omg.lol Pics feed.
-    /// - Returns: An array of `Pic` objects.
-    func getPicsFeed() async throws -> PicReel {
+    /// Retrieves the global public feed of ``Pic`` models.
+    ///
+    /// - Returns: An array of ``Pic`` objects.
+    func picsFeed() async throws -> PicReel {
         let request = GETPicsFeed()
         let response = try await apiResponse(for: request)
         let pics = response.pics.map({ model in
@@ -28,10 +29,10 @@ public extension api {
         return pics
     }
     
-    /// Retrieves all Pics uploaded by a specific address.
+    /// Retrieves every ``Pic`` instance published by a given ``AddressName``.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of `Pic` objects.
-    func getAddressPics(_ address: AddressName) async throws -> PicReel {
+    func pics(from address: AddressName) async throws -> PicReel {
         let request = GETAddressPics(address)
         let response = try await apiResponse(for: request)
         let pics = response.pics.map({ model in
@@ -48,12 +49,12 @@ public extension api {
         return pics
     }
     
-    /// Retrieves a specific Pic by ID from an address.
+    /// Retrieves a specific ``Pic`` by ID from an address.
     /// - Parameters:
     ///   - address: The omg.lol address.
     ///   - id: The Pic identifier.
     /// - Returns: A `Pic` object.
-    func getAddressPic(_ address: AddressName, id: String) async throws -> Pic {
+    func addressPic(_ address: AddressName, id: String) async throws -> Pic {
         let request = GETAddressPic(address, target: id)
         let response = try await apiResponse(for: request)
         let pic = Pic(
@@ -68,7 +69,7 @@ public extension api {
         return pic
     }
     
-    /// Uploads a new Pic and applies metadata.
+    /// Uploads a new ``Pic`` and applies metadata.
     /// - Parameters:
     ///   - data: Raw image data.
     ///   - info: Metadata including description and tags.
@@ -82,7 +83,7 @@ public extension api {
         return try await updatePicDetails(draft: info, address, id: id, credential: credential)
     }
     
-    /// Updates metadata for an existing Pic.
+    /// Updates metadata for an existing ``Pic``.
     /// - Parameters:
     ///   - draft: New metadata values.
     ///   - address: The omg.lol address that owns the Pic.
@@ -92,7 +93,7 @@ public extension api {
     func updatePicDetails(draft: Pic.Draft, _ address: AddressName, id: String, credential: APICredential) async throws -> Pic {
         let request = PATCHAddressPic(draft: draft, address, target: id, credential: credential)
         let _ = try await apiResponse(for: request)
-        return try await getAddressPic(address, id: id)
+        return try await addressPic(address, id: id)
     }
     
     /// Downloads raw image data for a Pic.

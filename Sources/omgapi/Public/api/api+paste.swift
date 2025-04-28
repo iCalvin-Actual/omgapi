@@ -9,7 +9,7 @@ import Foundation
 
 public extension api {
     
-    /// Retrieves the full pastebin listing for a specific omg.lol address.
+    /// Retrieves the full ``PasteBin`` listing for a specific omg.lol ``AddressName``.
     /// - Parameters:
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for private pastes.
@@ -28,7 +28,7 @@ public extension api {
         }
     }
     
-    /// Retrieves a single paste by title from an address's pastebin.
+    /// Retrieves a single ``Paste`` by title from an address's ``PasteBin``.
     /// - Parameters:
     ///   - title: The title of the paste.
     ///   - address: The omg.lol address to fetch from.
@@ -56,7 +56,7 @@ public extension api {
         }
     }
     
-    /// Deletes a paste from the given address.
+    /// Deletes a ``Paste`` from the given address.
     /// - Parameters:
     ///   - name: The paste name or title.
     ///   - address: The omg.lol address to remove from.
@@ -66,12 +66,13 @@ public extension api {
         let _ = try await apiResponse(for: request)
     }
     
-    /// Saves a new or updated paste for an address.
+    /// Saves a new or updated ``Paste`` for an address.
+    ///
     /// - Parameters:
     ///   - draft: The draft content and metadata.
     ///   - address: The omg.lol address to save to.
     ///   - credential: The API credential for write access.
-    /// - Returns: The updated or newly saved `Paste`, if successful.
+    /// - Returns: The updated or newly saved ``Paste``, if successful.
     func savePaste(_ draft: Paste.Draft, to address: AddressName, credential: APICredential) async throws -> Paste? {
         let request = SETAddressPaste(draft, to: address, authorization: credential)
         let response = try await apiResponse(for: request)

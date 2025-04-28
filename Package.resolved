@@ -1,6 +1,15 @@
 {
-  "originHash" : "93d478922b9c01cf145db060c470f1a2f08e466316b2b595dd7bb84dc08460d8",
+  "originHash" : "d7ce6f4a819bc64072238688a6570cb5f6ebb1aff433128ec618835b9e7979cf",
   "pins" : [
+    {
+      "identity" : "punycodeswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/iCalvin-Actual/PunycodeSwift",
+      "state" : {
+        "branch" : "main",
+        "revision" : "30a462bdb4398ea835a3585472229e0d74b36ba5"
+      }
+    },
     {
       "identity" : "swift-docc-plugin",
       "kind" : "remoteSourceControl",

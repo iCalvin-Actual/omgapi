@@ -9,25 +9,26 @@ import Foundation
 
 public extension api {
     
-    /// Fetches the list of addresses following a given omg.lol address.
+    /// Fetches the list of addresses following a given omg.lol ``AddressName``.
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of follower addresses.
-    func followers(for address: AddressName) async throws -> AddressDirectory {
+    func followers(for address: AddressName) async throws -> Directory {
         let request = GETAddressFollowers(address)
         let response = try await apiResponse(for: request)
         return response.followers
     }
     
-    /// Fetches the list of addresses followed by a given omg.lol address.
+    /// Fetches the list of addresses followed by a given omg.lol ``AddressName``.
+    ///
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of followed addresses.
-    func following(from address: AddressName) async throws -> AddressDirectory {
+    func following(from address: AddressName) async throws -> Directory {
         let request = GETAddressFollowing(address)
         let response = try await apiResponse(for: request)
         return response.following
     }
     
-    /// Submits a request for one omg.lol address to follow another.
+    /// Submits a request for one omg.lol ``AddressName`` to follow another.
     /// - Parameters:
     ///   - target: The address to follow.
     ///   - address: The address initiating the follow.
@@ -37,7 +38,7 @@ public extension api {
         let _ = try await apiResponse(for: request)
     }
     
-    /// Unfollows a target address on behalf of another.
+    /// Unfollows a target ``AddressName`` on behalf of another.
     /// - Parameters:
     ///   - target: The address to unfollow.
     ///   - address: The address initiating the unfollow.

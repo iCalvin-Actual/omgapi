@@ -7,27 +7,27 @@
 
 import Foundation
 
-/// Represents a public view of an omg.lol Address profile
-public struct PublicProfile: Sendable {
-    /// The omg.lol address the profile belongs to.
-    public let address: String
-
-    /// The published content of the profile, if available.
-    public let content: String?
-}
-
 /// Represents an Address' complete profile
 public struct Profile: Sendable {
+    /// Structure contains the public webpage content for a given `AddressName`
+    public struct Page: Sendable {
+        /// The omg.lol address the profile belongs to.
+        public let address: String
+
+        /// The raw HTML response of the Address' profile page
+        public let content: String?
+    }
+    
     /// The omg.lol address the profile belongs to.
     public let address: String
 
-    /// The raw content of the profile (typically markdown).
+    /// The raw markdown of the profile page.
     public let content: String
 
-    /// The selected theme for displaying the profile.
+    /// The slug of the selected `Theme` for displaying the profile.
     public let theme: String
 
-    /// Optional HTML to be injected into the `<head>` section.
+    /// Optional HTML to be injected into the `<head>` section of the rendered page.
     public let head: String?
 
     /// Optional custom CSS to apply to the profile.
@@ -36,10 +36,10 @@ public struct Profile: Sendable {
 
 extension Profile {
     /// A draft profile used for updating omg.lol profile content.
-    ///
-    /// Includes the content body and a flag indicating whether it should be published.
     public struct Draft: MDDraft {
+        /// New markdown content to apply to the profile page.
         public let content: String
+        /// Indicates whether to publish immediately or save as an external draft.
         public let publish: Bool
     }
 }

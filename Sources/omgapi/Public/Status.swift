@@ -7,38 +7,41 @@
 
 import Foundation
 
+/// A series of moments in the `omg.lol` community.
 public typealias StatusLog = [Status]
 
-/// A short bio associated with the omg.lol address.
-public struct AddressBio: Sendable {
-    public struct Bio: Sendable {
-    }
-    /// The textual content of the bio.
+/// A brief biography associated with an omg.lol `AddressName`.
+public struct Bio: Sendable {
+    /// The textual content of the bio, as a Markdown `String`
     public let content: String
 }
 
-/// Represents a status post from the omg.lol statuslog.
+/// A public post on the omg.lol micro-blogging service, statuslog.
+///
+/// A Status post lives on the web as a public post, and in the API in the public statuslog and the Address' personal statuslog. 
 public struct Status: Sendable {
     /// A unique identifier for the status entry.
     public let id: String
 
-    /// The omg.lol address that created the status.
+    /// The omg.lol `AddressName` that created the `Status`.
     public let address: AddressName
 
-    /// The date and time the status was posted.
+    /// The date the `Status` was first posted.
     public let created: Date
 
-    /// The main textual content of the status.
+    /// The main content of the `Status` as a markdown `String`
     public let content: String
 
-    /// An optional emoji representing the status.
+    /// An emoji `String` accompanying a `Status` post.
+    ///
+    /// Expected to be a single emoji unicode character, but some posts may unexpectedly contain a larger `String` value.
     public let emoji: String?
 
-    /// An optional external URL associated with the status.
+    /// An external link to the post on a federated service, if the Address has enabled cross-posting.
     public let externalURL: URL?
 }
 
-extension AddressBio {
+extension Bio {
     /// A draft representation of a statuslog bio.
     ///
     /// Contains only the content string.

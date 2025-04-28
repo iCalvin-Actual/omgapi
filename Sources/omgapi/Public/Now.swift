@@ -7,14 +7,17 @@
 
 import Foundation
 
-/// A collection of entries in the Now Garden.
+/// A collection of references to /now pages
 public typealias NowGarden = [Now.Reference]
 
+/// Structure wraps content and metadata for an Address' `/now` page on omg.lol
+///
+/// A [/now page](https://sive.rs/nowff) let's you easily share what's latest and greatest to a consistent web url.
 public struct Now {
     /// The omg.lol address associated with this now entry.
     public let address: AddressName
 
-    /// The content of the now entry (typically plain text or markdown).
+    /// The content of the now entry as markdown text.
     public let content: String
 
     /// Whether the entry is publicly listed.
@@ -38,13 +41,13 @@ extension Now {
     ///
     /// Represents a public Now page listed in the Now Garden.
     public struct Reference: Sendable {
-        /// The omg.lol address associated with this entry.
+        /// The omg.lol address which published the /now page
         public let address: AddressName
         
-        /// The public URL of the Now page.
+        /// The public URL of the /now page.
         public let url: String
         
-        /// The timestamp indicating when the Now page was last updated.
+        /// The last known date when the /now page was updated
         public let updated: Date
     }
 }

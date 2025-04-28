@@ -32,7 +32,7 @@ async let info = try client.serviceInfo()
 ```
 
 All functions in the API are async and will throw an ``api/Error`` if it runs into an issue. Make sure to properly catch those expected cases as you go.
-```
+```swift
 do {
   async let profile = try client.publicProfile(searchAddress)
   searchAddressExists = true
@@ -40,8 +40,7 @@ do {
 catch {
   switch error as? api.Error {
 
-  // `api.Error` includ
-es an .unexpected case so this should never happen
+  // `api.Error` includes an .unexpected case so this should never happen
   case nil: throw error
 
   // Expected error case handled by the UI
@@ -57,10 +56,9 @@ es an .unexpected case so this should never happen
 
 ### Essentials
 
-``api`` is the gateway to everything, start here to learn more about `omg.lol` and `omgapi`.
+Start here to learn more about `omg.lol` and `omgapi`.
 
 - ``api``
-- ``api/Error``
 - ``ServiceInfo``
 
 ### String Extensions
@@ -69,54 +67,54 @@ Many ``api`` functions accept simple String values which are represented using t
 
 - ``APICredential``
 - ``AddressName``
-- ``Swift/String/addressDisplayString``
+
+### Core Models
+
+Swift models to represent content about or posted by any Address on omg.lol.
+
+- ``Profile``
+- ``Bio``
+- ``Now``
+- ``Status``
+- ``PURL``
+- ``Paste``
+- ``Pic``
 
 ### Public Feeds
 
 The `omg.lol` community it built on top of simple lists.
 
-- ``AddressDirectory``
+- ``Directory``
 - ``NowGarden``
+- ``StatusLog``
+- ``PicReel``
 
 ### Address Data
 
 View public data for any AddressName.
 
 - ``AddressInfo``
-- ``PublicProfile``
-- ``PicReel``
+- ``AddressAvailability``
+
+### Authentication
+- <doc:Posting>
+- ``Account``
+
+### Social Features
+
+Documentation on how a series of public feeds becomes a bare bones social network.
+
+- <doc:Following>
+
+### Data Collections
+
+If so great, why not more?
+
 - ``PURLs``
 - ``PasteBin``
 
-### Acting on a user's behalf
+### Additional Profile Content
 
-Edit and post content. Access private data.
-
-- <doc:Authentication>
-- <doc:Posting>
-
-### StatusLog
-
-Statuses allow omg.lol addresses to share small posts attached to an emoji.
-
-- <doc:Following>
-- ``StatusLog``
-- ``AddressBio``
-- ``Status``
-
-### Now Pages
-
-Most relevant right now.
-
-- ``Now``
-- ``Now/Page``
-- ``Now/Reference``
-
-### Additional Address Content
-
-Swift models to represent content about or posted by any Address on omg.lol.
+Resources to help personalize profile pages
 
 - ``Theme``
-- ``Pic``
-- ``PURL``
-- ``Paste``

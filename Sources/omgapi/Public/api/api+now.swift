@@ -22,9 +22,9 @@ public extension api {
             )}
     }
     
-    /// Retrieves the raw HTML content of a Now page for a specific address.
-    /// - Parameter address: The omg.lol address to retrieve.
-    /// - Returns: A `NowPage` object containing HTML content.
+    /// Retrieves the raw HTML content of a ``Now`` page for a specific address.
+    /// - Parameter address: The omg.lol ``AddressName`` to retrieve.
+    /// - Returns: A ``Now/Page`` object containing HTML content.
     func nowWebpage(for address: AddressName) async throws -> Now.Page {
         let request = GETAddressNowPageRequest(address)
         let response = try await apiResponse(for: request) { data in
@@ -36,7 +36,7 @@ public extension api {
         )
     }
     
-    /// Fetches the Now entry content for an address.
+    /// Fetches the ``Now`` entry content for an address.
     /// - Parameters:
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for authenticated access.
@@ -52,14 +52,14 @@ public extension api {
         )
     }
     
-    /// Saves or updates a Now entry for the given address.
+    /// Saves or updates a ``Now`` entry for the given address.
+    /// 
     /// - Parameters:
+    ///   - draft: The drafted /now content to post
     ///   - address: The omg.lol address to update.
-    ///   - content: The text content of the Now entry.
     ///   - credential: API credential with write access.
     /// - Returns: The updated `Now` entry.
-    func saveNow(for address: AddressName, content: String, credential: APICredential) async throws -> Now? {
-        let draft = Now.Draft(content: content, listed: true)
+    func saveNow(_ draft: Now.Draft, for address: AddressName, credential: APICredential) async throws -> Now? {
         let request = SETAddressNowRequest(for: address, draft: draft, authorization: credential)
         let _ = try await apiResponse(for: request)
         return try await now(for: address, credential: credential)

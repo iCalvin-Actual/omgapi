@@ -107,6 +107,22 @@ class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
     }
 }
 
+/// Updates the biography for the given address based on the draft content.
+class SETAddressStatusBio: APIRequest<Bio.Draft, BasicResponse> {
+    /// - Parameters:
+    ///   - draft: The model that contains the updated markdown text.
+    ///   - address: The `AddressName` to apply the update to
+    ///   - authorization: An appropriate APICredential for the given `AddressName`
+    init(_ draft: Bio.Draft, for address: AddressName, authorization: APICredential) {
+        super.init(
+            authorization: authorization,
+            method: .POST,
+            path: StatusPath.addressBio(address),
+            body: draft
+        )
+    }
+}
+
 /// Retrieves a specific status by ID for the given address.
 /// - Parameters:
 ///   - status: The status ID.

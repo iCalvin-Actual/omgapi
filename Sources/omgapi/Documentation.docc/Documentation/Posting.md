@@ -46,16 +46,16 @@ let profile = try await api.saveProfile(draft.content, for: "youraddress", with:
 ## Draft Types
 
 Each content type has its own `Draft` struct:
-- ``Status`` — post or edit statuslog entries
-- ``Now`` — manage Now page content
-- ``Paste`` — create or update Pastebin items
-- ``Profile`` — edit the profile page content
-- ``PURL`` — configure PURL redirects
-- ``StatusLog`` — Bio struct supports Draft
-- ``Pic`` — attach metadata to a Pic image
+- ``Status/Draft`` — post or edit statuslog entries
+- ``Now/Draft`` — manage Now page content
+- ``Paste/Draft`` — create or update Pastebin items
+- ``Profile/Draft`` — edit the profile page content
+- ``PURL/Draft`` — configure PURL redirects
+- ``Bio/Draft`` — update address biography text
+- ``Pic/Draft`` — attach metadata to a Pic image
 
 All of these are `Sendable` so they can be passed directly to the corresponding ``api`` save/update methods.
 
-## Topics
+## See Also
 
 - ``api``

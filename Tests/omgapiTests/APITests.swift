@@ -115,10 +115,10 @@ struct APIIntegrationTests {
     @Test
     func testFetchPublicData() async throws {
         let targetAddress = "app"
-        async let directory = try client.addressDirectory()
+        async let directory = try client.directory()
         async let garden = try client.nowGarden()
         async let themes = try client.themes()
-        async let picsFeed = try client.getPicsFeed()
+        async let picsFeed = try client.picsFeed()
         async let availability = client.availability(targetAddress)
         async let profile = try client.publicProfile(targetAddress)
         async let details = try client.details(targetAddress)

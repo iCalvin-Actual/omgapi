@@ -8,27 +8,31 @@
 
 import Foundation
 
+/// A collection of published ``Pic`` instances
 public typealias PicReel = [Pic]
 
-/// Represents a Pic uploaded to omg.lol, including metadata and ownership information.
+/// An image file hosted by an `Address` on omg.lol.
+///
+/// `Pics` give an extra view into the life behind an `Address`, images are accessible with a description text by default, and include other metadata about the photo, so be careful what you share.
 public struct Pic: Sendable {
-    /// Unique identifier for the Pic.
-    let id: String
+    /// Unique identifier for the `Pic`.
+    public let id: String
     
-    /// The omg.lol address that owns the Pic.
-    let address: AddressName
+    /// The accessability description that accompanies the image.
+    public let description: String
     
-    /// The date and time the Pic was created.
-    let created: Date
+    /// The omg.lol `Address` that published the image
+    public let address: AddressName
     
-    /// The size of the Pic in bytes.
-    let size: Double
+    /// The date and time the image was created.
+    public let created: Date
+    
+    /// The size of the image in bytes.
+    public let size: Double
     /// The MIME type of the Pic (e.g., "image/png").
-    let mime: String
+    public let mime: String
     /// EXIF metadata extracted from the image.
-    let exif: [String: String]
-    /// The description associated with the Pic.
-    let description: String
+    public let exif: [String: String]
     
     /// Creates a new `Pic` instance from its metadata components.
     ///

@@ -7,10 +7,12 @@
 
 import Foundation
 
-/// A type alias representing an API credential, typically a bearer token.
+/// Typealias around `String` used for server authorization
 public typealias APICredential = String
 
 /// A user account wrapper that provides access to account details.
+///
+/// Only available via authenticated requests, Account gives you meta fields about the Account owner, distinct from any individual address.
 public struct Account: Sendable {
     /// Creates an `Account` from a decoded `AccountInfo`.
     ///
@@ -21,10 +23,17 @@ public struct Account: Sendable {
         self.created = info.created.date
     }
     
-    /// User's email address.
+    /// The email address associated to the account and which is used for login.
     public let emailAddress: String
-    /// Account creation timestamp.
+    /// The `Date` when the omg.lol account was originally created
     public let created: Date
-    /// Display name or username.
+    /// A display name to use to reference a registered omg.lol member
     public let name: String
+}
+
+extension APICredential {
+    /// Helper value to quickly create a Bearer string to inject into a request header, assuming `self` is a valid ``APICredential``.
+    var headerValue: String {
+        "Bearer \(self)"
+    }
 }

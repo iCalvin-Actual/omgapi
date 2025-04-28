@@ -10,7 +10,7 @@ import Foundation
 // MARK: Models
 
 /// Response model for `AddressDirectoryResponse`.
-struct AddressDirectoryResponseModel: CommonAPIResponse {
+struct DirectoryResponseModel: CommonAPIResponse {
     /// Optional response message string.
     let message: String?
     /// Associated URL.
@@ -76,7 +76,7 @@ struct AddressAvailabilityResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Fetches a directory listing.
-class GETAddressDirectoryRequest: APIRequest<None, AddressDirectoryResponseModel> {
+class GETAddressDirectoryRequest: APIRequest<None, DirectoryResponseModel> {
     /// - Parameters:
     init() {
         super.init(path: AddressPath.directory)

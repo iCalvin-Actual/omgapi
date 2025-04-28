@@ -148,6 +148,7 @@ enum AddressPath: APIPath {
     private static let addressAvailability = "address/{address}/availability/"
     private static let addressExpiration = "address/{address}/expiration/"
     private static let addressInfo = "address/{address}/info/"
+    private static let addressAvatar = "{address}/picture"
     
     /// Public directory listing of addresses.
     case directory
@@ -157,6 +158,16 @@ enum AddressPath: APIPath {
     case expiration     (_ address: String)
     /// Gets metadata for an address.
     case info           (_ address: String)
+    case avatar         (_ address: String)
+    
+    var baseUrl: URL? {
+        switch self {
+        case .avatar:
+            return URL(string: "https://profiles.cache.lol")
+        default:
+            return CommonPath.api.url
+        }
+    }
     
     var string: String {
         switch self {
@@ -168,6 +179,8 @@ enum AddressPath: APIPath {
             return Self.addressExpiration.replacingAddress(address)
         case .info(let address):
             return Self.addressInfo.replacingAddress(address)
+        case .avatar(let address):
+            return Self.addressAvatar.replacingAddress(address)
         }
     }
 }

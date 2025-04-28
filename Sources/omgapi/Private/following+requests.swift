@@ -12,7 +12,7 @@ import Foundation
 /// Response model for `AddressFollowersModel`.
 struct StatusLogFollowersResponseModel: CommonAPIResponse {
     let message: String?
-    let followers: AddressDirectory
+    let followers: Directory
     let followersCount: Int
 }
 
@@ -21,7 +21,7 @@ struct StatusLogFollowingResponseModel: CommonAPIResponse {
     /// Optional response message string.
     let message: String?
     /// List of addresses the user is following.
-    let following: AddressDirectory
+    let following: Directory
     /// Count of followed addresses.
     let followingCount: Int
 }

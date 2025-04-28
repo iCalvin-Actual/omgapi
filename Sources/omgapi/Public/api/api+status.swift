@@ -9,9 +9,9 @@ import Foundation
 
 public extension api {
     
-    /// Retrieves the complete public statuslog feed from omg.lol from the beginning of time.
-    /// - Returns: A `PublicLog` containing all  statuses posted to omg.lol.
-    func completeStatusLog() async throws -> StatusLog {
+    /// Retrieves the complete public ``StatusLog`` feed from omg.lol from the beginning of time.
+    /// - Returns: A ``StatusLog`` containing all  statuses posted to omg.lol.
+    func completeStatuslog() async throws -> StatusLog {
         let request = GETCompleteStatusLog()
         let response = try await apiResponse(for: request)
         let statuses = response.statuses ?? []
@@ -27,9 +27,9 @@ public extension api {
         }
     }
     
-    /// Retrieves the latest latest entry from each address in a sequential log..
-    /// - Returns: A `PublicLog` of recent statuses.
-    func latestStatusLog() async throws -> StatusLog {
+    /// Retrieves the latest ``Status`` entry from each ``AddressName`` in a sequential array
+    /// - Returns: A `StatusLog` of recent statuses.
+    func latestStatuslog() async throws -> StatusLog {
         let request = GETLatestStatusLogs()
         let response = try await apiResponse(for: request)
         let statuses = response.statuses ?? []
@@ -45,10 +45,11 @@ public extension api {
         }
     }
     
-    /// Retrieves all statuses posted by a specific omg.lol address.
+    /// Retrieves every ``Status`` posted by a specific omg.lol ``AddressName``.
+    /// 
     /// - Parameter address: The omg.lol address.
     /// - Returns: An array of `Status` entries.
-    func logs(for address: String) async throws -> StatusLog {
+    func logs(for address: AddressName) async throws -> StatusLog {
         guard !address.isEmpty else {
             return []
         }
@@ -67,10 +68,11 @@ public extension api {
         }
     }
     
-    /// Retrieves the bio text for a statuslog, if set.
+    /// Returns the biography text set by the Address owner to appear alongside the user's ``StatusLog``.
+    ///
     /// - Parameter address: The omg.lol address.
     /// - Returns: A `StatusLog.Bio` object.
-    func bio(for address: String) async throws -> AddressBio {
+    func bio(for address: AddressName) async throws -> Bio {
         let request = GETAddressStatusBio(address)
         let response = try await apiResponse(for: request, priorityDecoding: { data in
             if let response = try? api.decoder.decode(APIResponse<StatusLogBioResponseModel>.self, from: data) {
@@ -83,7 +85,19 @@ public extension api {
         return .init(content: response.bio ?? "")
     }
     
-    /// Fetches a specific status entry by ID.
+    /// Updates the biography for the given `AddressName`
+    ///
+    /// - Parameters:
+    ///   - draft: The model that contains the updated markdown text.
+    ///   - address: The `AddressName` to apply the update to
+    ///   - credential: An appropriate APICredential for the given `AddressName`
+    func saveBio(_ draft: Bio.Draft, for address: AddressName, credential: APICredential) async throws -> Bio {
+        let request = SETAddressStatusBio(draft, for: address, authorization: credential)
+        let _ = try await apiResponse(for: request)
+        return try await bio(for: address)
+    }
+    
+    /// Fetches a specific ``Status`` entry by ID.
     /// - Parameters:
     ///   - status: The status ID.
     ///   - address: The omg.lol address that owns the status.
@@ -101,7 +115,7 @@ public extension api {
         )
     }
     
-    /// Deletes a specific status and returns the removed content.
+    /// Deletes a specific ``Status`` and returns the removed content.
     /// - Parameters:
     ///   - status: A draft containing the ID of the status to delete.
     ///   - address: The omg.lol address that owns the status.
@@ -117,7 +131,7 @@ public extension api {
         return backup
     }
     
-    /// Creates or updates a status entry.
+    /// Creates or updates a ``Status`` entry.
     /// - Parameters:
     ///   - draft: The status content and optional metadata.
     ///   - address: The omg.lol address to post to.

@@ -38,11 +38,11 @@ public extension api {
         return response.accessToken
     }
     
-    /// Retrieves a list of omg.lol addresses associated with the authenticated account.
+    /// Retrieves a list of omg.lol ``AddressName`` instances associated with the authenticated account.
     ///
     /// - Parameter credentials: The API credential used to authenticate.
     /// - Returns: An array of `AddressName`.
-    func addresses(with credentials: APICredential) async throws -> AddressDirectory {
+    func addresses(with credentials: APICredential) async throws -> Directory {
         let request = GETAddresses(authorization: credentials)
         
         let response = try await self.apiResponse(for: request)
@@ -50,7 +50,7 @@ public extension api {
         return response.map({ $0.address })
     }
     
-    /// Fetches the current account metadata for a specific email address.
+    /// Fetches account metadata for a specific email address.
     ///
     /// - Parameters:
     ///   - emailAddress: The email address to fetch.
@@ -68,7 +68,7 @@ public extension api {
         )
     }
     
-    /// Returns the expiration date of a specific address.
+    /// Returns the expiration date of a specific ``AddressName``.
     ///
     /// - Parameters:
     ///   - address: The omg.lol address.

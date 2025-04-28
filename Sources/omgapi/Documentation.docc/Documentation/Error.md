@@ -6,14 +6,21 @@ Best practice is to always catch errors thrown from the API and check the Error 
 
 ```swift
 do {
-   let profile = try await api.publicProfile("PrivateAddress")
-} catch {
-   switch error as? APIError {
-   case .notFound:
-     // Handle private profile
-   default:
-     throw error
-   }
+  async let profile = try client.publicProfile(searchAddress)
+  searchAddressExists = true
+}
+catch {
+  switch error as? api.Error {
+
+  // `api.Error` includes an .unexpected case so this should never happen
+  case nil: throw error
+
+  // Expected error case handled by the UI
+  case .notFound: searchAddressExists = false
+  
+  // Handle defined errors cases with logs or alerts
+  default:  displayError(error)
+  }
 }
 ```
 
@@ -21,15 +28,21 @@ do {
 
 ### Permissions
 
+Requested resource is private or requires authentication.
+
 - ``notFound``
 - ``unauthenticated``
 
 ### Encoding
 
+Not expected in general use, models are encoded/decoded internally, but provided for completeness.
+
 - ``badBody``
-- ``badResponseEncoding``
+- ``badResponse``
 
 ### Other errors 
+
+Unhandled error cases that may be thrown from the API.
 
 - ``unhandled(_:message:)``
 - ``inconceivable``

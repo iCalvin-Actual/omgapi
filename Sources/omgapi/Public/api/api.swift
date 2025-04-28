@@ -7,18 +7,15 @@
 
 import Foundation
 
-
-// MARK: - Internal
-
-/// Main client interface for interacting with api.omg.lol in omgapi
+/// Main client interface for interacting with api.omg.lol within omgapi
 ///
 /// In general all access goes through the ``api`` interface, which acts as it's own Swift `actor`. Models are returned by the api asyncronously, the api itself is state-less. Each function requests all the data it needs, and returns everything relevant it receives.
 ///
-/// Public omg.lol resources like ``Profile``, ``Status``, and ``NowGarden`` don't require any authentication. If that content isn't marked public however then the `api` will throw `APIError.notFound`.
+/// Public requests like ``directory()``  and ``bio(for:)`` don't require any authentication. If that content isn't marked public however then the `api` will throw `APIError.notFound`.
 ///
 /// Private resources can be fetched by providing an appropriate ``APICredential`` to the given request. If the `credential` property is marked as `optional` then providing `nil` will only return public resources. `APICredential` is generally only marked `nonoptional` if the function makes no sense in a public context, otherwise it's always `optional`.
 ///
-/// Learn more in <doc:Authentication>
+/// Learn more in ``APICredential``
 ///
 /// ## Getting started
 ///
@@ -33,12 +30,12 @@ import Foundation
 /// let info = try? await api.serviceInfo()
 /// ```
 ///
-/// Make sure to handle common errors. See ``api/Error`` for more guidance
+/// Make sure to handle common errors that may be thrown. See ``api/Error`` for more guidance
 /// ```swift
 /// do {
 ///    let profile = try await api.publicProfile("PrivateAddress")
 /// } catch {
-///    switch error as? APIError {
+///    switch error as? api.Error {
 ///    case .notFound:
 ///      // Handle private profile
 ///    default:
@@ -59,7 +56,7 @@ public actor api {
     
     let urlSession: URLSession = .shared
     
-    /// Creates a new instance of the api interface
+    /// Default initializer does nothing in itself. New instances of `api` have all the internal models they need.
     public init() {
     }
     
@@ -96,7 +93,7 @@ public actor api {
                 }
                 
                 guard let result = apiResponse.result else {
-                    throw Error.badResponseEncoding
+                    throw Error.badResponse
                 }
                 return result
             }
@@ -105,16 +102,14 @@ public actor api {
             if let errorMessageResponse: APIResponse<BasicResponse> = try? api.decoder.decode(APIResponse.self, from: data) {
                 throw Error.create(from: errorMessageResponse)
             }
-            throw Error.badResponseEncoding
+            throw Error.badResponse
         }
     }
 }
 
 extension api {
-    /// Expected error cases when working with omgapi
+    /// Error cases that may arise when working with the API
     public enum Error: Swift.Error, Equatable {
-        /// Placeholder value to indicate no error actually occured
-        case none
         
         /// An internal value used only for cases that shouldn't happen in normal usage
         case inconceivable
@@ -129,7 +124,7 @@ extension api {
         case badBody
 
         /// The response could not be decoded from the expected format.
-        case badResponseEncoding
+        case badResponse
 
         /// A non-specific error with an unhandled HTTP status code and optional message.
         ///
@@ -155,7 +150,7 @@ extension api {
             case 404:
                 return .notFound
             case 200:
-                return .badResponseEncoding
+                return .badResponse
             default:
                 var message: String?
 

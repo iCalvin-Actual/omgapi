@@ -9,7 +9,8 @@ import Foundation
 
 public extension api {
     
-    /// Retrieves all PURLs associated with the given address.
+    /// Retrieves all ``PURLs`` associated with the given ``AddressName``.
+    /// 
     /// - Parameters:
     ///   - address: The omg.lol address to query.
     ///   - credential: Optional API credential for authentication.
@@ -28,7 +29,7 @@ public extension api {
         })
     }
     
-    /// Retrieves a specific PURL by name.
+    /// Retrieves a specific ``PURL`` published by an ``AddressName`` by name.
     /// - Parameters:
     ///   - name: The name of the PURL.
     ///   - address: The omg.lol address that owns the PURL.
@@ -54,7 +55,8 @@ public extension api {
         }
     }
     
-    /// Retrieves the raw content associated with a PURL.
+    /// Retrieves the raw HTML that can be found by following a ``PURL`` redirect.
+    ///
     /// - Parameters:
     ///   - name: The name of the PURL.
     ///   - address: The omg.lol address that owns the PURL.
@@ -70,7 +72,7 @@ public extension api {
         }
     }
     
-    /// Deletes a PURL from the specified address.
+    /// Deletes a ``PURL`` from the specified address.
     /// - Parameters:
     ///   - name: The PURL name.
     ///   - address: The omg.lol address to delete from.
@@ -80,7 +82,7 @@ public extension api {
         let _ = try await apiResponse(for: request)
     }
     
-    /// Creates or updates a PURL for the given address.
+    /// Creates or updates a ``PURL`` for the given address.
     /// - Parameters:
     ///   - draft: The draft data including name and URL.
     ///   - address: The omg.lol address to associate with the PURL.

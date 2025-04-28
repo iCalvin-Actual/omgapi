@@ -8,7 +8,8 @@
 import Foundation
 
 public extension api {
-    /// Retrieves high-level information about the omg.lol service (member count, profile count, etc.).
+    /// Returns information about the omg.lol service, specifically the number of Addresses and Profiles
+    /// - Returns: ``ServiceInfo`` model containing counts of members, addresses, and profiles on the omg.lol service
     func serviceInfo() async throws -> ServiceInfo {
         let request = GETServiceInfoAPIRequest()
         let response = try await apiResponse(for: request)
@@ -23,7 +24,8 @@ public extension api {
         return info
     }
     
-    /// Retrieves the full list of available omg.lol themes.
+    /// Retrieves the full list of every available omg.lol Profile ``Theme``.
+    ///
     /// - Returns: An array of `Theme` objects.
     func themes() async throws -> [Theme] {
         let request = GETThemes()
