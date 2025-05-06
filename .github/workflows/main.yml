@@ -34,6 +34,7 @@ jobs:
     - name: Checkout docs branch
       run: |
         git switch docs
+        git merge main
 
     # Build the DocC website using swiftPM.
     - name: Build docs with SwiftPM
