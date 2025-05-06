@@ -25,7 +25,7 @@ This structure exposes that core functionality to the API. Rather than navigatin
 
 - ``Profile/Page``
 
-### api
+### Relevant APIs
 
 Use the ``api`` class to fetch a profile for a given ``AddressName`` 
 

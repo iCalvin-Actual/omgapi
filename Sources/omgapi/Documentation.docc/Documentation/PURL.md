@@ -13,7 +13,7 @@
 - ``listed``
 - ``counter``
 
-### api
+### Relevant APIs
 
 - ``api/purls(from:credential:)``
 - ``api/purlContent(_:for:credential:)``

@@ -24,7 +24,7 @@ If a Punycode is provided that code and the proper `AddressName` `String` value 
 
 - ``address``
 
-### api
+### Relevant APIs
 
 Pass the desired ``AddressName`` `String` to ``api/availability(_:)`` and inspect the resulting model.
 

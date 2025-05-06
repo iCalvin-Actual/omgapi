@@ -6,7 +6,7 @@ See ``Now`` to learn more about Now pages and how to work with the content from 
 
 ## Topics
 
-### api
+### Relevant APIs
 
 Fetch the Now Garden with ``api`` and receive an array of ``Now/Reference`` instances sorted by most recently updated. 
 

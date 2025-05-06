@@ -24,7 +24,7 @@ if all.count > public.count {
 
 ## Topics
 
-### api
+### Relevant APIs
 
 - ``api/purls(from:credential:)``
 

@@ -13,7 +13,7 @@
 - ``listed``
 - ``modifiedOn``
 
-### api
+### Relevant APIs
 
 - ``api/paste(_:from:credential:)``
 - ``api/deletePaste(_:for:credential:)``

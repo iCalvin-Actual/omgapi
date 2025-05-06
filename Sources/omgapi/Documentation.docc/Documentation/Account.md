@@ -8,7 +8,7 @@
 - ``emailAddress``
 - ``created``
 
-### api
+### Relevant APIs
 
 - ``api/account(for:with:)``
 - ``api/expirationDate(_:credentials:)``

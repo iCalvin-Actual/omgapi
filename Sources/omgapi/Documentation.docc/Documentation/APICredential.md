@@ -87,7 +87,7 @@ let profile = try? await api.profile("app", with: apiCredential)
 
 ## Topics
 
-### api
+### Relevant APIs
 
 - ``api/authURL(with:redirect:)``
 - ``api/oAuthExchange(with:and:redirect:code:)``

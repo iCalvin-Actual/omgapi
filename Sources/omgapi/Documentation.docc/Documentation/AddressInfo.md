@@ -9,6 +9,6 @@
 - ``verified``
 - ``expired``
 
-### api
+### Relevant APIs
 
 - ``api/details(_:)``

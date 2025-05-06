@@ -35,7 +35,7 @@ If that happens, the `Status` is accompanied by an ``Status/externalURL`` that p
 
 - ``Status/externalURL``
 
-### api
+### Relevant APIs
 
 Relevant `api` functionality.
 

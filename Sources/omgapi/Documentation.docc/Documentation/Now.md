@@ -21,7 +21,7 @@ More structures within `omeapi` that reference a particular `/now` page.
 - ``Now/Page``
 - ``Now/Reference``
 
-### api
+### Relevant APIs
 
 Relevant `api` functionality.
 

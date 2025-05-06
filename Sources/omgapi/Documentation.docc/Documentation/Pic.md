@@ -26,7 +26,7 @@ Once you have the image data you are able to present the complete `Pic` in your 
 - ``mime``
 - ``exif``
 
-### api
+### Relevant APIs
 
 - ``api/addressPic(_:id:)``
 - ``api/getPicData(_:id:ext:)``

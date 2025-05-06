@@ -18,6 +18,6 @@
 - ``updated``
 - ``version``
 
-### api
+### Relevant APIs
 
 - ``api/themes()``

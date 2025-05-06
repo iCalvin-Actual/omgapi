@@ -8,7 +8,7 @@ A bit of personality to display alongside some given `Address` content.
 
 - ``content``
 
-### api
+### Relevant APIs
 
 ```
 let bio = client.bio(for: someAddress)

@@ -12,7 +12,7 @@ Recent public user activity is also highlighted in the ``NowGarden``, ``StatusLo
 
 ## Topics
 
-### api
+### Relevant APIs
 
 Simply request the array of names in the Directory.
 
