@@ -86,15 +86,17 @@ dependencies: [
 
 ## Documentation
 
-View full  documentation at: [api.omg.lol](https://api.omg.lol)
+Full Swift API documentation: [app.url.lol/swiftAPI](https://app.url.lol/swiftAPI)
 
-To build locally with with SwiftPM:
+Reference for the omg.lol web API: [api.omg.lol](https://api.omg.lol)
+
+To build locally with SwiftPM:
 
 ```sh
 swift package generate-documentation
 ```
 
-Or build within Xcode 'Build Documentation'
+Or build within Xcode using 'Build Documentation'
 
 ## License
 
