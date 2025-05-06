@@ -50,4 +50,4 @@ jobs:
         git config --local user.name "github-actions[bot]"
         git add ./docs
         git commit -a -m "Generated Swift DocC"
-        git push origin docs
+        git push -f origin docs
