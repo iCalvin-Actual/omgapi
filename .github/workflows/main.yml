@@ -1,0 +1,49 @@
+name: Build Swift DocC and publish on GitHub Pages
+on:
+  push:
+    # If you wanted to only trigger this flow on certain branches,
+    # specify them here in 
+    branches: main
+    # alternatively, you can trigger docs only on new tags pushed:
+    # tags:
+    #   - '*'
+# `concurrency` specifices how this action is run. 
+# Setting concurrency group makes it so that only one build process runs at a time.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+env:
+  # Build target specifies which target in your Swift Package to build documentation for.
+  # To build all targets, remove this env variable, 
+  # and remove --target arg in the building step below.
+  BUILD_TARGET: PackageDescription
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set up Swift environment
+      uses: fwal/setup-swift@v1
+      with:
+        swift-version: '5.8'
+    # Build the DocC website using swiftPM.
+    - name: Build docs with SwiftPM
+      run: |
+        swift package --allow-writing-to-directory ./docs \
+        generate-documentation --target omgapi \
+        --output-path ./docs \
+        --disable-indexing \
+        --transform-for-static-hosting \
+        --hosting-base-path omgapi
+    - name: Commit and push generated documentation
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git switch docs
+        git add ./docs
+        git commit -a -m "Generated Swift DocC"
+        git push origin gh-pages
