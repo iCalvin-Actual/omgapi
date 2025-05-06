@@ -1,0 +1,4 @@
+{
+    "request": { "success": false, "statusCode": 500 },
+    "result": { "message": "should not return" }
+}
