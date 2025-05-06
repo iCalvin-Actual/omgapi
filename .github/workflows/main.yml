@@ -29,7 +29,7 @@ jobs:
     - name: Set up Swift environment
       uses: fwal/setup-swift@v1
       with:
-        swift-version: '5.9'
+        swift-version: '6.0'
     # Build the DocC website using swiftPM.
     - name: Build docs with SwiftPM
       run: |
