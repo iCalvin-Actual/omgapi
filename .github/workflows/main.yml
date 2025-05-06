@@ -19,7 +19,7 @@ env:
   BUILD_TARGET: PackageDescription
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
     - name: Checkout
@@ -29,7 +29,7 @@ jobs:
     - name: Set up Swift environment
       uses: fwal/setup-swift@v1
       with:
-        swift-version: '5.8'
+        swift-version: '5.9'
     # Build the DocC website using swiftPM.
     - name: Build docs with SwiftPM
       run: |
