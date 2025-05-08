@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+
+jobs:
+  ui-tests:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2.3.0
+        with:
+          swift-version: '6.0'
+      - name: Run iOS UI tests
+        run: |
+          xcodebuild -scheme omgapi -destination 'platform=iOS Simulator,name=iPhone 16' test
+      - name: Run macOS UI tests
+        run: |
+          xcodebuild -scheme omgapi -destination 'platform=macOS' test
