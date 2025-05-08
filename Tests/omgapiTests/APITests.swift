@@ -92,7 +92,7 @@ struct APIUnitTests {
             let response = try await api().apiResponse(for: request)
             #expect(response.message == nil)
         } catch {
-            #expect((error as? APIError) == .unhandled(500, message:nil))
+            #expect((error as? api.Error) == .unhandled(500, message:nil))
         }
     }
     
@@ -103,8 +103,8 @@ struct APIUnitTests {
 
         do {
             _ = try await client.apiResponse(for: request)
-        } catch let error as APIError {
-            #expect(error == .badResponseEncoding)
+        } catch let error as api.Error {
+            #expect(error == .badResponse)
         }
     }
 }

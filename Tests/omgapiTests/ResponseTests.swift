@@ -20,7 +20,7 @@ struct DecodingTests {
     }
     """.data(using: .utf8)!
         
-        let decoded = try JSONDecoder().decode(ServiceInfoResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(ServiceInfoResponseModel.self, from: json)
         #expect(decoded.message == "OK")
         #expect(decoded.members == "https://api.omg.lol/address/members")
         #expect(decoded.addresses == "https://api.omg.lol/address/")
@@ -34,7 +34,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(OAuthResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(OAuthResponseModel.self, from: json)
         #expect(decoded.accessToken == "abcd1234")
     }
     
@@ -51,7 +51,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AccountInfo.self, from: json)
+        let decoded = try JSONDecoder().decode(AccountInfoResponseModel.self, from: json)
         #expect(decoded.message == "Account loaded")
         #expect(decoded.email == "user@example.com")
         #expect(decoded.name == "User")
@@ -66,7 +66,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AccountOwner.self, from: json)
+        let decoded = try JSONDecoder().decode(AccountOwnerResponseModel.self, from: json)
         #expect(decoded.message == "Owner loaded")
         #expect(decoded.name == "Owner Name")
     }
@@ -83,7 +83,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AccountAddressResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(AccountAddressResponseModel.self, from: json)
         #expect(decoded.message == "Registered")
         #expect(decoded.address == "name.omg.lol")
         #expect(decoded.registration.date == Date(timeIntervalSince1970: 987654321))
@@ -111,7 +111,7 @@ struct DecodingTests {
         ]
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AddressCollection.self, from: json)
+        let decoded = try JSONDecoder().decode(AddressCollectionResponseModel.self, from: json)
         #expect(decoded.count == 2)
         #expect(decoded[0].address == "user1.omg.lol")
         #expect(decoded[1].address == "user2.omg.lol")
@@ -128,7 +128,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AddressDirectoryResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(DirectoryResponseModel.self, from: json)
         #expect(decoded.url == "https://omg.lol/directory")
         #expect(decoded.directory == ["a", "b", "c"])
     }
@@ -157,7 +157,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AddressInfoResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(AddressInfoResponseModel.self, from: json)
         #expect(decoded.address == "user.omg.lol")
         #expect(decoded.owner == "user")
         #expect(decoded.registration.date == Date(timeIntervalSince1970: 123))
@@ -178,7 +178,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AddressAvailabilityResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(AddressAvailabilityResponseModel.self, from: json)
         #expect(decoded.available == true)
         #expect(decoded.availability == "Available")
         #expect(decoded.punyCode == "check")
@@ -201,7 +201,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(NowGardenResponse.self, from: json)
+        let decoded = try JSONDecoder().decode(NowGardenResponseModel.self, from: json)
         #expect(decoded.message == "Garden loaded")
         #expect(decoded.garden.count == 1)
         #expect(decoded.garden[0].address == "user1")
@@ -457,7 +457,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(StatusLogFollowersModel.self, from: json)
+        let decoded = try JSONDecoder().decode(StatusLogFollowersResponseModel.self, from: json)
         #expect(decoded.message == "Followers listed")
         #expect(decoded.followers == ["user1", "user2"])
         #expect(decoded.followersCount == 2)
@@ -472,7 +472,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(StatusLogFollowingModel.self, from: json)
+        let decoded = try JSONDecoder().decode(StatusLogFollowingResponseModel.self, from: json)
         #expect(decoded.message == "Following listed")
         #expect(decoded.following == ["other1", "other2"])
         #expect(decoded.followingCount == 2)
@@ -620,7 +620,7 @@ struct DecodingTests {
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(PicResponseModel.self, from: json)
+        let decoded = try JSONDecoder().decode(AddressPicResponse.self, from: json)
         #expect(decoded.id == "pic123")
         #expect(decoded.address == "user.omg.lol")
         #expect(decoded.mime == "image/jpeg")

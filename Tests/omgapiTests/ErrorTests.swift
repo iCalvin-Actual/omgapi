@@ -11,7 +11,7 @@ import Testing
 struct APIErrorTests {
     @Test func testNilResponse() {
         let response: APIResponse<None>? = nil
-        let error = APIError.create(from: response)
+        let error = api.Error.create(from: response)
         #expect(error == .inconceivable)
     }
     
@@ -20,7 +20,7 @@ struct APIErrorTests {
             request: .init(statusCode: 401, success: false),
             result: BasicResponse(message: "Unauthorized")
         )
-        let error = APIError.create(from: response)
+        let error = api.Error.create(from: response)
         #expect(error == .unauthenticated)
     }
     
@@ -29,7 +29,7 @@ struct APIErrorTests {
             request: .init(statusCode: 404, success: false),
             result: BasicResponse(message: "Missing")
         )
-        let error = APIError.create(from: response)
+        let error = api.Error.create(from: response)
         #expect(error == .notFound)
     }
     
@@ -38,14 +38,14 @@ struct APIErrorTests {
             request: .init(statusCode: 500, success: false),
             result: BasicResponse(message: "Internal error")
         )
-        var error = APIError.create(from: response)
+        var error = api.Error.create(from: response)
         #expect(error == .unhandled(500, message: "Internal error"))
         response = APIResponse<BasicResponse>(
             request: .init(statusCode: 200, success: true),
             result: BasicResponse(message: "Internal error")
         )
-        error = APIError.create(from: response)
-        #expect(error == .badResponseEncoding)
+        error = api.Error.create(from: response)
+        #expect(error == .badResponse)
     }
 }
 
