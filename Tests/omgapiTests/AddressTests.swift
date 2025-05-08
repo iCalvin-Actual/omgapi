@@ -10,13 +10,13 @@ import Testing
 
 struct AccountTests {
     @Test func testPopulateFromInfo() async {
-        let infoOne = AccountInfo(
+        let infoOne = AccountInfoResponseModel(
             message: "Sample account A",
             email: "user@domain.com",
             created: .init(.init(timeIntervalSince1970: 0)),
             name: "User"
         )
-        let infoTwo = AccountInfo(
+        let infoTwo = AccountInfoResponseModel(
             message: "Sample account B",
             email: "client@business.com",
             created: .init(.now),

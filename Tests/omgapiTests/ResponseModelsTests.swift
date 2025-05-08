@@ -11,7 +11,7 @@ import Testing
 
 struct LogicTests {
     @Test func testPasteIsPublicDefaultsTrueWhenListedIsNil() {
-        let paste = AddressPasteResponseModel.Paste(
+        let paste = AddressPasteResponseModel.PasteResponseModel(
             title: "Test",
             content: "Content",
             modifiedOn: 123456789,
@@ -22,7 +22,7 @@ struct LogicTests {
     
     @Test func testPasteUpdatedTimestamp() {
         let ts = 123456789
-        let paste = AddressPasteResponseModel.Paste(
+        let paste = AddressPasteResponseModel.PasteResponseModel(
             title: "Test",
             content: "Content",
             modifiedOn: ts,
@@ -33,7 +33,7 @@ struct LogicTests {
     
     @Test func testNowUpdatedAtConversion() {
         let raw = 123456789
-        let now = AddressNowResponseModel.Now(content: "text", updated: raw, listed: 1)
+        let now = AddressNowResponseModel.NowResponseModel(content: "text", updated: raw, listed: 1)
         #expect(now.updatedAt == Date(timeIntervalSince1970: Double(raw)))
     }
     
