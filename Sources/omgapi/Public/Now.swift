@@ -13,7 +13,7 @@ public typealias NowGarden = [Now.Reference]
 /// Structure wraps content and metadata for an Address' `/now` page on omg.lol
 ///
 /// A [/now page](https://sive.rs/nowff) let's you easily share what's latest and greatest to a consistent web url.
-public struct Now {
+public struct Now: Sendable {
     /// The omg.lol address associated with this now entry.
     public let address: AddressName
 
