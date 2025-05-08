@@ -1,4 +1,4 @@
-name: Build Swift DocC and publish on GitHub Pages
+name: docc-update
 on:
   push:
     # If you wanted to only trigger this flow on certain branches,
@@ -16,7 +16,7 @@ env:
   # Build target specifies which target in your Swift Package to build documentation for.
   # To build all targets, remove this env variable, 
   # and remove --target arg in the building step below.
-  BUILD_TARGET: PackageDescription
+  BUILD_TARGET: omgapi
 jobs:
   build:
     runs-on: macos-latest
