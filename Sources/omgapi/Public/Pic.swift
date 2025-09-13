@@ -55,7 +55,7 @@ public struct Pic: Sendable {
             self.url = url
         } else {
             let ext = exif["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
-            self.url = .init(string: "https://cdn.some.pics/\(address)/\(id)/\(ext)")!
+            self.url = .init(string: "https://cdn.some.pics/\(address)/\(id).\(ext)")!
         }
         self.size = size
         self.mime = mime
