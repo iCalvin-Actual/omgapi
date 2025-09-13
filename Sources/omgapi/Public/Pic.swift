@@ -47,11 +47,16 @@ public struct Pic: Sendable {
     ///   - mime: The MIME type of the image.
     ///   - exif: EXIF metadata from the image.
     ///   - description: A user-provided description of the Pic.
-    init(id: String, address: AddressName, created: Date, url: URL, size: Double, mime: String, exif: [String : String], description: String) {
+    init(id: String, address: AddressName, created: Date, url: URL?, size: Double, mime: String, exif: [String : String], description: String) {
         self.id = id
         self.address = address
         self.created = created
-        self.url = url
+        if let url {
+            self.url = url
+        } else {
+            let ext = exif["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
+            self.url = .init(string: "https://cdn.some.pics/\(address)/\(id)/\(ext)")!
+        }
         self.size = size
         self.mime = mime
         self.exif = exif

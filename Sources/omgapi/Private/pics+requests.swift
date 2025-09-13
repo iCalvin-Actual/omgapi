@@ -18,7 +18,7 @@ struct AddressPicResponse: Response {
     /// The timestamp when the Pic was uploaded.
     let created: TimeInterval
     /// The URL where the image can be viewed
-    let url: URL
+    let url: URL?
     /// MIME type of the uploaded image (e.g., "image/jpeg").
     let mime: String
     /// File size as a human-readable string (e.g., "512 KB").
