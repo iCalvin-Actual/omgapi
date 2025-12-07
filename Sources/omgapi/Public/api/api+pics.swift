@@ -20,6 +20,7 @@ public extension api {
                 id: model.id,
                 address: model.address,
                 created: .init(timeIntervalSince1970: model.created),
+                url: model.url,
                 size: Double(model.size),
                 mime: model.mime,
                 exif: model.exif,
@@ -40,6 +41,7 @@ public extension api {
                 id: model.id,
                 address: model.address,
                 created: .init(timeIntervalSince1970: model.created),
+                url: model.url,
                 size: Double(model.size),
                 mime: model.mime,
                 exif: model.exif,
@@ -57,16 +59,16 @@ public extension api {
     func addressPic(_ address: AddressName, id: String) async throws -> Pic {
         let request = GETAddressPic(address, target: id)
         let response = try await apiResponse(for: request)
-        let pic = Pic(
+        return Pic(
             id: response.pic.id,
             address: response.pic.address,
             created: .init(timeIntervalSince1970: response.pic.created),
+            url: response.pic.url,
             size: Double(response.pic.size),
             mime: response.pic.mime,
             exif: response.pic.exif,
             description: response.pic.description
         )
-        return pic
     }
     
     /// Uploads a new ``Pic`` and applies metadata.

@@ -17,6 +17,8 @@ struct AddressPicResponse: Response {
     let address: String
     /// The timestamp when the Pic was uploaded.
     let created: TimeInterval
+    /// The URL where the image can be viewed
+    let url: URL?
     /// MIME type of the uploaded image (e.g., "image/jpeg").
     let mime: String
     /// File size as a human-readable string (e.g., "512 KB").
@@ -24,7 +26,7 @@ struct AddressPicResponse: Response {
     /// Optional description provided by the uploader.
     let description: String
     /// Dictionary of EXIF metadata extracted from the image.
-    let exif: [String: String]
+    let exif: [String: String]?
 }
 
 /// Response model for `GETPicsFeed` and `GETAddressPics`.
