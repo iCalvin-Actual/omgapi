@@ -34,7 +34,7 @@ public struct Pic: Sendable {
     /// The MIME type of the Pic (e.g., "image/png").
     public let mime: String
     /// EXIF metadata extracted from the image.
-    public let exif: [String: String]
+    public let exif: [String: String]?
     
     /// Creates a new `Pic` instance from its metadata components.
     ///
@@ -47,14 +47,14 @@ public struct Pic: Sendable {
     ///   - mime: The MIME type of the image.
     ///   - exif: EXIF metadata from the image.
     ///   - description: A user-provided description of the Pic.
-    init(id: String, address: AddressName, created: Date, url: URL?, size: Double, mime: String, exif: [String : String], description: String) {
+    init(id: String, address: AddressName, created: Date, url: URL?, size: Double, mime: String, exif: [String : String]?, description: String) {
         self.id = id
         self.address = address
         self.created = created
         if let url {
             self.url = url
         } else {
-            let ext = exif["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
+            let ext = exif?["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
             self.url = .init(string: "https://cdn.some.pics/\(address)/\(id).\(ext)")!
         }
         self.size = size

@@ -26,7 +26,7 @@ struct AddressPicResponse: Response {
     /// Optional description provided by the uploader.
     let description: String
     /// Dictionary of EXIF metadata extracted from the image.
-    let exif: [String: String]
+    let exif: [String: String]?
 }
 
 /// Response model for `GETPicsFeed` and `GETAddressPics`.
