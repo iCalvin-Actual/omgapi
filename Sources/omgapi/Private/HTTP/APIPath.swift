@@ -10,7 +10,7 @@ import Foundation
 // MARK: Protocols
 
 /// A protocol representing a resolvable path to a URL.
-protocol Path {
+protocol Path: Sendable {
     /// The string representation of the path (e.g., "https://api.omg.lol").
     var string: String  { get }
 

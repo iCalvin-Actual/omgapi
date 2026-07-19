@@ -76,95 +76,79 @@ struct StatusLogResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Fetches data for `GETCompleteStatusLog`.
-class GETCompleteStatusLog: APIRequest<None, StatusLogResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(path: StatusPath.completeLog)
-    }
+/// - Parameters:
+func GETCompleteStatusLog() -> APIRequest<None, StatusLogResponseModel> {
+    .init(path: StatusPath.completeLog)
 }
 
 /// Fetches data for `GETLatestStatusLogs`.
-class GETLatestStatusLogs: APIRequest<None, StatusLogResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(path: StatusPath.latestLogs)
-    }
+/// - Parameters:
+func GETLatestStatusLogs() -> APIRequest<None, StatusLogResponseModel> {
+    .init(path: StatusPath.latestLogs)
 }
 
 /// Fetches data for `GETAddressStatuses`.
-class GETAddressStatuses: APIRequest<None, StatusLogResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    init(_ address: AddressName) {
-        super.init(path: StatusPath.addressLog(address))
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+func GETAddressStatuses(_ address: AddressName) -> APIRequest<None, StatusLogResponseModel> {
+    .init(path: StatusPath.addressLog(address))
 }
 
 /// Fetches data for `GETAddressStatusBio`.
-class GETAddressStatusBio: APIRequest<None, StatusLogBioResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    init(_ address: AddressName) {
-        super.init(path: StatusPath.addressBio(address))
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+func GETAddressStatusBio(_ address: AddressName) -> APIRequest<None, StatusLogBioResponseModel> {
+    .init(path: StatusPath.addressBio(address))
 }
 
 /// Updates the biography for the given address based on the draft content.
-class SETAddressStatusBio: APIRequest<Bio.Draft, BasicResponse> {
-    /// - Parameters:
-    ///   - draft: The model that contains the updated markdown text.
-    ///   - address: The `AddressName` to apply the update to
-    ///   - authorization: An appropriate APICredential for the given `AddressName`
-    init(_ draft: Bio.Draft, for address: AddressName, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .POST,
-            path: StatusPath.addressBio(address),
-            body: draft
-        )
-    }
+/// - Parameters:
+///   - draft: The model that contains the updated markdown text.
+///   - address: The `AddressName` to apply the update to
+///   - authorization: An appropriate APICredential for the given `AddressName`
+func SETAddressStatusBio(_ draft: Bio.Draft, for address: AddressName, authorization: APICredential) -> APIRequest<Bio.Draft, BasicResponse> {
+    .init(
+        authorization: authorization,
+        method: .POST,
+        path: StatusPath.addressBio(address),
+        body: draft
+    )
 }
 
 /// Retrieves a specific status by ID for the given address.
 /// - Parameters:
 ///   - status: The status ID.
 ///   - address: The omg.lol address owning the status.
-class GETAddressStatus: APIRequest<None, StatusResponseModel> {
-    /// - Parameters:
-    ///   - status: Description for `status`.
-    ///   - address: Description for `address`.
-    init(_ status: String, from address: AddressName) {
-        super.init(path: StatusPath.addressStatus(status, address))
-    }
+/// - Parameters:
+///   - status: Description for `status`.
+///   - address: Description for `address`.
+func GETAddressStatus(_ status: String, from address: AddressName) -> APIRequest<None, StatusResponseModel> {
+    .init(path: StatusPath.addressStatus(status, address))
 }
 
 /// Deletes a specific status from an address' statuslog.
-class DELETEAddressStatus: APIRequest<None, BasicResponse> {
-    /// - Parameters:
-    ///   - statusId: The id of the status to delete.
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ statusId: String, from address: AddressName, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .DELETE,
-            path: StatusPath.addressStatus(statusId, address)
-        )
-    }
+/// - Parameters:
+///   - statusId: The id of the status to delete.
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func DELETEAddressStatus(_ statusId: String, from address: AddressName, authorization: APICredential) -> APIRequest<None, BasicResponse> {
+    .init(
+        authorization: authorization,
+        method: .DELETE,
+        path: StatusPath.addressStatus(statusId, address)
+    )
 }
 
 /// Creates or updates data for `SETAddressStatus`.
-class SETAddressStatus: APIRequest<Status.Draft, NewStatusResponseModel> {
-    /// - Parameters:
-    ///   - draft: Description for `draft`.
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ draft: Status.Draft, with address: AddressName, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .POST,
-            path: StatusPath.addressLog(address),
-            body: draft
-        )
-    }
+/// - Parameters:
+///   - draft: Description for `draft`.
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func SETAddressStatus(_ draft: Status.Draft, with address: AddressName, authorization: APICredential) -> APIRequest<Status.Draft, NewStatusResponseModel> {
+    .init(
+        authorization: authorization,
+        method: .POST,
+        path: StatusPath.addressLog(address),
+        body: draft
+    )
 }

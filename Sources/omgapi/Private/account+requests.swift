@@ -57,98 +57,86 @@ extension AddressCollectionResponseModel: Response { }
 // MARK: Requests
 
 /// Initiates an OAuth authorization exchange.
-class OAuthRequest: APIRequest<None, OAuthResponseModel> {
-    /// - Parameters:
-    ///   - clientId: Description for `clientId`.
-    ///   - clientSecret: Description for `clientSecret`.
-    ///   - redirect: Description for `redirect`.
-    ///   - accessCode: Description for `accessCode`.
-    init(with clientId: String, and clientSecret: String, redirect: String, accessCode: String) {
-        super.init(
-            path: AccountPath.oauth(clientId, clientSecret, redirect, accessCode)
-        )
-    }
+/// - Parameters:
+///   - clientId: Description for `clientId`.
+///   - clientSecret: Description for `clientSecret`.
+///   - redirect: Description for `redirect`.
+///   - accessCode: Description for `accessCode`.
+func OAuthRequest(with clientId: String, and clientSecret: String, redirect: String, accessCode: String) -> APIRequest<None, OAuthResponseModel> {
+    .init(
+        path: AccountPath.oauth(clientId, clientSecret, redirect, accessCode)
+    )
 }
 
 /// Retrieves accountinfo information.
-class GETAccountInfoAPIRequest: APIRequest<None, AccountInfoResponseModel> {
-    /// - Parameters:
-    ///   - emailAddress: Description for `emailAddress`.
-    ///   - authorization: Description for `authorization`.
-    init(for emailAddress: String, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: AccountPath.info(emailAddress)
-        )
-    }
+/// - Parameters:
+///   - emailAddress: Description for `emailAddress`.
+///   - authorization: Description for `authorization`.
+func GETAccountInfoAPIRequest(for emailAddress: String, authorization: APICredential) -> APIRequest<None, AccountInfoResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AccountPath.info(emailAddress)
+    )
 }
 
 /// Fetches data for `GETAccountNameAPIRequest`.
-class GETAccountNameAPIRequest: APIRequest<None, AccountOwnerResponseModel> {
-    /// - Parameters:
-    ///   - emailAddress: Description for `emailAddress`.
-    ///   - authorization: Description for `authorization`.
-    init(for emailAddress: String, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: AccountPath.name(emailAddress)
-        )
-    }
+/// - Parameters:
+///   - emailAddress: Description for `emailAddress`.
+///   - authorization: Description for `authorization`.
+func GETAccountNameAPIRequest(for emailAddress: String, authorization: APICredential) -> APIRequest<None, AccountOwnerResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AccountPath.name(emailAddress)
+    )
 }
 
 /// Creates or updates data for `SETAccountNameAPIRequest`.
-class SETAccountNameAPIRequest: APIRequest<SETAccountNameAPIRequest.Parameters, AccountOwnerResponseModel> {
-    struct Parameters: RequestBody {
-        let name: String
-    }
-    /// - Parameters:
-    ///   - newValue: Description for `newValue`.
-    ///   - emailAddress: Description for `emailAddress`.
-    ///   - authorization: Description for `authorization`.
-    init(newValue: String, for emailAddress: String, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .POST,
-            path: AccountPath.name(emailAddress),
-            body: Parameters(name: newValue)
-        )
-    }
+/// Request body for `SETAccountNameAPIRequest`.
+struct AccountNameParameters: RequestBody {
+    let name: String
+}
+
+/// - Parameters:
+///   - newValue: Description for `newValue`.
+///   - emailAddress: Description for `emailAddress`.
+///   - authorization: Description for `authorization`.
+func SETAccountNameAPIRequest(newValue: String, for emailAddress: String, authorization: APICredential) -> APIRequest<AccountNameParameters, AccountOwnerResponseModel> {
+    .init(
+        authorization: authorization,
+        method: .POST,
+        path: AccountPath.name(emailAddress),
+        body: AccountNameParameters(name: newValue)
+    )
 }
 
 /// Fetches data for `GETAddresses`.
-class GETAddresses: APIRequest<None, AddressCollectionResponseModel> {
-    /// - Parameters:
-    ///   - authorization: Description for `authorization`.
-    init(authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: AccountPath.addresses
-        )
-    }
+/// - Parameters:
+///   - authorization: Description for `authorization`.
+func GETAddresses(authorization: APICredential) -> APIRequest<None, AddressCollectionResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AccountPath.addresses
+    )
 }
 
 /// Fetches data for `GETAddressesForEmailAPIRequest`.
-class GETAddressesForEmailAPIRequest: APIRequest<None, AddressCollectionResponseModel> {
-    /// - Parameters:
-    ///   - emailAddress: Description for `emailAddress`.
-    ///   - authorization: Description for `authorization`.
-    init(for emailAddress: String, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: AccountPath.emailAddresses(emailAddress)
-        )
-    }
+/// - Parameters:
+///   - emailAddress: Description for `emailAddress`.
+///   - authorization: Description for `authorization`.
+func GETAddressesForEmailAPIRequest(for emailAddress: String, authorization: APICredential) -> APIRequest<None, AddressCollectionResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AccountPath.emailAddresses(emailAddress)
+    )
 }
 
 /// Fetches data for `GETAddressExpirationRequest`.
-class GETAddressExpirationRequest: APIRequest<None, AddressInfoResponseModel.ExpirationResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(for address: String, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: AddressPath.expiration(address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETAddressExpirationRequest(for address: String, authorization: APICredential) -> APIRequest<None, AddressInfoResponseModel.ExpirationResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AddressPath.expiration(address)
+    )
 }

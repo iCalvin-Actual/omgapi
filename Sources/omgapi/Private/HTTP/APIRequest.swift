@@ -8,7 +8,7 @@
 import Foundation
 
 /// A marker protocol for types that can be encoded as the body of an API request.
-protocol RequestBody: Encodable {
+protocol RequestBody: Encodable, Sendable {
 }
 
 /// Allows raw `Data` to be used as a request body type.
@@ -24,10 +24,14 @@ struct None: RequestBody, Response {
 
 /// A generic API request model that includes authorization, method, path, and optional body.
 ///
+/// Immutable value type; `Sendable` is compiler-checked, so requests can be
+/// built anywhere and freely cross actor boundaries. Endpoint-specific
+/// requests are the factory functions in `Private/*+requests.swift`.
+///
 /// - Parameters:
 ///   - B: The type of the request body, conforming to `RequestBody`.
 ///   - R: The type of the expected response, conforming to `Response`.
-class APIRequest<B: RequestBody, R: Response> {
+struct APIRequest<B: RequestBody, R: Response>: Sendable {
     
     /// Optional API credentials to include with the request.
     let authorization: APICredential?
