@@ -41,9 +41,6 @@ class APIRequest<B: RequestBody, R: Response> {
     /// Optional request body, encoded to JSON if present.
     let body: B?
 
-    /// Whether the body should be encoded as multipart form data.
-    let multipartBody: Bool
-    
     /// Initializes a new APIRequest instance.
     ///
     /// - Parameters:
@@ -51,18 +48,15 @@ class APIRequest<B: RequestBody, R: Response> {
     ///   - method: The HTTP method for the request.
     ///   - path: The endpoint path for the request.
     ///   - body: Optional request body.
-    ///   - multipartBody: Set to `true` for multipart/form-data encoding.
     init(
         authorization: APICredential? = nil,
         method: HTTPMethod = .GET,
         path: Path,
-        body: B? = nil,
-        multipartBody: Bool = false
+        body: B? = nil
     ) {
         self.authorization = authorization
         self.method = method
         self.path = path
         self.body = body
-        self.multipartBody = multipartBody
     }
 }

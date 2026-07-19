@@ -22,7 +22,7 @@ public extension api {
                 created: status.createdDate,
                 content: status.content,
                 emoji: status.emoji,
-                externalURL: status.externalURL
+                externalURL: status.externalUrl
             )
         }
     }
@@ -40,7 +40,7 @@ public extension api {
                 created: status.createdDate,
                 content: status.content,
                 emoji: status.emoji,
-                externalURL: status.externalURL
+                externalURL: status.externalUrl
             )
         }
     }
@@ -63,7 +63,7 @@ public extension api {
                 created: status.createdDate,
                 content: status.content,
                 emoji: status.emoji,
-                externalURL: status.externalURL
+                externalURL: status.externalUrl
             )
         }
     }
@@ -111,7 +111,7 @@ public extension api {
             created: response.status.createdDate,
             content: response.status.content,
             emoji: response.status.emoji,
-            externalURL: response.status.externalURL
+            externalURL: response.status.externalUrl
         )
     }
     
@@ -125,7 +125,7 @@ public extension api {
         guard let id = status.id else {
             return nil
         }
-        let request = DELETEAddressStatus(status, from: address, authorization: credential)
+        let request = DELETEAddressStatus(id, from: address, authorization: credential)
         let backup = try await self.status(id, from: address)
         let _ = try await apiResponse(for: request)
         return backup

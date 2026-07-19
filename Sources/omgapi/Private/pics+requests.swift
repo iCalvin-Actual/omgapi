@@ -35,10 +35,20 @@ struct PicsResponseModel: CommonAPIResponse {
     let pics: [AddressPicResponse]
 }
 
-/// Response model for `GETAddressPic` and `POSTAddressPic`.
+/// Response model for `GETAddressPic`.
 struct PicResponseModel: CommonAPIResponse {
     let message: String?
     let pic: AddressPicResponse
+}
+
+/// Response model for `POSTAddressPic`.
+///
+/// The upload endpoint returns the new pic's fields directly in `response`
+/// rather than nested under a `pic` key, so both shapes are accepted here.
+struct PicUploadResponseModel: CommonAPIResponse {
+    let message: String?
+    let id: String?
+    let pic: AddressPicResponse?
 }
 
 // MARK: Requests
@@ -85,19 +95,24 @@ class PATCHAddressPic: APIRequest<Pic.Draft, BasicResponse> {
     }
 }
 
+/// Request body for `POSTAddressPic`: the image bytes as a base64 string
+/// under the `pic` key, which is the JSON payload the upload endpoint expects.
+struct PicUploadRequestBody: RequestBody {
+    let pic: String
+}
+
 /// Uploads a new Pic to the specified address.
 /// - Parameters:
 ///   - image: The raw image data to upload.
 ///   - address: The address to associate the Pic with.
 ///   - credential: API credential for authorization.
-class POSTAddressPic: APIRequest<Data, PicResponseModel> {
+class POSTAddressPic: APIRequest<PicUploadRequestBody, PicUploadResponseModel> {
     init(image: Data, _ address: String, credential: APICredential) {
         super.init(
             authorization: credential,
             method: .POST,
             path: PicsPath.upload(address),
-            body: image,
-            multipartBody: true
+            body: PicUploadRequestBody(pic: image.base64EncodedString())
         )
     }
 }

@@ -54,8 +54,11 @@ public struct Pic: Sendable {
         if let url {
             self.url = url
         } else {
-            let ext = exif?["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
-            self.url = .init(string: "https://cdn.some.pics/\(address)/\(id).\(ext)")!
+            // The extension comes from unsanitized EXIF/MIME data, so every
+            // component is percent-encoded to guarantee a parseable URL.
+            let rawExt = exif?["File Type Extension"] ?? String(mime.split(separator: "/").last ?? "")
+            let ext = rawExt.hasPrefix(".") ? String(rawExt.dropFirst()) : rawExt
+            self.url = .init(string: "https://cdn.some.pics/\(address.pathSegmentEncoded)/\(id.pathSegmentEncoded).\(ext.pathSegmentEncoded)")!
         }
         self.size = size
         self.mime = mime

@@ -17,6 +17,12 @@ struct AddressPURLResponseModel: Response {
     let url: String
     /// Access or hit count.
     let counter: Int?
+    /// Visibility flag or status.
+    let listed: String?
+
+    var isPublic: Bool {
+        listed.boolValue
+    }
 }
 
 /// Response model for `AddressPURLItemResponse`.
@@ -83,14 +89,16 @@ class GETAddressPURL: APIRequest<None, PURLResponseModel> {
 }
 
 /// Retrieves PURL data.
+///
+/// Never attaches a credential: this endpoint redirects to an arbitrary
+/// user-chosen URL, and `URLSession` re-sends headers on redirect, so an
+/// `Authorization` header here would leak the bearer token to third-party hosts.
 class GETAddressPURLContent: APIRequest<None, String> {
     /// - Parameters:
     ///   - purl: Description for `purl`.
     ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(purl: String, address: AddressName, authorization: APICredential? = nil) {
+    init(purl: String, address: AddressName) {
         super.init(
-            authorization: authorization,
             path: PublicPath.purl(address, purl: purl)
         )
     }
@@ -121,7 +129,7 @@ class SETAddressPURL: APIRequest<PURL.Draft, BasicResponse> {
         super.init(
             authorization: authorization,
             method: .POST,
-            path: PURLPath.managePurl(draft.name, address: address),
+            path: PURLPath.createPurl(address),
             body: draft
         )
     }

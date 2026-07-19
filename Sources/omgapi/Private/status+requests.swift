@@ -23,8 +23,10 @@ struct AddressStatusResponseModel: Response {
     let content: String
     /// Property `emoji` of type `String?`.
     let emoji: String?
-    /// Property `externalURL` of type `URL?`.
-    let externalURL: URL?
+    /// External link for the status. The API's `external_url` key arrives as
+    /// `externalUrl` via the decoder's snake_case conversion, so the property
+    /// name must match that capitalization exactly.
+    let externalUrl: URL?
     
     var createdDate: Date {
         Date(timeIntervalSince1970: Double(created) ?? 0)
@@ -136,18 +138,17 @@ class GETAddressStatus: APIRequest<None, StatusResponseModel> {
     }
 }
 
-/// Deletes a resource related to `DELETEAddressStatus`.
-class DELETEAddressStatus: APIRequest<Status.Draft, BasicResponse> {
+/// Deletes a specific status from an address' statuslog.
+class DELETEAddressStatus: APIRequest<None, BasicResponse> {
     /// - Parameters:
-    ///   - draft: Description for `draft`.
+    ///   - statusId: The id of the status to delete.
     ///   - address: Description for `address`.
     ///   - authorization: Description for `authorization`.
-    init(_ draft: Status.Draft, from address: AddressName, authorization: APICredential) {
+    init(_ statusId: String, from address: AddressName, authorization: APICredential) {
         super.init(
             authorization: authorization,
             method: .DELETE,
-            path: StatusPath.addressLog(address),
-            body: draft
+            path: StatusPath.addressStatus(statusId, address)
         )
     }
 }

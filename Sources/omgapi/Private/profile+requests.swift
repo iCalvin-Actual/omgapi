@@ -42,13 +42,14 @@ struct ProfileResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Fetches data for `GETPublicProfile`.
+///
+/// Never attaches a credential: profile pages live on the public web host and
+/// can be configured to redirect off-site, and `URLSession` re-sends headers on
+/// redirect, so an `Authorization` header here could leak the bearer token.
 class GETPublicProfile: APIRequest<None, String> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ address: AddressName, with authorization: APICredential? = nil) {
+    /// - Parameter address: Description for `address`.
+    init(_ address: AddressName) {
         super.init(
-            authorization: authorization,
             path: PublicPath.profile(address)
         )
     }

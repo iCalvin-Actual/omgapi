@@ -45,15 +45,11 @@ import Foundation
 /// ```
 public actor api {
     static let decoder: JSONDecoder = {
-        var decoder = JSONDecoder()
-        
+        let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
         return decoder
     }()
-    
-    let requestConstructor = APIRequestConstructor()
-    
+
     let urlSession: URLSession = .shared
     
     /// Default initializer does nothing in itself. New instances of `api` have all the internal models they need.
@@ -69,19 +65,22 @@ public actor api {
     /// - Throws: `APIError` if the request fails or decoding is unsuccessful.
     func apiResponse<B, R>(for request: APIRequest<B, R>, priorityDecoding: ((Data) -> R?)? = nil) async throws -> R {
         let data: Data
+        var httpResponse: HTTPURLResponse?
         if request.path is LocalPath {
-            data = FileManager.default.contents(atPath: request.path.string) ?? .init()
-        } else {
-            let urlRequest: URLRequest
-            switch request.multipartBody {
-            case true:
-                urlRequest = APIRequestConstructor.multipartUrlRequest(from: request)
-            case false:
-                urlRequest = APIRequestConstructor.urlRequest(from: request)
+            guard let fileData = FileManager.default.contents(atPath: request.path.string) else {
+                throw Error.notFound
             }
-            
-            let (fetchedData, _) = try await urlSession.data(for: urlRequest)
-            data = fetchedData
+            data = fileData
+        } else {
+            let urlRequest = try APIRequestConstructor.urlRequest(from: request)
+
+            do {
+                let (fetchedData, fetchedResponse) = try await urlSession.data(for: urlRequest)
+                data = fetchedData
+                httpResponse = fetchedResponse as? HTTPURLResponse
+            } catch let urlError as URLError {
+                throw Error.networkFailure(urlError.code.rawValue, message: urlError.localizedDescription)
+            }
         }
         do {
             if let result = priorityDecoding?(data) {
@@ -89,9 +88,9 @@ public actor api {
             } else {
                 let apiResponse = try api.decoder.decode(APIResponse<R>.self, from: data)
                 guard apiResponse.request.success else {
-                    throw Error.unhandled(apiResponse.request.statusCode, message: "Request \(request.path) in failed state")
+                    throw Error.unhandled(apiResponse.request.statusCode, message: "Request \(type(of: request)) in failed state")
                 }
-                
+
                 guard let result = apiResponse.result else {
                     throw Error.badResponse
                 }
@@ -101,6 +100,18 @@ public actor api {
         catch {
             if let errorMessageResponse: APIResponse<BasicResponse> = try? api.decoder.decode(APIResponse.self, from: data) {
                 throw Error.create(from: errorMessageResponse)
+            }
+            // The body wasn't a decodable API envelope (e.g. an HTML error
+            // page); fall back to the transport-level status code.
+            if let statusCode = httpResponse?.statusCode, !(200...299).contains(statusCode) {
+                switch statusCode {
+                case 401:
+                    throw Error.unauthenticated
+                case 404:
+                    throw Error.notFound
+                default:
+                    throw Error.unhandled(statusCode, message: nil)
+                }
             }
             throw Error.badResponse
         }
@@ -125,6 +136,14 @@ extension api {
 
         /// The response could not be decoded from the expected format.
         case badResponse
+
+        /// A transport-level failure (offline, timeout, DNS) that occurred
+        /// before any HTTP response was received.
+        ///
+        /// - Parameters:
+        ///   - code: The `URLError.Code` raw value.
+        ///   - message: A localized description of the failure.
+        case networkFailure(_ code: Int, message: String?)
 
         /// A non-specific error with an unhandled HTTP status code and optional message.
         ///

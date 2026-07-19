@@ -81,7 +81,9 @@ public extension api {
     func uploadPic(_ data: Data, info: Pic.Draft, _ address: AddressName, credential: APICredential) async throws -> Pic {
         let request = POSTAddressPic(image: data, address, credential: credential)
         let response = try await apiResponse(for: request)
-        let id = response.pic.id
+        guard let id = response.id ?? response.pic?.id else {
+            throw Error.badResponse
+        }
         return try await updatePicDetails(draft: info, address, id: id, credential: credential)
     }
     
@@ -106,7 +108,7 @@ public extension api {
     /// - Returns: The image data.
     func getPicData(_ address: AddressName, id: String, ext: String) async throws -> Data {
         let request = GETPicData(address, target: id, ext: ext)
-        let response = try await apiResponse(for: request)
-        return response
+        // The CDN serves raw image bytes, not a JSON envelope.
+        return try await apiResponse(for: request, priorityDecoding: { $0 })
     }
 }

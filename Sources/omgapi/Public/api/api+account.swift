@@ -17,7 +17,7 @@ public extension api {
     /// - Returns: The full authorization URL.
     nonisolated
     func authURL(with clientId: String, redirect: String) -> URL? {
-        URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId)&scope=everything&redirect_uri=\(redirect)&response_type=code")
+        URL(string: "https://home.omg.lol/oauth/authorize?client_id=\(clientId.queryValueEncoded)&scope=everything&redirect_uri=\(redirect.queryValueEncoded)&response_type=code")
     }
     
     /// Exchanges an OAuth authorization code for an API credential.
@@ -73,11 +73,14 @@ public extension api {
     /// - Parameters:
     ///   - address: The omg.lol address.
     ///   - credentials: API credential with permission to access expiration info.
-    /// - Returns: A `Date` object representing expiration.
-    func expirationDate(_ address: AddressName, credentials: APICredential) async throws -> Date {
+    /// - Returns: A `Date` object representing expiration, or `nil` for
+    ///   addresses that never expire (e.g. lifetime addresses).
+    func expirationDate(_ address: AddressName, credentials: APICredential) async throws -> Date? {
         let request = GETAddressInfoRequest(for: address, authorization: credentials)
         let response = try await apiResponse(for: request)
-        let date = Date(timeIntervalSince1970: Double(response.expiration.unixEpochTime ?? "") ?? 0)
-        return date
+        guard let epochString = response.expiration.unixEpochTime, let epoch = Double(epochString) else {
+            return nil
+        }
+        return Date(timeIntervalSince1970: epoch)
     }
 }

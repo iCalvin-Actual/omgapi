@@ -43,7 +43,7 @@ struct APIUnitTests {
     @Test
     func testAuthURLGeneration() {
         let url = api().authURL(with: "client123", redirect: "https://app/callback")
-        #expect(url?.absoluteString == "https://home.omg.lol/oauth/authorize?client_id=client123&scope=everything&redirect_uri=https://app/callback&response_type=code")
+        #expect(url?.absoluteString == "https://home.omg.lol/oauth/authorize?client_id=client123&scope=everything&redirect_uri=https%3A%2F%2Fapp%2Fcallback&response_type=code")
     }
 
     @Test

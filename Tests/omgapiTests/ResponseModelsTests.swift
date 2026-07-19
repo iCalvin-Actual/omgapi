@@ -54,7 +54,7 @@ struct LogicTests {
             created: "123456789",
             content: "hello",
             emoji: nil,
-            externalURL: nil
+            externalUrl: nil
         )
         #expect(status.createdDate == Date(timeIntervalSince1970: 123456789))
     }

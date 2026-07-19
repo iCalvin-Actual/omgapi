@@ -10,9 +10,14 @@ import Foundation
 // MARK: Models
 
 /// Response model for `OAuthResponse`.
+///
+/// `accessToken` is required so that decoding fails for error payloads —
+/// the priority decode in `oAuthExchange` then falls through to standard
+/// envelope handling, which throws a descriptive `api.Error` instead of
+/// silently returning a `nil` credential.
 struct OAuthResponseModel: Response {
     /// OAuth access token string.
-    let accessToken: String?
+    let accessToken: String
 }
 
 /// Response model for `AccountInfo`.
