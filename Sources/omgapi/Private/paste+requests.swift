@@ -56,60 +56,52 @@ struct SavePasteResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Retrieves pastebin contents.
-class GETAddressPasteBin: APIRequest<None, PasteBinResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ address: AddressName, authorization: APICredential? = nil) {
-        super.init(
-            authorization: authorization,
-            path: PasteBinPath.pastes(address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETAddressPasteBin(_ address: AddressName, authorization: APICredential? = nil) -> APIRequest<None, PasteBinResponseModel> {
+    .init(
+        authorization: authorization,
+        path: PasteBinPath.pastes(address)
+    )
 }
 
 /// Retrieves pastebin contents.
-class GETAddressPaste: APIRequest<None, AddressPasteResponseModel> {
-    /// - Parameters:
-    ///   - title: Description for `title`.
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ title: String, from address: AddressName, authorization: APICredential? = nil) {
-        super.init(
-            authorization: authorization,
-            path: PasteBinPath.paste(title, address: address)
-        )
-    }
+/// - Parameters:
+///   - title: Description for `title`.
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETAddressPaste(_ title: String, from address: AddressName, authorization: APICredential? = nil) -> APIRequest<None, AddressPasteResponseModel> {
+    .init(
+        authorization: authorization,
+        path: PasteBinPath.paste(title, address: address)
+    )
 }
 
 /// Deletes a resource related to `DELETEAddressPasteContent`.
-class DELETEAddressPasteContent: APIRequest<None, BasicResponse> {
-    /// - Parameters:
-    ///   - paste: Description for `paste`.
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(paste: String, address: AddressName, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .DELETE,
-            path: PasteBinPath.managePaste(paste, address: address)
-        )
-    }
+/// - Parameters:
+///   - paste: Description for `paste`.
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func DELETEAddressPasteContent(paste: String, address: AddressName, authorization: APICredential) -> APIRequest<None, BasicResponse> {
+    .init(
+        authorization: authorization,
+        method: .DELETE,
+        path: PasteBinPath.managePaste(paste, address: address)
+    )
 }
 
 /// Creates or updates data for `SETAddressPaste`.
-class SETAddressPaste: APIRequest<Paste.Draft, SavePasteResponseModel> {
-    /// - Parameters:
-    ///   - draft: Description for `draft`.
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .POST,
-            path: PasteBinPath.pastes(address),
-            body: draft
-        )
-    }
+/// - Parameters:
+///   - draft: Description for `draft`.
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func SETAddressPaste(_ draft: Paste.Draft, to address: AddressName, authorization: APICredential) -> APIRequest<Paste.Draft, SavePasteResponseModel> {
+    .init(
+        authorization: authorization,
+        method: .POST,
+        path: PasteBinPath.pastes(address),
+        body: draft
+    )
 }
 

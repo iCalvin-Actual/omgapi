@@ -39,6 +39,7 @@ public extension api {
     /// - Returns: Image data for the Address' chosen avatar
     func avatar(_ address: AddressName) async throws -> Data {
         let request = GETAvatar(address)
-        return try await apiResponse(for: request)
+        // The avatar endpoint serves raw image bytes, not a JSON envelope.
+        return try await apiResponse(for: request, priorityDecoding: { $0 })
     }
 }

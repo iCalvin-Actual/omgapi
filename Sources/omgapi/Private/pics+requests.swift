@@ -35,37 +35,41 @@ struct PicsResponseModel: CommonAPIResponse {
     let pics: [AddressPicResponse]
 }
 
-/// Response model for `GETAddressPic` and `POSTAddressPic`.
+/// Response model for `GETAddressPic`.
 struct PicResponseModel: CommonAPIResponse {
     let message: String?
     let pic: AddressPicResponse
 }
 
+/// Response model for `POSTAddressPic`.
+///
+/// The upload endpoint returns the new pic's fields directly in `response`
+/// rather than nested under a `pic` key, so both shapes are accepted here.
+struct PicUploadResponseModel: CommonAPIResponse {
+    let message: String?
+    let id: String?
+    let pic: AddressPicResponse?
+}
+
 // MARK: Requests
 
 /// Retrieves the global omg.lol Pics feed.
-class GETPicsFeed: APIRequest<None, PicsResponseModel> {
-    init() {
-        super.init(path: PicsPath.picsFeed)
-    }
+func GETPicsFeed() -> APIRequest<None, PicsResponseModel> {
+    .init(path: PicsPath.picsFeed)
 }
 
 /// Retrieves all Pics for the specified omg.lol address.
 /// - Parameter address: The address whose Pics should be fetched.
-class GETAddressPics: APIRequest<None, PicsResponseModel> {
-    init(_ address: String) {
-        super.init(path: PicsPath.addressPics(address))
-    }
+func GETAddressPics(_ address: String) -> APIRequest<None, PicsResponseModel> {
+    .init(path: PicsPath.addressPics(address))
 }
 
 /// Retrieves a specific Pic by name for the given address.
 /// - Parameters:
 ///   - address: The address that owns the Pic.
 ///   - target: The Pic's filename or identifier.
-class GETAddressPic: APIRequest<None, PicResponseModel> {
-    init(_ address: String, target: String) {
-        super.init(path: PicsPath.addressPic(address, target))
-    }
+func GETAddressPic(_ address: String, target: String) -> APIRequest<None, PicResponseModel> {
+    .init(path: PicsPath.addressPic(address, target))
 }
 
 /// Updates the metadata for an existing Pic.
@@ -74,15 +78,19 @@ class GETAddressPic: APIRequest<None, PicResponseModel> {
 ///   - address: The address that owns the Pic.
 ///   - target: The Pic identifier to update.
 ///   - credential: API credential with permission to modify the Pic.
-class PATCHAddressPic: APIRequest<Pic.Draft, BasicResponse> {
-    init(draft: Pic.Draft, _ address: String, target: String, credential: APICredential) {
-        super.init(
-            authorization: credential,
-            method: .PATCH,
-            path: PicsPath.addressPic(address, target),
-            body: draft
-        )
-    }
+func PATCHAddressPic(draft: Pic.Draft, _ address: String, target: String, credential: APICredential) -> APIRequest<Pic.Draft, BasicResponse> {
+    .init(
+        authorization: credential,
+        method: .PATCH,
+        path: PicsPath.addressPic(address, target),
+        body: draft
+    )
+}
+
+/// Request body for `POSTAddressPic`: the image bytes as a base64 string
+/// under the `pic` key, which is the JSON payload the upload endpoint expects.
+struct PicUploadRequestBody: RequestBody {
+    let pic: String
 }
 
 /// Uploads a new Pic to the specified address.
@@ -90,16 +98,13 @@ class PATCHAddressPic: APIRequest<Pic.Draft, BasicResponse> {
 ///   - image: The raw image data to upload.
 ///   - address: The address to associate the Pic with.
 ///   - credential: API credential for authorization.
-class POSTAddressPic: APIRequest<Data, PicResponseModel> {
-    init(image: Data, _ address: String, credential: APICredential) {
-        super.init(
-            authorization: credential,
-            method: .POST,
-            path: PicsPath.upload(address),
-            body: image,
-            multipartBody: true
-        )
-    }
+func POSTAddressPic(image: Data, _ address: String, credential: APICredential) -> APIRequest<PicUploadRequestBody, PicUploadResponseModel> {
+    .init(
+        authorization: credential,
+        method: .POST,
+        path: PicsPath.upload(address),
+        body: PicUploadRequestBody(pic: image.base64EncodedString())
+    )
 }
 
 /// Deletes a Pic from the specified address.
@@ -107,14 +112,12 @@ class POSTAddressPic: APIRequest<Data, PicResponseModel> {
 ///   - address: The address that owns the Pic.
 ///   - target: The Pic to delete.
 ///   - credential: API credential with deletion rights.
-class DELETEAddressPic: APIRequest<None, BasicResponse> {
-    init(_ address: String, target: String, credential: APICredential) {
-        super.init(
-            authorization: credential,
-            method: .DELETE,
-            path: PicsPath.addressPic(address, target)
-        )
-    }
+func DELETEAddressPic(_ address: String, target: String, credential: APICredential) -> APIRequest<None, BasicResponse> {
+    .init(
+        authorization: credential,
+        method: .DELETE,
+        path: PicsPath.addressPic(address, target)
+    )
 }
 
 /// Retrieves raw image data for a specific Pic.
@@ -122,8 +125,6 @@ class DELETEAddressPic: APIRequest<None, BasicResponse> {
 ///   - address: The address that owns the Pic.
 ///   - target: The Pic identifier.
 ///   - ext: The image file extension (e.g. "jpg", "png").
-class GETPicData: APIRequest<None, Data> {
-    init(_ address: String, target: String, ext: String) {
-        super.init(path: CDNPath.pic(address, target, ext))
-    }
+func GETPicData(_ address: String, target: String, ext: String) -> APIRequest<None, Data> {
+    .init(path: CDNPath.pic(address, target, ext))
 }

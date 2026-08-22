@@ -46,11 +46,14 @@ struct TimeStamp: Codable, Sendable {
             epochString = "\(try container.decode(Int.self, forKey: .epoch))"
         }
 
-        if let epochString = epochString, let epoch = Double(epochString) {
-            self.date = Date(timeIntervalSince1970: epoch)
-        } else {
-            self.date = Date()
+        guard let epochString, let epoch = Double(epochString) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .epoch,
+                in: container,
+                debugDescription: "'\(epochString ?? "nil")' is not a valid unix epoch value"
+            )
         }
+        self.date = Date(timeIntervalSince1970: epoch)
     }
 
     /// Encodes the `TimeStamp` for transmission to an API.

@@ -11,44 +11,34 @@ import Foundation
 final class APIRequestConstructor: Sendable {
     
     /// Shared JSON encoder used for encoding request bodies.
+    ///
+    /// Encodes keys as snake_case to mirror `api.decoder`'s snake_case
+    /// conversion — the omg.lol API uses snake_case in both directions
+    /// (e.g. `Status.Draft.externalUrl` must be sent as `external_url`).
     static let encoder: JSONEncoder = {
-        var encoder = JSONEncoder()
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
         return encoder
     }()
-    
-    /// Constructs a multipart/form-data `URLRequest` from an `APIRequest`.
-    ///
-    /// - Parameter apiRequest: The `APIRequest` describing the endpoint and body.
-    /// - Returns: A configured `URLRequest` with a multipart body, if applicable.
-    static func multipartUrlRequest<O, I>(from apiRequest: APIRequest<O, I>) -> URLRequest {
-        var request = standardURLRequest(from: apiRequest)
-        
-        if let bodyParameters = apiRequest.body, O.Type.self != None.Type.self {
-            do {
-                request.httpBody = try createMultipartData(for: bodyParameters)
-            } catch {
-                // Do nothing, body won't be included and will return error
-            }
-        }
-        
-        return request
-    }
     
     /// Constructs a standard application/json `URLRequest` from an `APIRequest`.
     ///
     /// - Parameter apiRequest: The `APIRequest` describing the endpoint and body.
     /// - Returns: A configured `URLRequest` with a JSON body, if applicable.
-    static func urlRequest<O, I>(from apiRequest: APIRequest<O, I>) -> URLRequest {
+    /// - Throws: `api.Error.badBody` if the body fails to encode, rather than
+    ///   silently sending the request without a body.
+    static func urlRequest<O, I>(from apiRequest: APIRequest<O, I>) throws -> URLRequest {
         var request = standardURLRequest(from: apiRequest)
-        
+
         if let bodyParameters = apiRequest.body, O.Type.self != None.Type.self {
             do {
                 request.httpBody = try createBodyData(for: bodyParameters)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             } catch {
-                // Do nothing, body won't be included and will return error
+                throw api.Error.badBody
             }
         }
-        
+
         return request
     }
     
@@ -73,32 +63,5 @@ final class APIRequestConstructor: Sendable {
     /// - Throws: An error if encoding fails.
     static func createBodyData<T: Encodable>(for body: T) throws -> Data {
         try Self.encoder.encode(body)
-    }
-    
-    /// Creates a multipart/form-data encoded body wrapping the given `Encodable` as a single JSON part.
-    ///
-    /// This implementation wraps the JSON-encoded `body` in a multipart structure with a fixed boundary.
-    /// The part is labeled `multipartData` and uses `application/json` as its content type.
-    ///
-    /// - Parameter body: The request body to encode and include in the multipart form.
-    /// - Returns: A `Data` object representing the multipart body.
-    /// - Throws: An error if encoding the body to JSON fails.
-    static func createMultipartData<T: Encodable>(for body: T) throws -> Data {
-        let encoded = try createBodyData(for: body)
-        var multipartData = Data()
-        
-        let lineBreak = "\r\n"
-        let boundary: String = "Boundary-\(UUID().uuidString)"
-        let file = "multipartData"
-        let boundaryPrefix = "--\(boundary)\r\n"
-        
-        multipartData.append(Data(boundaryPrefix.utf8))
-        multipartData.append(Data("Content-Disposition: form-data; name=\"\(file)\"\r\n".utf8))
-        multipartData.append(Data("Content-Type: application/json;charset=utf-8\r\n\r\n".utf8))
-        multipartData.append(encoded)
-        multipartData.append(Data("\r\n".utf8))
-        multipartData.append(Data("--\(boundary)--\(lineBreak)".utf8))
-        
-        return multipartData
     }
 }

@@ -42,49 +42,42 @@ struct ProfileResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Fetches data for `GETPublicProfile`.
-class GETPublicProfile: APIRequest<None, String> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ address: AddressName, with authorization: APICredential? = nil) {
-        super.init(
-            authorization: authorization,
-            path: PublicPath.profile(address)
-        )
-    }
+///
+/// Never attaches a credential: profile pages live on the public web host and
+/// can be configured to redirect off-site, and `URLSession` re-sends headers on
+/// redirect, so an `Authorization` header here could leak the bearer token.
+/// - Parameter address: Description for `address`.
+func GETPublicProfile(_ address: AddressName) -> APIRequest<None, String> {
+    .init(
+        path: PublicPath.profile(address)
+    )
 }
 
 /// Fetches data for `GETProfile`.
-class GETProfile: APIRequest<None, ProfileResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(_ address: AddressName, with authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            path: ProfilePath.profile(address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETProfile(_ address: AddressName, with authorization: APICredential) -> APIRequest<None, ProfileResponseModel> {
+    .init(
+        authorization: authorization,
+        path: ProfilePath.profile(address)
+    )
 }
 
 /// Creates or updates data for `SETProfile`.
-class SETProfile: APIRequest<Profile.Draft, BasicResponse> {
-    /// - Parameters:
-    ///   - draft: Description for `draft`.
-    ///   - address: Description for `address`.
-    ///   - credential: Description for `credential`.
-    init(_ draft: Profile.Draft, from address: AddressName, with credential: APICredential) {
-        super.init(
-            authorization: credential,
-            method: .POST,
-            path: ProfilePath.profile(address),
-            body: draft
-        )
-    }
+/// - Parameters:
+///   - draft: Description for `draft`.
+///   - address: Description for `address`.
+///   - credential: Description for `credential`.
+func SETProfile(_ draft: Profile.Draft, from address: AddressName, with credential: APICredential) -> APIRequest<Profile.Draft, BasicResponse> {
+    .init(
+        authorization: credential,
+        method: .POST,
+        path: ProfilePath.profile(address),
+        body: draft
+    )
 }
 
-class GETAvatar: APIRequest<None, Data> {
-    init(_ address: AddressName) {
-        super.init(path: AddressPath.avatar(address))
-    }
+func GETAvatar(_ address: AddressName) -> APIRequest<None, Data> {
+    .init(path: AddressPath.avatar(address))
 }

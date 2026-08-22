@@ -13,7 +13,7 @@ struct RequestTests {
     @Test
     func testGETServiceInfoAPIRequestURLRequest() {
         let request = GETServiceInfoAPIRequest()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/service/info/")
@@ -28,7 +28,7 @@ struct RequestTests {
             redirect: "https://myapp/callback",
             accessCode: "code789"
         )
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.host() == "api.omg.lol")
@@ -36,7 +36,7 @@ struct RequestTests {
         let query = urlRequest.url?.query()
         #expect(query?.contains("client_id=client123") ?? false)
         #expect(query?.contains("client_secret=secret456") ?? false)
-        #expect(query?.contains("redirect_uri=https://myapp/callback") ?? false)
+        #expect(query?.contains("redirect_uri=https%3A%2F%2Fmyapp%2Fcallback") ?? false)
         #expect(query?.contains("code=code789") ?? false)
         #expect(query?.contains("scope=everything") ?? false)
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == nil)
@@ -48,7 +48,7 @@ struct RequestTests {
             for: "user@example.com",
             authorization: "abc123"
         )
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/account/user@example.com/info/")
@@ -61,7 +61,7 @@ struct RequestTests {
             for: "user@example.com",
             authorization: "abc123"
         )
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/account/user@example.com/name/")
@@ -75,7 +75,7 @@ struct RequestTests {
             for: "user@example.com",
             authorization: "abc123"
         )
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/account/user@example.com/name/")
@@ -88,7 +88,7 @@ struct RequestTests {
     @Test
     func testGETAddressesRequest() {
         let request = GETAddresses(authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/account/application/addresses/")
@@ -101,7 +101,7 @@ struct RequestTests {
             for: "user@example.com",
             authorization: "token"
         )
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/account/user@example.com/addresses/")
@@ -111,7 +111,7 @@ struct RequestTests {
     @Test
     func testGETAddressDirectoryRequest() {
         let request = GETAddressDirectoryRequest()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/directory/")
@@ -121,7 +121,7 @@ struct RequestTests {
     @Test
     func testGETAddressAvailabilityRequest() {
         let request = GETAddressAvailabilityRequest(for: "username")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/username/availability/")
@@ -131,7 +131,7 @@ struct RequestTests {
     @Test
     func testGETAddressInfoRequest() {
         let request = GETAddressInfoRequest(for: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/info/")
@@ -141,7 +141,7 @@ struct RequestTests {
     @Test
     func testGETAddressExpirationRequest() {
         let request = GETAddressExpirationRequest(for: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/expiration/")
@@ -151,7 +151,7 @@ struct RequestTests {
     @Test
     func testGETNowGardenRequest() {
         let request = GETNowGardenRequest()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/now/garden/")
@@ -161,7 +161,7 @@ struct RequestTests {
     @Test
     func testGETAddressNowPageRequest() {
         let request = GETAddressNowPageRequest("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://user.omg.lol/now")
@@ -171,7 +171,7 @@ struct RequestTests {
     @Test
     func testGETAddressNowRequest() {
         let request = GETAddressNowRequest(for: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/now/")
@@ -182,7 +182,7 @@ struct RequestTests {
     func testSETAddressNowRequest() {
         let draft = Now.Draft(content: "My status", listed: true)
         let request = SETAddressNowRequest(for: "user", draft: draft, authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/now/")
@@ -196,7 +196,7 @@ struct RequestTests {
     @Test
     func testGETAddressPasteBin() {
         let request = GETAddressPasteBin("user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pastebin/")
@@ -206,7 +206,7 @@ struct RequestTests {
     @Test
     func testGETAddressPaste() {
         let request = GETAddressPaste("note-title", from: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pastebin/note-title/")
@@ -216,7 +216,7 @@ struct RequestTests {
     @Test
     func testDELETEAddressPasteContent() {
         let request = DELETEAddressPasteContent(paste: "draft", address: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "DELETE")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pastebin/draft")
@@ -227,7 +227,7 @@ struct RequestTests {
     func testSETAddressPaste() {
         let draft = Paste.Draft(title: "Hello", content: "Hello World", listed: true)
         let request = SETAddressPaste(draft, to: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pastebin/")
@@ -242,7 +242,7 @@ struct RequestTests {
     @Test
     func testGETAddressPURLsRequest() {
         let request = GETAddressPURLs("user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/purls/")
@@ -252,7 +252,7 @@ struct RequestTests {
     @Test
     func testGETAddressPURLRequest() {
         let request = GETAddressPURL("link", address: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/purl/link")
@@ -261,18 +261,19 @@ struct RequestTests {
     
     @Test
     func testGETAddressPURLContentRequest() {
-        let request = GETAddressPURLContent(purl: "link", address: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
-        
+        let request = GETAddressPURLContent(purl: "link", address: "user")
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
+
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://user.url.lol/link")
-        #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer token")
+        // This endpoint redirects to arbitrary URLs, so it must never carry a credential.
+        #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == nil)
     }
     
     @Test
     func testDELETEAddressPURLContentRequest() {
         let request = DELETEAddressPURLContent(purl: "link", address: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "DELETE")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/purl/link")
@@ -283,13 +284,14 @@ struct RequestTests {
     func testSETAddressPURLRequest() {
         let draft = PURL.Draft(name: "link", content: "https://example.com", listed: true)
         let request = SETAddressPURL(draft, address: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
-        #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/purl/link")
+        #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/purl")
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer token")
-        
+
         let body = try? JSONSerialization.jsonObject(with: urlRequest.httpBody ?? Data()) as? [String: Any]
+        #expect(body?["name"] as? String == "link")
         #expect(body?["url"] as? String == "https://example.com")
         #expect(body?["listed"] as? Bool == true)
     }
@@ -298,7 +300,7 @@ struct RequestTests {
     @Test
     func testGETPublicProfileRequest() {
         let request = GETPublicProfile("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://user.omg.lol")
@@ -308,7 +310,7 @@ struct RequestTests {
     @Test
     func testGETProfileRequest() {
         let request = GETProfile("user", with: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/web")
@@ -319,7 +321,7 @@ struct RequestTests {
     func testSETProfileRequest() {
         let draft = Profile.Draft(content: "<h1>Hello</h1>", publish: true)
         let request = SETProfile(draft, from: "user", with: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/web")
@@ -333,7 +335,7 @@ struct RequestTests {
     @Test
     func testGETCompleteStatusLogRequest() {
         let request = GETCompleteStatusLog()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/statuslog/")
@@ -343,7 +345,7 @@ struct RequestTests {
     @Test
     func testGETLatestStatusLogsRequest() {
         let request = GETLatestStatusLogs()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/statuslog/latest/")
@@ -353,7 +355,7 @@ struct RequestTests {
     @Test
     func testGETAddressStatusesRequest() {
         let request = GETAddressStatuses("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses")
@@ -363,7 +365,7 @@ struct RequestTests {
     @Test
     func testGETAddressStatusBioRequest() {
         let request = GETAddressStatusBio("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/bio")
@@ -373,7 +375,7 @@ struct RequestTests {
     @Test
     func testGETAddressFollowingRequest() {
         let request = GETAddressFollowing("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/following")
@@ -383,7 +385,7 @@ struct RequestTests {
     @Test
     func testGETAddressFollowersRequest() {
         let request = GETAddressFollowers("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/followers")
@@ -393,7 +395,7 @@ struct RequestTests {
     @Test
     func testSETAddressFollowingRequest() {
         let request = SETAddressFollowing("user", "target", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/follow/target")
@@ -403,7 +405,7 @@ struct RequestTests {
     @Test
     func testDELETEAddressFollowingRequest() {
         let request = DELETEAddressFollowing("user", "target", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "DELETE")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/follow/target")
@@ -413,7 +415,7 @@ struct RequestTests {
     @Test
     func testGETAddressStatusRequest() {
         let request = GETAddressStatus("abc123", from: "user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/abc123")
@@ -422,23 +424,19 @@ struct RequestTests {
     
     @Test
     func testDELETEAddressStatusRequest() {
-        let draft = Status.Draft(content: "goodbye", emoji: nil, externalUrl: nil)
-        let request = DELETEAddressStatus(draft, from: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
-        
+        let request = DELETEAddressStatus("abc123", from: "user", authorization: "token")
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
+
         #expect(urlRequest.httpMethod == "DELETE")
-        #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses")
+        #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses/abc123")
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer token")
-        
-        let body = try? JSONSerialization.jsonObject(with: urlRequest.httpBody ?? Data()) as? [String: Any]
-        #expect(body?["content"] as? String == "goodbye")
     }
     
     @Test
     func testSETAddressStatusRequest() {
         let draft = Status.Draft(content: "I'm back", emoji: "👋", externalUrl: "https://home.omg.lol")
         let request = SETAddressStatus(draft, with: "user", authorization: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
         
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/statuses")
@@ -447,13 +445,13 @@ struct RequestTests {
         let body = try? JSONSerialization.jsonObject(with: urlRequest.httpBody ?? Data()) as? [String: Any]
         #expect(body?["content"] as? String == "I'm back")
         #expect(body?["emoji"] as? String == "👋")
-        #expect(body?["externalUrl"] as? String == "https://home.omg.lol")
+        #expect(body?["external_url"] as? String == "https://home.omg.lol")
     }
     
     @Test
     func testGETThemesRequest() {
         let request = GETThemes()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/theme/list")
@@ -463,7 +461,7 @@ struct RequestTests {
     @Test
     func testGETPicsFeedRequest() {
         let request = GETPicsFeed()
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/pics")
@@ -473,7 +471,7 @@ struct RequestTests {
     @Test
     func testGETAddressPicsRequest() {
         let request = GETAddressPics("user")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pics")
@@ -483,7 +481,7 @@ struct RequestTests {
     @Test
     func testGETAddressPicRequest() {
         let request = GETAddressPic("user", target: "photo.jpg")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "GET")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pics/photo.jpg")
@@ -494,7 +492,7 @@ struct RequestTests {
     func testPATCHAddressPicRequest() {
         let draft = Pic.Draft(description: "Updated pic", tags: ["update", "sample"].joined(separator: ","))
         let request = PATCHAddressPic(draft: draft, "user", target: "pic.jpg", credential: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "PATCH")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pics/pic.jpg")
@@ -508,20 +506,21 @@ struct RequestTests {
     @Test
     func testPOSTAddressPicRequest() throws {
         let imageData = Data([0xFF, 0xD8, 0xFF]) // mock JPEG header
-        let encodedData = try APIRequestConstructor.encoder.encode(imageData)
         let request = POSTAddressPic(image: imageData, "user", credential: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "POST")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pics/upload")
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == "Bearer token")
-        #expect(urlRequest.httpBody == encodedData)
+        #expect(urlRequest.value(forHTTPHeaderField: "Content-Type") == "application/json")
+        let body = try JSONSerialization.jsonObject(with: urlRequest.httpBody ?? Data()) as? [String: Any]
+        #expect(body?["pic"] as? String == imageData.base64EncodedString())
     }
 
     @Test
     func testDELETEAddressPicRequest() {
         let request = DELETEAddressPic("user", target: "pic.jpg", credential: "token")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "DELETE")
         #expect(urlRequest.url?.absoluteString == "https://api.omg.lol/address/user/pics/pic.jpg")
@@ -531,10 +530,10 @@ struct RequestTests {
     @Test
     func testGETPicDataRequest() {
         let request = GETPicData("user", target: "pic", ext: "png")
-        let urlRequest = APIRequestConstructor.urlRequest(from: request)
+        let urlRequest = try! APIRequestConstructor.urlRequest(from: request)
 
         #expect(urlRequest.httpMethod == "GET")
-        #expect(urlRequest.url?.absoluteString == "https://cdn.some.pics/user/pic%7Bextension%7D")
+        #expect(urlRequest.url?.absoluteString == "https://cdn.some.pics/user/pic.png")
         #expect(urlRequest.value(forHTTPHeaderField: "Authorization") == nil)
     }
 

@@ -35,7 +35,7 @@ public extension api {
     ///   - credential: Optional API credential for private access.
     /// - Returns: A `Paste` if found, or `nil`.
     func paste(_ title: String, from address: AddressName, credential: APICredential?) async throws -> Paste? {
-        let request = GETAddressPaste(title, from: address)
+        let request = GETAddressPaste(title, from: address, authorization: credential)
         do {
             let response = try await apiResponse(for: request)
             let paste = response.paste

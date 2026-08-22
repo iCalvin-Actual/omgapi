@@ -16,7 +16,7 @@ public extension api {
     ///   - credential: Optional API credential for authentication.
     /// - Returns: An array of `PURL` objects.
     func purls(from address: AddressName, credential: APICredential? = nil) async throws -> PURLs {
-        let request = GETAddressPURLs(address)
+        let request = GETAddressPURLs(address, authorization: credential)
         let response = try await apiResponse(for: request)
         return response.purls.map({ purl in
             PURL(
@@ -41,18 +41,14 @@ public extension api {
             address: address,
             authorization: credential
         )
-        do {
-            let response = try await apiResponse(for: request)
-            return PURL(
-                address: address,
-                name: response.purl.name,
-                url: response.purl.url,
-                counter: response.purl.counter ?? 0,
-                listed: true
-            )
-        } catch {
-            throw error
-        }
+        let response = try await apiResponse(for: request)
+        return PURL(
+            address: address,
+            name: response.purl.name,
+            url: response.purl.url,
+            counter: response.purl.counter ?? 0,
+            listed: response.purl.isPublic
+        )
     }
     
     /// Retrieves the raw HTML that can be found by following a ``PURL`` redirect.
@@ -60,16 +56,12 @@ public extension api {
     /// - Parameters:
     ///   - name: The name of the PURL.
     ///   - address: The omg.lol address that owns the PURL.
-    ///   - credential: Optional API credential.
+    ///   - credential: Unused. This request follows a redirect to an arbitrary
+    ///     destination, so a credential is never sent with it.
     /// - Returns: A `String` containing the content, or `nil` if decoding fails.
     func purlContent(_ name: String, for address: AddressName, credential: APICredential?) async throws -> String? {
-        let request = GETAddressPURLContent(purl: name, address: address, authorization: credential)
-        do {
-            let response = try await apiResponse(for: request, priorityDecoding: { String(data: $0, encoding: .utf8) })
-            return response
-        } catch {
-            throw error
-        }
+        let request = GETAddressPURLContent(purl: name, address: address)
+        return try await apiResponse(for: request, priorityDecoding: { String(data: $0, encoding: .utf8) })
     }
     
     /// Deletes a ``PURL`` from the specified address.

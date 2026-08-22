@@ -76,31 +76,25 @@ struct AddressAvailabilityResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Fetches a directory listing.
-class GETAddressDirectoryRequest: APIRequest<None, DirectoryResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(path: AddressPath.directory)
-    }
+/// - Parameters:
+func GETAddressDirectoryRequest() -> APIRequest<None, DirectoryResponseModel> {
+    .init(path: AddressPath.directory)
 }
 
 /// Checks for availability.
-class GETAddressAvailabilityRequest: APIRequest<None, AddressAvailabilityResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    init(for address: String) {
-        super.init(path: AddressPath.availability(address))
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+func GETAddressAvailabilityRequest(for address: String) -> APIRequest<None, AddressAvailabilityResponseModel> {
+    .init(path: AddressPath.availability(address))
 }
 
 /// Retrieves addressinforequest information.
-class GETAddressInfoRequest: APIRequest<None, AddressInfoResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(for address: String, authorization: APICredential? = nil) {
-        super.init(
-            authorization: authorization,
-            path: AddressPath.info(address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETAddressInfoRequest(for address: String, authorization: APICredential? = nil) -> APIRequest<None, AddressInfoResponseModel> {
+    .init(
+        authorization: authorization,
+        path: AddressPath.info(address)
+    )
 }

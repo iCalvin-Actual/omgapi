@@ -5,7 +5,6 @@
 //  Created by Calvin Chestnut on 3/5/23.
 //
 
-import Combine
 import Foundation
 
 /// A marker protocol indicating a type can be decoded as an API response.
@@ -15,15 +14,6 @@ protocol Response: Decodable {
 /// Conforms `String` to `Response` to allow raw string payloads.
 extension String: Response { }
 extension Data: Response { }
-
-/// A type alias for handling decoded API responses with result or error.
-typealias APIResult<T: Response> = Result<T, api.Error>
-
-/// A publisher that emits one `APIResult` and completes.
-typealias APIResultPublisher<T: Response> = AnyPublisher<APIResult<T>, Never>
-
-/// A generic result-based publisher that emits one `Result` and completes.
-typealias ResultPublisher<T> = AnyPublisher<Result<T, api.Error>, Never>
 
 /// A protocol for simple omg.lol API responses that include a message.
 protocol CommonAPIResponse: Response {

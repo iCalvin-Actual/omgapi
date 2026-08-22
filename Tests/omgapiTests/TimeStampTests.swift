@@ -46,16 +46,16 @@ struct TimeStampTests {
         #expect(decoded.message == nil)
     }
     
-    @Test func testTimeStampDecodesFallbackOnInvalidEpoch() throws {
+    @Test func testTimeStampThrowsOnInvalidEpoch() throws {
         let json = """
     {
         "unixEpochTime": "invalid"
     }
     """.data(using: .utf8)!
-        
-        let decoded = try JSONDecoder().decode(TimeStamp.self, from: json)
-        let delta = abs(decoded.date.timeIntervalSinceNow)
-        #expect(delta < 2)
+
+        #expect(throws: DecodingError.self) {
+            try JSONDecoder().decode(TimeStamp.self, from: json)
+        }
     }
     
     @Test func testNowTimeStamp() throws {

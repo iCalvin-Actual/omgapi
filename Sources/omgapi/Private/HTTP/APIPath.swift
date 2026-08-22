@@ -10,7 +10,7 @@ import Foundation
 // MARK: Protocols
 
 /// A protocol representing a resolvable path to a URL.
-protocol Path {
+protocol Path: Sendable {
     /// The string representation of the path (e.g., "https://api.omg.lol").
     var string: String  { get }
 
@@ -122,10 +122,10 @@ enum AccountPath: APIPath {
         switch self {
         case .oauth(let clientId, let clientSecret, let redirect, let accessCode):
             return Self.oAuthExchange
-                .replacingOccurrences(of: "{id}", with: clientId)
-                .replacingOccurrences(of: "{secret}", with: clientSecret)
-                .replacingOccurrences(of: "{redirect}", with: redirect)
-                .replacingOccurrences(of: "{accessCode}", with: accessCode)
+                .replacingOccurrences(of: "{id}", with: clientId.queryValueEncoded)
+                .replacingOccurrences(of: "{secret}", with: clientSecret.queryValueEncoded)
+                .replacingOccurrences(of: "{redirect}", with: redirect.queryValueEncoded)
+                .replacingOccurrences(of: "{accessCode}", with: accessCode.queryValueEncoded)
         case .addresses:
             return Self.accountAddresses
         case .info(let email):
@@ -428,7 +428,7 @@ enum PicsPath: APIPath {
 
 /// Paths for accessing CDN-hosted images.
 enum CDNPath: WebPath {
-    private static let cdnPic = "https://cdn.some.pics/{address}/{target}{extension}"
+    private static let cdnPic = "https://cdn.some.pics/{address}/{target}.{ext}"
 
     /// CDN image path for a Pic.
     case pic(_ address: String, _ target: String, _ extension: String)
@@ -436,7 +436,8 @@ enum CDNPath: WebPath {
     var string: String {
         switch self {
         case .pic(let address, let target, let ext):
-            return Self.cdnPic.replacingAddress(address).replacingTarget(target).replacingExtension(ext)
+            let normalizedExt = ext.hasPrefix(".") ? String(ext.dropFirst()) : ext
+            return Self.cdnPic.replacingAddress(address).replacingTarget(target).replacingExtension(normalizedExt)
         }
     }
 }

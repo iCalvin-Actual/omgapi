@@ -51,51 +51,43 @@ struct AddressNowResponseModel: CommonAPIResponse {
 // MARK: Requests
 
 /// Retrieves Now page or status information.
-class GETNowGardenRequest: APIRequest<None, NowGardenResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(
-            path: NowPath.garden
-        )
-    }
+/// - Parameters:
+func GETNowGardenRequest() -> APIRequest<None, NowGardenResponseModel> {
+    .init(
+        path: NowPath.garden
+    )
 }
 
 /// Retrieves Now page or status information.
-class GETAddressNowPageRequest: APIRequest<None, String> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    init(_ address: AddressName) {
-        super.init(
-            path: NowPagePath.nowPage(address: address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+func GETAddressNowPageRequest(_ address: AddressName) -> APIRequest<None, String> {
+    .init(
+        path: NowPagePath.nowPage(address: address)
+    )
 }
 
 /// Retrieves Now page or status information.
-class GETAddressNowRequest: APIRequest<None, AddressNowResponseModel> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - authorization: Description for `authorization`.
-    init(for address: AddressName, authorization: APICredential?) {
-        super.init(
-            authorization: authorization,
-            path: NowPath.now(address: address)
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - authorization: Description for `authorization`.
+func GETAddressNowRequest(for address: AddressName, authorization: APICredential?) -> APIRequest<None, AddressNowResponseModel> {
+    .init(
+        authorization: authorization,
+        path: NowPath.now(address: address)
+    )
 }
 
 /// Creates or updates data for `SETAddressNowRequest`.
-class SETAddressNowRequest: APIRequest<Now.Draft, BasicResponse> {
-    /// - Parameters:
-    ///   - address: Description for `address`.
-    ///   - draft: Description for `draft`.
-    ///   - authorization: Description for `authorization`.
-    init(for address: AddressName, draft: Now.Draft, authorization: APICredential) {
-        super.init(
-            authorization: authorization,
-            method: .POST,
-            path: NowPath.now(address: address),
-            body: draft
-        )
-    }
+/// - Parameters:
+///   - address: Description for `address`.
+///   - draft: Description for `draft`.
+///   - authorization: Description for `authorization`.
+func SETAddressNowRequest(for address: AddressName, draft: Now.Draft, authorization: APICredential) -> APIRequest<Now.Draft, BasicResponse> {
+    .init(
+        authorization: authorization,
+        method: .POST,
+        path: NowPath.now(address: address),
+        body: draft
+    )
 }

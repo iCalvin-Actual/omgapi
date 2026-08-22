@@ -420,16 +420,16 @@ struct DecodingTests {
             "created": "1234567890",
             "content": "Hello from omg.lol",
             "emoji": "👋",
-            "externalURL": "https://example.com"
+            "external_url": "https://example.com"
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(AddressStatusResponseModel.self, from: json)
+        let decoded = try api.decoder.decode(AddressStatusResponseModel.self, from: json)
         #expect(decoded.id == "abc123")
         #expect(decoded.address == "test.omg.lol")
         #expect(decoded.content == "Hello from omg.lol")
         #expect(decoded.emoji == "👋")
-        #expect(decoded.externalURL?.absoluteString == "https://example.com")
+        #expect(decoded.externalUrl?.absoluteString == "https://example.com")
         #expect(decoded.createdDate == Date(timeIntervalSince1970: 1234567890))
     }
 
@@ -507,12 +507,12 @@ struct DecodingTests {
                 "created": "1714000000",
                 "content": "Hello world",
                 "emoji": "👋",
-                "externalURL": "https://example.com"
+                "external_url": "https://example.com"
             }
         }
         """.data(using: .utf8)!
         
-        let decoded = try JSONDecoder().decode(StatusResponseModel.self, from: json)
+        let decoded = try api.decoder.decode(StatusResponseModel.self, from: json)
         #expect(decoded.message == "Fetched")
         #expect(decoded.status.id == "stat456")
         #expect(decoded.status.createdDate == Date(timeIntervalSince1970: 1714000000))
@@ -531,7 +531,7 @@ struct DecodingTests {
                     "created": "1111111111",
                     "content": "First status",
                     "emoji": null,
-                    "externalURL": null
+                    "external_url": null
                 },
                 {
                     "id": "s2",
@@ -539,18 +539,18 @@ struct DecodingTests {
                     "created": "1111112222",
                     "content": "Second status",
                     "emoji": "🔥",
-                    "externalURL": "https://link"
+                    "external_url": "https://link"
                 }
             ]
         }
         """.data(using: .utf8)!
 
-        let decoded = try JSONDecoder().decode(StatusLogResponseModel.self, from: json)
+        let decoded = try api.decoder.decode(StatusLogResponseModel.self, from: json)
         #expect(decoded.message == "Log loaded")
         #expect(decoded.statuses?.count == 2)
         #expect(decoded.statuses?[0].id == "s1")
         #expect(decoded.statuses?[1].emoji == "🔥")
-        #expect(decoded.statuses?[1].externalURL?.absoluteString == "https://link")
+        #expect(decoded.statuses?[1].externalUrl?.absoluteString == "https://link")
     }
     @Test func testDecodeThemesResponseModel() throws {
         let json = """
@@ -626,7 +626,7 @@ struct DecodingTests {
         #expect(decoded.mime == "image/jpeg")
         #expect(decoded.size == 512)
         #expect(decoded.description == "A lovely sunset")
-        #expect(decoded.exif["Camera"] == "Canon EOS")
+        #expect(decoded.exif?["Camera"] == "Canon EOS")
     }
 
     @Test func testDecodePicsResponseModel() throws {
@@ -674,6 +674,6 @@ struct DecodingTests {
         #expect(decoded.message == "Single pic loaded")
         #expect(decoded.pic.id == "pic999")
         #expect(decoded.pic.mime == "image/gif")
-        #expect(decoded.pic.exif["Loop"] == "Forever")
+        #expect(decoded.pic.exif?["Loop"] == "Forever")
     }
 }

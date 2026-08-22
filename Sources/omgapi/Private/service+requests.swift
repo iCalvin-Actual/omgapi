@@ -58,17 +58,13 @@ struct ThemeResponseModel: Response {
 // MARK: Requests
 
 /// Retrieves serviceinfo information.
-class GETServiceInfoAPIRequest: APIRequest<None, ServiceInfoResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(path: CommonPath.service)
-    }
+/// - Parameters:
+func GETServiceInfoAPIRequest() -> APIRequest<None, ServiceInfoResponseModel> {
+    .init(path: CommonPath.service)
 }
 
 /// Fetches available themes.
-class GETThemes: APIRequest<None, ThemesResponseModel> {
-    /// - Parameters:
-    init() {
-        super.init(path: ThemePath.themes)
-    }
+/// - Parameters:
+func GETThemes() -> APIRequest<None, ThemesResponseModel> {
+    .init(path: ThemePath.themes)
 }
