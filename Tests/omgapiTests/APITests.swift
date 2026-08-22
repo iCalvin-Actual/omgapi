@@ -112,7 +112,10 @@ struct APIUnitTests {
 struct APIIntegrationTests {
     let client = api()
     
-    @Test
+    // Hits the live omg.lol API across fifteen endpoints, so it reports network
+    // trouble as a test failure rather than a real regression. Passing as of
+    // 2026-08-22; remove the trait to run it manually.
+    @Test(.disabled("Live API integration test; run manually."))
     func testFetchPublicData() async throws {
         let targetAddress = "app"
         async let directory = try client.directory()
