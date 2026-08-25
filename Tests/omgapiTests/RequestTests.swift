@@ -190,7 +190,8 @@ struct RequestTests {
         
         let body = try? JSONSerialization.jsonObject(with: urlRequest.httpBody ?? Data()) as? [String: Any]
         #expect(body?["content"] as? String == "My status")
-        #expect(body?["listed"] as? Bool == true)
+        // The API documents `listed` as a string flag, not a JSON boolean.
+        #expect(body?["listed"] as? String == "1")
     }
     
     @Test
