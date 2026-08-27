@@ -64,5 +64,22 @@ extension Now {
             self.content = content
             self.listed = listed
         }
+
+        enum CodingKeys: String, CodingKey {
+            case content
+            case listed
+        }
+
+        /// The API documents `listed` as a string flag rather than a JSON
+        /// boolean — its example body is `{"content": "...", "listed": "1"}`.
+        /// Synthesised encoding would send `true`, which does not match the
+        /// documented shape.
+        ///
+        /// See https://api.omg.lol/#token-post-now-page-update-/now-page
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(content, forKey: .content)
+            try container.encode(listed ? "1" : "0", forKey: .listed)
+        }
     }
 }
