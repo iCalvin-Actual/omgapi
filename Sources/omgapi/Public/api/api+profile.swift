@@ -64,7 +64,7 @@ public extension api {
         let response = try await apiResponse(for: request)
         return AddressInfo(
             name: response.address,
-            registered: response.registration.date,
+            registered: response.registration?.date,
             expired: response.expiration.expired,
             verified: response.verification.verified
         )

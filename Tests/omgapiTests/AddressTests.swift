@@ -13,23 +13,23 @@ struct AccountTests {
         let infoOne = AccountInfoResponseModel(
             message: "Sample account A",
             email: "user@domain.com",
-            created: .init(.init(timeIntervalSince1970: 0)),
+            created: .init(TimeStamp(Date(timeIntervalSince1970: 0))),
             name: "User"
         )
         let infoTwo = AccountInfoResponseModel(
             message: "Sample account B",
             email: "client@business.com",
-            created: .init(.now),
+            created: .init(TimeStamp.now),
             name: "Client"
         )
         var account = Account(info: infoOne)
         #expect(account.name == "User")
         #expect(account.emailAddress == "user@domain.com")
-        #expect(account.created.timeIntervalSince1970 == 0)
+        #expect(account.created?.timeIntervalSince1970 == 0)
         
         account = Account(info: infoTwo)
         #expect(account.name == "Client")
         #expect(account.emailAddress == "client@business.com")
-        #expect(account.created.timeIntervalSinceNow < 2)
+        #expect((account.created?.timeIntervalSinceNow ?? .infinity) < 2)
     }
 }

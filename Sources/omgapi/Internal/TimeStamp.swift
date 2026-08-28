@@ -33,8 +33,9 @@ struct TimeStamp: Codable, Sendable {
 
     /// Decodes a `TimeStamp` from an API response.
     ///
-    /// The `unixEpochTime` field is expected as a `String` or `Int`.
-    /// If decoding fails, a fallback value of `Date()` is used.
+    /// The `unixEpochTime` field is expected as a `String` or `Int`, and is
+    /// required: a missing, null, or unparseable value throws. Use
+    /// `LenientTimeStamp` for fields the API doesn't reliably populate.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.message = try container.decodeIfPresent(String.self, forKey: .message)
@@ -64,5 +65,40 @@ struct TimeStamp: Codable, Sendable {
         try container.encode(message, forKey: .message)
         let epoch = date.timeIntervalSince1970
         try container.encode("\(epoch)", forKey: .epoch)
+    }
+}
+
+/// A `TimeStamp` that decodes to a `nil` date instead of throwing when the API
+/// omits, nulls, or malforms its `unix_epoch_time`.
+///
+/// omg.lol doesn't populate every timestamp it documents — lifetime addresses
+/// carry no expiration epoch, and registration epochs aren't guaranteed either.
+/// Decoding those strictly fails the entire response, so a single address
+/// without a usable epoch would take down the whole account address list and
+/// leave the app looking signed out. Anything unparseable becomes `nil` here
+/// instead.
+struct LenientTimeStamp: Codable, Sendable {
+    /// The underlying timestamp, or `nil` if the API value was unusable.
+    let timeStamp: TimeStamp?
+
+    /// The decoded `Date`, if the API sent a usable epoch.
+    var date: Date? { timeStamp?.date }
+
+    /// Wraps an already-decoded timestamp.
+    init(_ timeStamp: TimeStamp?) {
+        self.timeStamp = timeStamp
+    }
+
+    init(from decoder: Decoder) throws {
+        self.timeStamp = try? TimeStamp(from: decoder)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        guard let timeStamp else {
+            var container = encoder.singleValueContainer()
+            try container.encodeNil()
+            return
+        }
+        try timeStamp.encode(to: encoder)
     }
 }
