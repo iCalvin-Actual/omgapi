@@ -20,13 +20,14 @@ public struct Account: Sendable {
     init(info: AccountInfoResponseModel) {
         self.emailAddress = info.email
         self.name = info.name
-        self.created = info.created.date
+        self.created = info.created?.date
     }
     
     /// The email address associated to the account and which is used for login.
     public let emailAddress: String
-    /// The `Date` when the omg.lol account was originally created
-    public let created: Date
+    /// The `Date` when the omg.lol account was originally created, or `nil`
+    /// when the API didn't report a usable creation timestamp.
+    public let created: Date?
     /// A display name to use to reference a registered omg.lol member
     public let name: String
 }

@@ -22,8 +22,9 @@ public struct AddressInfo: Sendable {
     /// The registered omg.lol address.
     public let name: AddressName
 
-    /// The timestamp when the address was registered.
-    public let registered: Date
+    /// The timestamp when the address was registered, or `nil` when the API
+    /// didn't report a usable registration timestamp.
+    public let registered: Date?
 
     /// Indicates whether the Address is currently expired.
     public let expired: Bool

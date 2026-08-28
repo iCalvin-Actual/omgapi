@@ -27,8 +27,8 @@ struct AccountInfoResponseModel: CommonAPIResponse, Sendable {
     
     /// User's email address.
     let email: String
-    /// Account creation timestamp.
-    let created: TimeStamp
+    /// Account creation timestamp, absent when the API omits a usable epoch.
+    let created: LenientTimeStamp?
     /// Display name or username.
     let name: String
 }
@@ -47,8 +47,9 @@ struct AccountAddressResponseModel: Response {
     let message: String?
     /// The omg.lol address this relates to.
     let address: String
-    /// Timestamp when the address was registered.
-    let registration: TimeStamp
+    /// Timestamp when the address was registered, absent when the API omits a
+    /// usable epoch. Optional so one address can't fail the whole list decode.
+    let registration: LenientTimeStamp?
 }
 
 typealias AddressCollectionResponseModel = [AccountAddressResponseModel]

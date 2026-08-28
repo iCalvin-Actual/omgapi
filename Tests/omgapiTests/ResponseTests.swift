@@ -55,7 +55,7 @@ struct DecodingTests {
         #expect(decoded.message == "Account loaded")
         #expect(decoded.email == "user@example.com")
         #expect(decoded.name == "User")
-        #expect(decoded.created.date == Date(timeIntervalSince1970: 123456789))
+        #expect(decoded.created?.date == Date(timeIntervalSince1970: 123456789))
     }
 
     @Test func testDecodeAccountOwner() throws {
@@ -86,7 +86,7 @@ struct DecodingTests {
         let decoded = try JSONDecoder().decode(AccountAddressResponseModel.self, from: json)
         #expect(decoded.message == "Registered")
         #expect(decoded.address == "name.omg.lol")
-        #expect(decoded.registration.date == Date(timeIntervalSince1970: 987654321))
+        #expect(decoded.registration?.date == Date(timeIntervalSince1970: 987654321))
     }
     
     @Test func testDecodeAddressCollection() throws {
@@ -115,8 +115,8 @@ struct DecodingTests {
         #expect(decoded.count == 2)
         #expect(decoded[0].address == "user1.omg.lol")
         #expect(decoded[1].address == "user2.omg.lol")
-        #expect(decoded[0].registration.date == Date(timeIntervalSince1970: 1000))
-        #expect(decoded[1].registration.date == Date(timeIntervalSince1970: 2000))
+        #expect(decoded[0].registration?.date == Date(timeIntervalSince1970: 1000))
+        #expect(decoded[1].registration?.date == Date(timeIntervalSince1970: 2000))
     }
     
     @Test func testDecodeAddressDirectoryResponse() throws {
@@ -160,7 +160,7 @@ struct DecodingTests {
         let decoded = try JSONDecoder().decode(AddressInfoResponseModel.self, from: json)
         #expect(decoded.address == "user.omg.lol")
         #expect(decoded.owner == "user")
-        #expect(decoded.registration.date == Date(timeIntervalSince1970: 123))
+        #expect(decoded.registration?.date == Date(timeIntervalSince1970: 123))
         #expect(decoded.expiration.expired == false)
         #expect(decoded.expiration.willExpire == true)
         #expect(decoded.expiration.unixEpochTime == "456")

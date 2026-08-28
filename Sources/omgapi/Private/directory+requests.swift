@@ -48,8 +48,9 @@ struct AddressInfoResponseModel: CommonAPIResponse {
     let address: String
     /// Property `owner` of type `String?`.
     let owner: String?
-    /// Timestamp when the address was registered.
-    let registration: TimeStamp
+    /// Timestamp when the address was registered, absent when the API omits a
+    /// usable epoch.
+    let registration: LenientTimeStamp?
     /// Expiration info for the address.
     let expiration: ExpirationResponseModel
     /// Verification state for the address.
